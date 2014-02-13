@@ -1,6 +1,7 @@
 #include "GraphicsEngine.h"
 
-GraphicsEngine::GraphicsEngine() {}
+GraphicsEngine::GraphicsEngine() : rot(0.0f) {}
+
 GraphicsEngine::~GraphicsEngine() {
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
@@ -71,13 +72,16 @@ void GraphicsEngine::resize() {
 }
 
 void GraphicsEngine::drawCube(GLfloat &x, GLfloat &y, GLfloat &z) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
-
 	// Render a color-cube consisting of 6 quads with different colors
 	glLoadIdentity();                 // Reset the model-view matrix
 	glTranslatef(x, y, z);  // Move right and into the screen
-	//glRotatef(rotquad, 0.0f, 1.0f, 0.0f);   // rotate
+	
+	
+	glRotatef(rot, 0.0f, 1.0f, 0.0f);   // rotate
+
+	rot += 0.5f;
+
+
 
 	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
 	// Top face (y = 1.0f)
@@ -123,4 +127,13 @@ void GraphicsEngine::drawCube(GLfloat &x, GLfloat &y, GLfloat &z) {
 	glVertex3f(1.0f, -1.0f, 1.0f);
 	glVertex3f(1.0f, -1.0f, -1.0f);
 	glEnd();  // End of drawing color-cube
+}
+
+void GraphicsEngine::clearScreen() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
+	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+}
+
+void GraphicsEngine::showScreen() {
+	SDL_GL_SwapWindow(window);
 }
