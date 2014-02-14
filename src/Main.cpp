@@ -74,17 +74,17 @@ void onKeyRight() {
 	//z += lx * fraction;
 }
 
-void onMouseUp() {
-	camera->rotateUp(0.05f);
+void onMouseUp(int v) {
+	camera->rotateUp(v * 0.0035f);
 	//ly += 0.05f;
 }
 
 void onMouseDown() {
-	camera->rotateDown(0.05f);
+	camera->rotateDown(0.04f);
 	//ly -= 0.05f;
 }
 
-void onMouseLeft(float v) {
+void onMouseLeft(int v) {
 	//camera->rotateLeft(0.05f);
 	//angle -= 0.05f;	// TODO: pick right angle/speed/checking for FPS mode
 	//lx = sin(angle);
@@ -92,7 +92,7 @@ void onMouseLeft(float v) {
 
 }
 
-void onMouseRight(float v) {
+void onMouseRight(int v) {
 	camera->rotateRight(v * 0.0035f);
 	//angle += 0.05f;
 	//lx = sin(angle);
@@ -128,7 +128,7 @@ int main(int argc, char * args[]) {
 	Box * b2 = new Box(0, 0, -10);
 	Box * b3 = new Box(0, 6, -4);
 
-	Vector3 gravity(0, -0.01, 0);	// should be vector really
+	Vector3 gravity(0, -0.01f, 0);	// should be vector really
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
 
@@ -155,20 +155,21 @@ int main(int argc, char * args[]) {
 		SDL_GetRelativeMouseState(&mx, &my);	// like normal window coord positive down and right
 
 		onMouseRight(mx);
+		onMouseUp(-my);
 		//onMouseLeft(mx);
 		/*if (mx > 2.5) {
 			onMouseRight();
 		}
 		else if (mx < -2.5) {
 			onMouseLeft();
-		}*/
+		}
 
 		if (my < -2.5) {
 			onMouseUp();
 		}
 		else if (my > 2.5) {
 			onMouseDown();
-		}
+		}*/
 
 
 
