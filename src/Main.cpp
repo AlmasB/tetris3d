@@ -155,6 +155,15 @@ int main(int argc, char * args[]) {
 			x + lx, 1.0f, z + lz,
 			0.0f, 1.0f, 0.0f);
 
+		/*glColor3f(0, 1.0f, 0);
+
+		glBegin(GL_LINES);
+
+		glVertex3f(0, 1.0f, 0);
+		glVertex3f(0, 0.0f, 0);
+
+		glEnd();*/
+
 		// some plane underneath
 		glColor3f(1.0f, 0.9f, 1.0f);
 
@@ -171,11 +180,7 @@ int main(int argc, char * args[]) {
 		b2->draw();
 		b3->draw();
 
-		/*gfx->drawCube(3, 0, -5);
-		gfx->drawCube(-7, 0, 6);
-		gfx->drawCube(0, 0, -15);
-		gfx->drawCube(-3, 3, 0);
-		gfx->drawCube(-2, 4, -3);*/
+		gfx->drawUI();
 
 		gfx->showScreen();
 

@@ -36,6 +36,7 @@ class GraphicsEngine {
 	private:
 		SDL_Window * window;
 		SDL_GLContext glContext;
+		SDL_Renderer * renderer;
 		GLfloat rot;
 
 	public:
@@ -46,6 +47,7 @@ class GraphicsEngine {
 		void resize();
 		void drawCube(GLfloat x, GLfloat y, GLfloat z);
 		void drawCube(GLfloat x, GLfloat y, GLfloat z, RGB);
+		void drawUI();
 		void clearScreen();
 		void showScreen();
 };

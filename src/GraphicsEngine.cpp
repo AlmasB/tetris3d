@@ -18,7 +18,7 @@ std::string GraphicsEngine::init() {
 	window = SDL_CreateWindow(_ENGINE_TITLE,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		__ENGINE_WINDOW_W, __ENGINE_WINDOW_H,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		SDL_WINDOW_OPENGL);	// shown?
 
 	if (window == NULL)
 		return _SDL_ERROR_INIT_WINDOW + std::string(SDL_GetError());
@@ -27,6 +27,34 @@ std::string GraphicsEngine::init() {
 
 	if (glContext == NULL)
 		return _SDL_ERROR_INIT_OPENGL + std::string(SDL_GetError());
+
+
+
+
+
+
+	int oglIdx = -1;
+	int nRD = SDL_GetNumRenderDrivers();
+	for (int i = 0; i<nRD; i++)
+	{
+		SDL_RendererInfo info;
+		if (!SDL_GetRenderDriverInfo(i, &info))
+		{
+			if (!strcmp(info.name, "opengl"))
+			{
+				oglIdx = i;
+			}
+		}
+	}
+
+
+	renderer = SDL_CreateRenderer(window, oglIdx, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+
+
+
+
 
 	initGL();
 
@@ -146,5 +174,21 @@ void GraphicsEngine::clearScreen() {
 }
 
 void GraphicsEngine::showScreen() {
-	SDL_GL_SwapWindow(window);
+	//SDL_GL_SwapWindow(window);
+	SDL_RenderPresent(renderer);
+}
+
+void GraphicsEngine::drawUI() {
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(-400, 400, 300, -300, 0, 1);
+	glColor4f(0, 0, 1.0f, 1.0f);
+
+	// need to specify renderer ?
+	//SDL_SetRenderDrawColor(renderer, 255, 10, 10, 255);
+	SDL_RenderDrawLine(renderer, 5, 0, 5+10, +0);
+	SDL_RenderDrawLine(renderer, -5, 0, -5-10, +0);
+	SDL_RenderDrawLine(renderer, 0, 0, +0, +10);
+	SDL_RenderDrawLine(renderer, 0, 0, +0, -10);
+	glPopMatrix();
 }
