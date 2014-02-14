@@ -2,17 +2,20 @@
 
 #include "GraphicsEngine.h"
 #include "Box.h"
+#include "Camera.h"
 
 using namespace std;	// for easier debugging, will be removed
 
+/*
 // angle of rotation for the camera direction
 float angle = 0.0;
 // actual vector representing the camera's direction
 float lx = 0.0f, ly = 0.0f, lz = -1.0f;
 // XZ position of the camera
-float x = 0.0f, y = 0.0f, z = 5.0f;
+float x = 0.0f, y = 0.0f, z = 0.0f;
 
 float fraction = 0.2f;
+*/
 
 static const int UP = 0;
 static const int DOWN = 1;
@@ -22,6 +25,8 @@ static const int RIGHT = 3;
 bool keys[4];
 
 bool running = true;
+
+Camera * camera;
 
 void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
 	//if (keyDown) {
@@ -46,50 +51,58 @@ void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
 }
 
 void onKeyUP() {
-	x += lx * fraction;
-	z += lz * fraction;
+	camera->moveForward();
+	//x += lx * fraction;
+	//z += lz * fraction;
 }
 
 void onKeyDown() {
-	x -= lx * fraction;
-	z -= lz * fraction;
+	camera->moveBack();
+	//x -= lx * fraction;
+	//z -= lz * fraction;
 }
 
 void onKeyLeft() {
-	x -= -lz * fraction;
-	z -= lx * fraction;
+	camera->moveLeft();
+	//x -= -lz * fraction;
+	//z -= lx * fraction;
 }
 
 void onKeyRight() {
-	x += -lz * fraction;
-	z += lx * fraction;
+	camera->moveRight();
+	//x += -lz * fraction;
+	//z += lx * fraction;
 }
 
 void onMouseUp() {
-	ly += 0.05f;
+	camera->rotateUp(0.05f);
+	//ly += 0.05f;
 }
 
 void onMouseDown() {
-	ly -= 0.05f;
+	camera->rotateDown(0.05f);
+	//ly -= 0.05f;
 }
 
-void onMouseLeft() {
-	angle -= 0.05f;	// TODO: pick right angle/speed/checking for FPS mode
-	lx = sin(angle);
-	lz = -cos(angle);
+void onMouseLeft(float v) {
+	//camera->rotateLeft(0.05f);
+	//angle -= 0.05f;	// TODO: pick right angle/speed/checking for FPS mode
+	//lx = sin(angle);
+	//lz = -cos(angle);
 
-	//cout << "sin(angle): " << lx << " -cos(angle): " << lz << endl;
 }
 
-void onMouseRight() {
-	angle += 0.05f;
-	lx = sin(angle);
-	lz = -cos(angle);
+void onMouseRight(float v) {
+	camera->rotateRight(v * 0.0035f);
+	//angle += 0.05f;
+	//lx = sin(angle);
+	//lz = -cos(angle);
 
-	//cout << "sin(angle): " << lx << " -cos(angle): " << lz << endl;
 }
 
 int main(int argc, char * args[]) {
+
+	camera = new Camera();
 
 	keys[UP] = false;
 	keys[DOWN] = false;
@@ -115,7 +128,7 @@ int main(int argc, char * args[]) {
 	Box * b2 = new Box(0, 0, -10);
 	Box * b3 = new Box(0, 6, -4);
 
-	Point3 gravity(0, -0.01, 0);	// should be vector really
+	Vector3 gravity(0, -0.01, 0);	// should be vector really
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
 
@@ -140,12 +153,15 @@ int main(int argc, char * args[]) {
 
 		int mx, my;
 		SDL_GetRelativeMouseState(&mx, &my);	// like normal window coord positive down and right
-		if (mx > 2.5) {
+
+		onMouseRight(mx);
+		//onMouseLeft(mx);
+		/*if (mx > 2.5) {
 			onMouseRight();
 		}
 		else if (mx < -2.5) {
 			onMouseLeft();
-		}
+		}*/
 
 		if (my < -2.5) {
 			onMouseUp();
@@ -168,11 +184,11 @@ int main(int argc, char * args[]) {
 
 		// update
 
-		if (b1->center.y > 0)
+		if (b1->center.getY() > 0)
 			b1->center += gravity;
-		if (b2->center.y > 0)
+		if (b2->center.getY() > 0)
 			b2->center += gravity;
-		if (b3->center.y > 0)
+		if (b3->center.getY() > 0)
 			b3->center += gravity;
 		
 
@@ -183,18 +199,18 @@ int main(int argc, char * args[]) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		// Set the camera
-		gluLookAt(x, y, z,
+		/*gluLookAt(x, y, z,
 			x + lx, y + ly, z + lz,
-			0.0f, 1.0f, 0.0f);
+			0.0f, 1.0f, 0.0f);*/
 
-		/*glColor3f(0, 1.0f, 0);
+		Point3 pos = camera->getPosition();
+		Point3 look = pos + camera->getDirection();
 
-		glBegin(GL_LINES);
+		Vector3 up = camera->getUP();
 
-		glVertex3f(0, 1.0f, 0);
-		glVertex3f(0, 0.0f, 0);
-
-		glEnd();*/
+		gluLookAt(pos.getX(), pos.getY(), pos.getZ(),
+			look.getX(), look.getY(), look.getZ(),
+			up.getX(), up.getY(), up.getZ());
 
 		// some plane underneath
 		glColor3f(1.0f, 0.9f, 1.0f);

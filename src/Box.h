@@ -1,13 +1,6 @@
 #include <SDL_opengl.h>
 
-class Point3 {
-	private:
-	public:
-		double x, y, z;
-		
-		Point3(double, double, double);
-		Point3& operator+=(const Point3 &);
-};
+#include "Common.h"
 
 class Box {
 	private:
