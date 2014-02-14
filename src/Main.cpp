@@ -1,6 +1,9 @@
 #include <iostream>
 
 #include "GraphicsEngine.h"
+#include "Box.h"
+
+using namespace std;	// for easier debugging, will be removed
 
 // angle of rotation for the camera direction
 float angle = 0.0;
@@ -9,7 +12,7 @@ float lx = 0.0f, lz = -1.0f;
 // XZ position of the camera
 float x = 0.0f, z = 5.0f;
 
-float fraction = 0.2;
+float fraction = 0.2f;
 
 static const int UP = 0;
 static const int DOWN = 1;
@@ -18,21 +21,25 @@ static const int RIGHT = 3;
 
 bool keys[4];
 
+bool running = true;
+
 void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
 	//if (keyDown) {
 		switch (key) {
-			case SDLK_RIGHT:
+			case SDLK_RIGHT: case SDLK_d:
 				keys[RIGHT] = keyDown;
 				break;
-			case SDLK_LEFT:
+			case SDLK_LEFT: case SDLK_a:
 				keys[LEFT] = keyDown;
-
 				break;
-			case SDLK_UP:
+			case SDLK_UP: case SDLK_w:
 				keys[UP] = keyDown;
 				break;
-			case SDLK_DOWN:
+			case SDLK_DOWN: case SDLK_s:
 				keys[DOWN] = keyDown;
+				break;
+			case SDLK_ESCAPE:
+				running = false;
 				break;
 		}
 	//}
@@ -49,13 +56,13 @@ void onKeyDown() {
 }
 
 void onKeyLeft() {
-	angle -= 0.05f;
+	angle -= 0.035f;	// TODO: pick right angle/speed/checking for FPS mode
 	lx = sin(angle);
 	lz = -cos(angle);
 }
 
 void onKeyRight() {
-	angle += 0.05f;
+	angle += 0.035f;
 	lx = sin(angle);
 	lz = -cos(angle);
 }
@@ -75,12 +82,20 @@ int main(int argc, char * args[]) {
 		return -1;
 	}
 
-	bool running = true;
+	
 	SDL_Event event;
 	Uint32 start, end;
 
 	GLdouble eyeX = 0, eyeY = 0, eyeZ = 5.0;
 	GLdouble toX = 0, toY = 0, toZ = 0;
+
+	Box * b1 = new Box(5, 3, -7);
+	Box * b2 = new Box(0, 0, -10);
+	Box * b3 = new Box(0, 6, -4);
+
+	Point3 gravity(0, -0.01, 0);	// should be vector really
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
 
 	while (running) {
 		start = SDL_GetTicks();
@@ -99,6 +114,17 @@ int main(int argc, char * args[]) {
 			}
 		}
 	
+
+
+		int mx, my;
+		SDL_GetRelativeMouseState(&mx, &my);	// like normal window coord positive down and right
+		if (mx > 2.5) {
+			onKeyRight();
+		}
+		else if (mx < -2.5) {
+			onKeyLeft();
+		}
+
 		if (keys[UP])
 			onKeyUP();
 		if (keys[DOWN])
@@ -110,8 +136,12 @@ int main(int argc, char * args[]) {
 
 		// update
 
-		//gfx->resize();
-
+		if (b1->center.y > 0)
+			b1->center += gravity;
+		if (b2->center.y > 0)
+			b2->center += gravity;
+		if (b3->center.y > 0)
+			b3->center += gravity;
 		
 
 		// render
@@ -135,12 +165,17 @@ int main(int argc, char * args[]) {
 		glVertex3f(100.0f, -1.0f, -100.0f);
 		glEnd();
 		
+		glColor3f(0.5f, 0.5f, 0.2f);
 		// get some cubes up
-		gfx->drawCube(3, 0, -5);
+		b1->draw();
+		b2->draw();
+		b3->draw();
+
+		/*gfx->drawCube(3, 0, -5);
 		gfx->drawCube(-7, 0, 6);
 		gfx->drawCube(0, 0, -15);
 		gfx->drawCube(-3, 3, 0);
-		gfx->drawCube(-2, 4, -3);
+		gfx->drawCube(-2, 4, -3);*/
 
 		gfx->showScreen();
 
@@ -149,6 +184,10 @@ int main(int argc, char * args[]) {
 			SDL_Delay(20 - end);
 		}
 	}
+
+	delete b1;
+	delete b2;
+	delete b3;
 
 	delete gfx;
 	return 0;
