@@ -1,6 +1,8 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+typedef unsigned int uint;
+
 class Point3;
 class Vector3;
 
