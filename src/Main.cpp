@@ -8,9 +8,9 @@ using namespace std;	// for easier debugging, will be removed
 // angle of rotation for the camera direction
 float angle = 0.0;
 // actual vector representing the camera's direction
-float lx = 0.0f, lz = -1.0f;
+float lx = 0.0f, ly = 0.0f, lz = -1.0f;
 // XZ position of the camera
-float x = 0.0f, z = 5.0f;
+float x = 0.0f, y = 0.0f, z = 5.0f;
 
 float fraction = 0.2f;
 
@@ -56,15 +56,37 @@ void onKeyDown() {
 }
 
 void onKeyLeft() {
-	angle -= 0.035f;	// TODO: pick right angle/speed/checking for FPS mode
-	lx = sin(angle);
-	lz = -cos(angle);
+	x -= -lz * fraction;
+	z -= lx * fraction;
 }
 
 void onKeyRight() {
-	angle += 0.035f;
+	x += -lz * fraction;
+	z += lx * fraction;
+}
+
+void onMouseUp() {
+	ly += 0.05f;
+}
+
+void onMouseDown() {
+	ly -= 0.05f;
+}
+
+void onMouseLeft() {
+	angle -= 0.05f;	// TODO: pick right angle/speed/checking for FPS mode
 	lx = sin(angle);
 	lz = -cos(angle);
+
+	//cout << "sin(angle): " << lx << " -cos(angle): " << lz << endl;
+}
+
+void onMouseRight() {
+	angle += 0.05f;
+	lx = sin(angle);
+	lz = -cos(angle);
+
+	//cout << "sin(angle): " << lx << " -cos(angle): " << lz << endl;
 }
 
 int main(int argc, char * args[]) {
@@ -119,11 +141,21 @@ int main(int argc, char * args[]) {
 		int mx, my;
 		SDL_GetRelativeMouseState(&mx, &my);	// like normal window coord positive down and right
 		if (mx > 2.5) {
-			onKeyRight();
+			onMouseRight();
 		}
 		else if (mx < -2.5) {
-			onKeyLeft();
+			onMouseLeft();
 		}
+
+		if (my < -2.5) {
+			onMouseUp();
+		}
+		else if (my > 2.5) {
+			onMouseDown();
+		}
+
+
+
 
 		if (keys[UP])
 			onKeyUP();
@@ -151,8 +183,8 @@ int main(int argc, char * args[]) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		// Set the camera
-		gluLookAt(x, 1.0f, z,
-			x + lx, 1.0f, z + lz,
+		gluLookAt(x, y, z,
+			x + lx, y + ly, z + lz,
 			0.0f, 1.0f, 0.0f);
 
 		/*glColor3f(0, 1.0f, 0);
