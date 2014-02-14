@@ -37,3 +37,8 @@ void EventEngine::updateKeys(const SDL_Keycode &key, bool keyDown) {
 bool EventEngine::isPressed(Key key) {
 	return keys[key];
 }
+
+Point2 EventEngine::getMouseDPos() {
+	SDL_GetRelativeMouseState(&mouseDPos.x, &mouseDPos.y);
+	return mouseDPos;
+}

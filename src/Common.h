@@ -46,7 +46,9 @@ class Point3 {
 		inline float getZ() const { return z; }
 };
 
-
+struct Point2 {
+	int x, y;
+};
 
 
 

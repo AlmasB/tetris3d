@@ -21,15 +21,20 @@ class Camera {
 		void moveRight();
 		void moveLeft();
 
-		void rotateUp(float);
-		void rotateDown(float);
-		void rotateRight(float);
-		void rotateLeft(float);
+		void lookUp(float);
+
+		/**
+		* Rotates camera right by given units
+		* Note: you can rotate camera left by passing negative value
+		*
+		* @param units
+		*
+		*/
+		void lookRight(float);
 
 		Point3 getPosition();
 		Vector3 getDirection();
 		Vector3 getUP();
-
 };
 
 #endif

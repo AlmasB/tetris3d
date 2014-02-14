@@ -33,7 +33,8 @@ void Game::runMainLoop() {
 		start = SDL_GetTicks();
 		eventSystem->pollEvents();
 
-
+		handleKeyEvents();
+		handleMouseEvents();
 
 		update();
 		render();
@@ -45,9 +46,7 @@ void Game::runMainLoop() {
 	}
 }
 
-void Game::update() {
-	Vector3 gravity(0, -0.01f, 0);
-
+void Game::handleKeyEvents() {
 	if (eventSystem->isPressed(Key::W))
 		camera->moveForward();
 	if (eventSystem->isPressed(Key::S))
@@ -58,13 +57,16 @@ void Game::update() {
 		camera->moveRight();
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
+}
 
-	int mx, my;
-	SDL_GetRelativeMouseState(&mx, &my);
+void Game::handleMouseEvents() {
+	Point2 pos = eventSystem->getMouseDPos();
+	camera->lookRight(pos.x * 0.0035f);
+	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
+}
 
-	camera->rotateRight(mx * 0.0035f);
-	camera->rotateUp(-my * 0.0035f);
-
+void Game::update() {
+	Vector3 gravity(0, -0.01f, 0);
 
 	if (b1->center.getY() > 0)
 		b1->center += gravity;
@@ -88,7 +90,7 @@ void Game::render() {
 		look.getX(), look.getY(), look.getZ(),
 		up.getX(), up.getY(), up.getZ());
 
-	// some plane underneath
+	// some plane below
 	glColor3f(1.0f, 0.9f, 1.0f);
 
 	glBegin(GL_QUADS);

@@ -24,25 +24,15 @@ void Camera::moveLeft() {
 	position += Vector3(direction.getZ() * speed, 0, -direction.getX() * speed);
 }
 
-// TODO: replace with 1 generic, rotateY or smth
-
-void Camera::rotateUp(float units) {
+void Camera::lookUp(float units) {
 	direction += Vector3(0, units, 0);
 }
 
-void Camera::rotateDown(float units) {
-	direction += Vector3(0, -units, 0);
-}
-
-void Camera::rotateRight(float units) {
+void Camera::lookRight(float units) {
 	angle += units;
 	adjustDirection();
 }
 
-void Camera::rotateLeft(float units) {
-	angle += -units;
-	adjustDirection();
-}
 
 Point3 Camera::getPosition() { return position; }
 Vector3 Camera::getDirection() { return direction; }

@@ -27,6 +27,9 @@ class Game {
 		bool init();
 		void runMainLoop();
 
+		void handleKeyEvents();
+		void handleMouseEvents();
+
 		void update();
 		void render();
 };
