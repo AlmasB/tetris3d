@@ -58,6 +58,8 @@ std::string GraphicsEngine::init() {
 
 	initGL();
 
+	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
+
 	return _ENGINE_ERROR_NONE;
 }
 
