@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "GraphicsEngine.h"
+#include "EventEngine.h"
 #include "Box.h"
 #include "Camera.h"
 
@@ -17,10 +18,10 @@ float x = 0.0f, y = 0.0f, z = 0.0f;
 float fraction = 0.2f;
 */
 
-static const int UP = 0;
+/*static const int UP = 0;
 static const int DOWN = 1;
 static const int LEFT = 2;
-static const int RIGHT = 3;
+static const int RIGHT = 3;*/
 
 bool keys[4];
 
@@ -28,7 +29,7 @@ bool running = true;
 
 Camera * camera;
 
-void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
+/*void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
 	//if (keyDown) {
 		switch (key) {
 			case SDLK_RIGHT: case SDLK_d:
@@ -48,7 +49,7 @@ void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
 				break;
 		}
 	//}
-}
+}*/
 
 void onKeyUP() {
 	camera->moveForward();
@@ -104,10 +105,10 @@ int main(int argc, char * args[]) {
 
 	camera = new Camera();
 
-	keys[UP] = false;
+	/*keys[UP] = false;
 	keys[DOWN] = false;
 	keys[LEFT] = false;
-	keys[RIGHT] = false;
+	keys[RIGHT] = false;*/
 
 	GraphicsEngine * gfx = new GraphicsEngine();
 	std::string error;
@@ -117,8 +118,10 @@ int main(int argc, char * args[]) {
 		return -1;
 	}
 
+	EventEngine * eventSys = new EventEngine();
+
 	
-	SDL_Event event;
+	//SDL_Event event;
 	Uint32 start, end;
 
 	GLdouble eyeX = 0, eyeY = 0, eyeZ = 5.0;
@@ -132,10 +135,13 @@ int main(int argc, char * args[]) {
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
 
+
+
 	while (running) {
 		start = SDL_GetTicks();
+		eventSys->pollEvents();
 
-		while (SDL_PollEvent(&event) != 0) {
+		/*while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 				case SDL_QUIT:
 					running = false;
@@ -146,8 +152,11 @@ int main(int argc, char * args[]) {
 						handleKeyEvent(event.key.keysym.sym, event.type == SDL_KEYDOWN);
 					}
 					break;
+					
 			}
-		}
+		}*/
+
+
 	
 
 
@@ -171,17 +180,26 @@ int main(int argc, char * args[]) {
 			onMouseDown();
 		}*/
 
+		if (eventSys->isPressed(Key::W))
+			onKeyUP();
+		if (eventSys->isPressed(Key::S))
+			onKeyDown();
+		if (eventSys->isPressed(Key::A))
+			onKeyLeft();
+		if (eventSys->isPressed(Key::D))
+			onKeyRight();
+		if (eventSys->isPressed(Key::ESC))
+			running = false;
 
 
-
-		if (keys[UP])
+		/*if (keys[UP])
 			onKeyUP();
 		if (keys[DOWN])
 			onKeyDown();
 		if (keys[RIGHT])
 			onKeyRight();
 		if (keys[LEFT])
-			onKeyLeft();
+			onKeyLeft();*/
 
 		// update
 
