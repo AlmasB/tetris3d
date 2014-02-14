@@ -71,15 +71,18 @@ void GraphicsEngine::resize() {
 	gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
 
-void GraphicsEngine::drawCube(GLfloat &x, GLfloat &y, GLfloat &z) {
+void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
+
+	//glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+	glPushMatrix();
 	// Render a color-cube consisting of 6 quads with different colors
-	glLoadIdentity();                 // Reset the model-view matrix
+	//glLoadIdentity();                 // Reset the model-view matrix
 	glTranslatef(x, y, z);  // Move right and into the screen
 	
 	
-	glRotatef(rot, 0.0f, 1.0f, 0.0f);   // rotate
+	//glRotatef(30.0f, 0.0f, 1.0f, 0.0f);   // rotate
 
-	rot += 0.5f;
+	//rot += 0.5f;
 
 
 
@@ -127,11 +130,12 @@ void GraphicsEngine::drawCube(GLfloat &x, GLfloat &y, GLfloat &z) {
 	glVertex3f(1.0f, -1.0f, 1.0f);
 	glVertex3f(1.0f, -1.0f, -1.0f);
 	glEnd();  // End of drawing color-cube
+
+	glPopMatrix();
 }
 
 void GraphicsEngine::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 }
 
 void GraphicsEngine::showScreen() {

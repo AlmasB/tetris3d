@@ -41,7 +41,7 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 		void resize();
-		void drawCube(GLfloat &x, GLfloat &y, GLfloat &z);
+		void drawCube(GLfloat x, GLfloat y, GLfloat z);
 		void clearScreen();
 		void showScreen();
 };
