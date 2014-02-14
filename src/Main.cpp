@@ -19,36 +19,61 @@ float x = 0.0f, z = 5.0f;
 
 float fraction = 0.2;
 
+static const int UP = 0;
+static const int DOWN = 1;
+static const int LEFT = 2;
+static const int RIGHT = 3;
+
+bool keys[4];
+
 void handleKeyEvent(const SDL_Keycode &key, bool keyDown) {
-	if (keyDown) {
+	//if (keyDown) {
 		switch (key) {
 			case SDLK_RIGHT:
-				//std::cout << "right" << std::endl;
-				angle += 0.05f;
-				lx = sin(angle);
-				lz = -cos(angle);
+				keys[RIGHT] = keyDown;
 				break;
 			case SDLK_LEFT:
-				//std::cout << "left" << std::endl;
-				angle -= 0.05f;
-				lx = sin(angle);
-				lz = -cos(angle);
+				keys[LEFT] = keyDown;
 
 				break;
 			case SDLK_UP:
-				x += lx * fraction;
-				z += lz * fraction;
+				keys[UP] = keyDown;
 				break;
 			case SDLK_DOWN:
-				x -= lx * fraction;
-				z -= lz * fraction;
-				//std::cout << eyeZ << std::endl;
+				keys[DOWN] = keyDown;
 				break;
 		}
-	}
+	//}
+}
+
+void onKeyUP() {
+	x += lx * fraction;
+	z += lz * fraction;
+}
+
+void onKeyDown() {
+	x -= lx * fraction;
+	z -= lz * fraction;
+}
+
+void onKeyLeft() {
+	angle -= 0.05f;
+	lx = sin(angle);
+	lz = -cos(angle);
+}
+
+void onKeyRight() {
+	angle += 0.05f;
+	lx = sin(angle);
+	lz = -cos(angle);
 }
 
 int main(int argc, char * args[]) {
+
+	keys[UP] = false;
+	keys[DOWN] = false;
+	keys[LEFT] = false;
+	keys[RIGHT] = false;
 
 	GraphicsEngine * gfx = new GraphicsEngine();
 	std::string error;
@@ -69,24 +94,27 @@ int main(int argc, char * args[]) {
 		start = SDL_GetTicks();
 
 		while (SDL_PollEvent(&event) != 0) {
-
-			if (event.type == SDL_QUIT) {
-				running = false;
+			switch (event.type) {
+				case SDL_QUIT:
+					running = false;
+					break;
+				case SDL_KEYDOWN:	//FALLTHRU
+				case SDL_KEYUP:
+					if (event.key.repeat == 0) {
+						handleKeyEvent(event.key.keysym.sym, event.type == SDL_KEYDOWN);
+					}
+					break;
 			}
-			else if (event.type == SDL_KEYDOWN) {
-				//if (event.key.repeat == 1) {
-					handleKeyEvent(event.key.keysym.sym, event.type == SDL_KEYDOWN);
-				//}
-			}
-
-			/*else if (e.type == SDL_TEXTINPUT)
-			{
-				int x = 0, y = 0;
-				SDL_GetMouseState(&x, &y);
-				handleKeys(e.text.text[0], x, y);
-			}*/
 		}
 	
+		if (keys[UP])
+			onKeyUP();
+		if (keys[DOWN])
+			onKeyDown();
+		if (keys[RIGHT])
+			onKeyRight();
+		if (keys[LEFT])
+			onKeyLeft();
 
 		// update
 
@@ -122,6 +150,7 @@ int main(int argc, char * args[]) {
 		gfx->drawCube(-7, 0, 6);
 		gfx->drawCube(0, 0, -15);
 		gfx->drawCube(-3, 3, 0);
+		gfx->drawCube(-2, 4, -3);
 
 		//glTranslatef(0, 0, 0);
 

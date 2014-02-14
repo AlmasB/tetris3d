@@ -72,14 +72,21 @@ void GraphicsEngine::resize() {
 }
 
 void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
+	RGB color = { 128, 128, 128 };
+	drawCube(x, y, z, color);
+}
+
+void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z, RGB color) {
 
 	//glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 	glPushMatrix();
 	// Render a color-cube consisting of 6 quads with different colors
 	//glLoadIdentity();                 // Reset the model-view matrix
 	glTranslatef(x, y, z);  // Move right and into the screen
-	
-	
+	//glColor3i(color.r, color.g, color.b);
+	//glColor3f(0.5f, 0.5f, 0.5f);
+	glColor3f(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f);
+
 	//glRotatef(30.0f, 0.0f, 1.0f, 0.0f);   // rotate
 
 	//rot += 0.5f;
@@ -89,42 +96,42 @@ void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
 	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
 	// Top face (y = 1.0f)
 	// Define vertices in counter-clockwise (CCW) order with normal pointing out
-	glColor3f(0.0f, 1.0f, 0.0f);
+	//glColor3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(1.0f, 1.0f, -1.0f);
 	glVertex3f(-1.0f, 1.0f, -1.0f);
 	glVertex3f(-1.0f, 1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
 
 	// Bottom face (y = -1.0f)
-	glColor3f(1.0f, 0.5f, 0.0f);
+	//glColor3f(1.0f, 0.5f, 0.0f);
 	glVertex3f(1.0f, -1.0f, 1.0f);
 	glVertex3f(-1.0f, -1.0f, 1.0f);
 	glVertex3f(-1.0f, -1.0f, -1.0f);
 	glVertex3f(1.0f, -1.0f, -1.0f);
 
 	// Front face  (z = 1.0f)
-	glColor3f(1.0f, 0.7f, 1.0f);
+	//glColor3f(1.0f, 0.7f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
 	glVertex3f(-1.0f, 1.0f, 1.0f);
 	glVertex3f(-1.0f, -1.0f, 1.0f);
 	glVertex3f(1.0f, -1.0f, 1.0f);
 
 	// Back face (z = -1.0f)
-	glColor3f(1.0f, 1.0f, 0.0f);
+	//glColor3f(1.0f, 1.0f, 0.0f);
 	glVertex3f(1.0f, -1.0f, -1.0f);
 	glVertex3f(-1.0f, -1.0f, -1.0f);
 	glVertex3f(-1.0f, 1.0f, -1.0f);
 	glVertex3f(1.0f, 1.0f, -1.0f);
 
 	// Left face (x = -1.0f)
-	glColor3f(0.0f, 0.0f, 1.0f);
+	//glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(-1.0f, 1.0f, 1.0f);
 	glVertex3f(-1.0f, 1.0f, -1.0f);
 	glVertex3f(-1.0f, -1.0f, -1.0f);
 	glVertex3f(-1.0f, -1.0f, 1.0f);
 
 	// Right face (x = 1.0f)
-	glColor3f(1.0f, 0.0f, 1.0f);
+	//glColor3f(1.0f, 0.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, -1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
 	glVertex3f(1.0f, -1.0f, 1.0f);
