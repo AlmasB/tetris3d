@@ -28,10 +28,7 @@
 #define __ENGINE_WINDOW_W 800
 #define __ENGINE_WINDOW_H 600
 
-// TODO: autocast to float, maybe even macro
-struct RGB {
-	int r, g, b;
-};
+
 
 
 class GraphicsEngine {
@@ -47,8 +44,8 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 		void resize();
-		void drawCube(GLfloat x, GLfloat y, GLfloat z);
-		void drawCube(GLfloat x, GLfloat y, GLfloat z, RGB);
+		//void drawCube(GLfloat x, GLfloat y, GLfloat z);
+		//void drawCube(GLfloat x, GLfloat y, GLfloat z, RGB);
 		void drawUI();
 		void clearScreen();
 		void showScreen();

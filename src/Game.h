@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include <iostream>
+#include <vector>
 
 #include "GraphicsEngine.h"
 #include "EventEngine.h"
@@ -9,16 +10,17 @@
 
 using namespace std;	// for debugging
 
+
+
 class Game {
 	private:
 		GraphicsEngine * gfx;
 		Camera * camera;
 		EventEngine * eventSystem;
 
-		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100);
+		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);
 
-		Cube * b1 = new Cube(Point3(-8, 5, 0), 4.0f);
-		Cube * b2 = new Cube(Point3(4, 6, -6), 5.0f);
+		vector<Cube*> cubes;
 
 		bool running;
 		bool gTest;
@@ -36,6 +38,8 @@ class Game {
 		void render();
 
 		void testCollision();
+
+		
 };
 
 

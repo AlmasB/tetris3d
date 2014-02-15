@@ -1,20 +1,22 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const Point3 & _center, float x, float y, float z)
-	: BoundingBox(_center, x, y, z) {
+GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBColor _color)
+	: BoundingBox(_center, x, y, z), color(_color) {
 
 }
 
 
 
-Cube::Cube(const Point3 & _center, float size) 
-	: GameObject(_center, size, size, size) {
+Cube::Cube(const Point3 & _center, float size, RGBColor _color) 
+	: GameObject(_center, size, size, size, _color) {
 
 }
 
 void Cube::draw() {
 	glPushMatrix();
 	glTranslatef(center.getX(), center.getY(), center.getZ());
+
+	glColor3f(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f);
 
 	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
 	// Top face (y = 1.0f)
@@ -58,14 +60,16 @@ void Cube::draw() {
 	glPopMatrix();
 }
 
-HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z)
-: GameObject(c, x, y, z) {
+HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RGBColor _color)
+: GameObject(c, x, y, z, _color) {
 
 }
 
 void HorizontalPlane::draw() {
 	glPushMatrix();
 	glTranslatef(center.getX(), center.getY(), center.getZ());
+
+	glColor3f(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f);
 
 	glBegin(GL_QUADS);
 	glVertex3f(-halfDistX.getX(), 0.0f, -halfDistZ.getZ());	// forget about Y for now

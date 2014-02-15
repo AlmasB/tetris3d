@@ -101,7 +101,7 @@ void GraphicsEngine::resize() {
 	gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
 
-void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
+/*void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
 	RGB color = { 128, 128, 128 };
 	drawCube(x, y, z, color);
 }
@@ -169,7 +169,7 @@ void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z, RGB color) {
 	glEnd();  // End of drawing color-cube
 
 	glPopMatrix();
-}
+}*/
 
 void GraphicsEngine::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers

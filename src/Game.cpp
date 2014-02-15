@@ -4,12 +4,21 @@ Game::Game() : running(true), gTest(true) {
 	camera = new Camera();
 	gfx = new GraphicsEngine();
 	eventSystem = new EventEngine();
+
+	cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
+	cubes.push_back(new Cube(Point3(4, 6, -6), 5.0f, COLOR_GREEN));
+	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_GREEN));
+	cubes.push_back(new Cube(Point3(15, 5, -3), 2.0f, COLOR_RED));
+	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));
 }
 
 Game::~Game() {
-	delete b1;
-	//delete b2;
-	//delete b3;
+
+	for (auto cube : cubes)
+		delete cube;
+
+	delete ground;
+
 	delete camera;
 	delete eventSystem;
 	delete gfx;
@@ -69,47 +78,29 @@ void Game::handleMouseEvents() {
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
-		cout << "Left click" << endl;
+		//cout << "Left click" << endl;
 	}
 
 	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
-		cout << "Right click" << endl;
+		//cout << "Right click" << endl;
 	}
 }
 
 void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
-	if (gTest) {
-		b1->center += gravity;	// stop individually to test whether works
-		b2->center += gravity;
-	}
+	for (auto cube : cubes)
+		if (!ground->collidesWith(*cube))
+			cube->center += gravity;
 
 	if (camera->getPosition().getY() > 0)
 		camera->moveDown();
 
-	testCollision();
+	//testCollision();
 }
 
 void Game::testCollision() {
-	if (ground->collidesWith(*b1)) {
-		if (gTest) {
-			std::cout << "b1 collides with b2" << std::endl;
-			std::cout << b1->center.getY() - b1->halfDistY.getY() << std::endl;
-		}
-		gTest = false;
-	}
 
-	/*
-	if (b2->collidesWith(*b3)) {
-		std::cout << "b2 collides with b3" << std::endl;
-	}
-
-	if (b1->collidesWith(*b3)) {
-		if (gTest)
-			std::cout << "b1 collides with b3" << std::endl;
-		gTest = false;
-	}*/
 }
 
 void Game::render() {
@@ -126,15 +117,10 @@ void Game::render() {
 		look.getX(), look.getY(), look.getZ(),
 		up.getX(), up.getY(), up.getZ());
 
-	// some plane below
-	glColor3f(1.0f, 0.9f, 1.0f);
-
 	ground->draw();
 
-	glColor3f(0.5f, 0.5f, 0.2f);
-	b1->draw();
-	b2->draw();
-	//b3->draw();
+	for (auto cube : cubes)
+		cube->draw();
 
 	gfx->drawUI();
 
