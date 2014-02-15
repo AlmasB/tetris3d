@@ -81,10 +81,8 @@ void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
 	if (gTest) {
-		//if (b1->getCenter().getY() > 0)
-			b1->center += gravity;
-		//if (b2->center.getY() > 0)
-			b2->center += gravity;
+		b1->center += gravity;	// stop individually to test whether works
+		b2->center += gravity;
 	}
 
 	if (camera->getPosition().getY() > 0)

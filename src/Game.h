@@ -17,7 +17,7 @@ class Game {
 
 		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100);
 
-		Cube * b1 = new Cube(Point3(0, 5, 0), 4.0f);
+		Cube * b1 = new Cube(Point3(-8, 5, 0), 4.0f);
 		Cube * b2 = new Cube(Point3(4, 6, -6), 5.0f);
 
 		bool running;

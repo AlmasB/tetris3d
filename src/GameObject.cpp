@@ -78,12 +78,12 @@ void HorizontalPlane::draw() {
 }
 
 bool HorizontalPlane::collidesWith(const BoundingBox & box) {
-	//std::cout << center.getY() << std::endl;
-
-	//std::cout << box.center.getY() - box.halfDistY.getY() << std::endl;
+	Rect plane = { (int)-halfDistX.getX(), (int)-halfDistZ.getZ(), 2 * (int)halfDistX.getX(), 2 * (int)halfDistZ.getZ() };
+	Point2 p = { (int)box.center.getX(), (int)box.center.getY() };
 
 	return center.getY() > box.center.getY() - box.halfDistY.getY() - 0.05
-		&& center.getY() < box.center.getY() - box.halfDistY.getY() + 0.05;
+		&& center.getY() < box.center.getY() - box.halfDistY.getY() + 0.05
+		&& plane.contains(p);
 
 	/*return center.getY() == box.center.getY() + box.halfDistY.getY() 
 		|| center.getY() == box.center.getY() - box.halfDistY.getY();*/

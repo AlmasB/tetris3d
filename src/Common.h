@@ -58,6 +58,17 @@ struct Point2 {
 	int x, y;
 };
 
+struct Rectangle2 {
+	int x, y, w, h;
+
+	inline bool contains(const Point2 & p) {
+		return p.x >= x && p.x <= x + w
+			&& p.y >= y && p.y <= y + h;
+	}
+};
+
+typedef Rectangle2 Rect;
+
 
 
 
