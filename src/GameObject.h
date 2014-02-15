@@ -21,6 +21,8 @@ class GameObject : public BoundingBox {
 		GameObject(const Point3 &, float, float, float, RGBColor);
 		void move(const Vector3 &);
 		void setDistZ(float);
+		bool alive;
+
 		//virtual void draw() = 0;	// revisit that
 };
 

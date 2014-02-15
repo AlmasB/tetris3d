@@ -6,10 +6,15 @@ Game::Game() : running(true), gTest(true) {
 	eventSystem = new EventEngine();
 
 	cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(4, 6, -6), 5.0f, COLOR_GREEN));
+	cubes.push_back(new Cube(Point3(4, 6, -6), 4.0f, COLOR_GREEN));
 	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_GREEN));
 	cubes.push_back(new Cube(Point3(15, 5, -3), 2.0f, COLOR_RED));
 	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));
+
+	bullet = new Cube(Point3(0, 0, 0), 3.0f, COLOR_BLUE);
+	bullet->alive = false;
+
+	selected = NULL;
 }
 
 Game::~Game() {
@@ -35,8 +40,6 @@ bool Game::init() {
 	return true;
 }
 
-
-
 void Game::runMainLoop() {
 	Uint32 start, end;
 
@@ -58,16 +61,29 @@ void Game::runMainLoop() {
 }
 
 void Game::handleKeyEvents() {
-	if (eventSystem->isPressed(Key::W))
-		camera->moveForward();
-	if (eventSystem->isPressed(Key::S))
-		camera->moveBack();
-	if (eventSystem->isPressed(Key::A))
-		camera->moveLeft();
-	if (eventSystem->isPressed(Key::D))
-		camera->moveRight();
-	if (eventSystem->isPressed(Key::SPACE))
-		camera->moveUp();
+	if (selected == NULL) {
+		if (eventSystem->isPressed(Key::W))
+			camera->moveForward();
+		if (eventSystem->isPressed(Key::S))
+			camera->moveBack();
+		if (eventSystem->isPressed(Key::A))
+			camera->moveLeft();
+		if (eventSystem->isPressed(Key::D))
+			camera->moveRight();
+		if (eventSystem->isPressed(Key::SPACE))
+			camera->moveUp();
+	}
+	else {
+		if (eventSystem->isPressed(Key::W))
+			selected->move(camera->getDirection());
+		if (eventSystem->isPressed(Key::S))
+			selected->move(camera->getDirection()*(-1.0f));
+		if (eventSystem->isPressed(Key::A))
+			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::D))
+			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
+	}
+
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
 }
@@ -79,27 +95,47 @@ void Game::handleMouseEvents() {
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		//cout << "Left click" << endl;
+		bullet->center = camera->getPosition();
+		bullet->alive = true;
 	}
 
 	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
 		//cout << "Right click" << endl;
+		selected = NULL;
 	}
 }
 
 void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
-	ground->setDistZ(ground->halfDistZ.getZ() * 2 - 0.1f);
-	ground->move(Vector3(0, 0, -0.05f));
+	//ground->setDistZ(ground->halfDistZ.getZ() * 2 - 0.1f);
+	//ground->move(Vector3(0, 0, -0.05f));
 
-	cout << ground->halfDistZ.getZ() << endl;
+	//cout << ground->halfDistZ.getZ() << endl;
 
 	for (auto cube : cubes)
-		if (!ground->collidesWith(*cube))
+		if (!ground->collidesWith(*cube) && selected != cube)
 			cube->center += gravity;
 
 	if (camera->getPosition().getY() > 0)
 		camera->moveDown();
+
+	// test
+	if (bullet->alive) {
+		bullet->move(camera->getDirection());	// only get the value when was "shot"
+		if (bullet->center.getZ() < -50)
+			bullet->alive = false;
+	}
+
+	if (bullet->alive) {
+		for (auto cube : cubes) {
+			if (bullet->collidesWith(*cube)) {
+				//cout << "hit" << endl;
+				bullet->alive = false;
+				selected = cube;
+			}
+		}
+	}
 
 	//testCollision();
 }
@@ -126,6 +162,9 @@ void Game::render() {
 
 	for (auto cube : cubes)
 		cube->draw();
+
+	//if (bullet->alive)
+		//bullet->draw();
 
 	gfx->drawUI();
 

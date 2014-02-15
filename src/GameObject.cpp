@@ -2,7 +2,7 @@
 
 GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z), color(_color) {
-
+	alive = true;
 }
 
 void GameObject::move(const Vector3 & v) {
@@ -92,10 +92,9 @@ bool HorizontalPlane::collidesWith(const BoundingBox & box) {
 	Rect plane = { (int)(center.getX()-halfDistX.getX()), (int)(center.getZ()-halfDistZ.getZ()), (int)(2*halfDistX.getX()), (int)(2*halfDistZ.getZ()) };
 	Point2 p = { (int)box.center.getX(), (int)box.center.getZ() };
 
+	// further check the whole plane around center point
+
 	return center.getY() > box.center.getY() - box.halfDistY.getY() - 0.05
 		&& center.getY() < box.center.getY() - box.halfDistY.getY() + 0.05
 		&& plane.contains(p);
-
-	/*return center.getY() == box.center.getY() + box.halfDistY.getY() 
-		|| center.getY() == box.center.getY() - box.halfDistY.getY();*/
 }

@@ -20,6 +20,9 @@ class Game {
 
 		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);
 
+		Cube * bullet;
+		Cube * selected;
+
 		vector<Cube*> cubes;
 
 		bool running;
