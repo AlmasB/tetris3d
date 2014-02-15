@@ -19,6 +19,8 @@ class GameObject : public BoundingBox {
 		RGBColor color;
 	public:
 		GameObject(const Point3 &, float, float, float, RGBColor);
+		void move(const Vector3 &);
+		void setDistZ(float);
 		//virtual void draw() = 0;	// revisit that
 };
 

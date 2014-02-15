@@ -89,6 +89,11 @@ void Game::handleMouseEvents() {
 void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
+	ground->setDistZ(ground->halfDistZ.getZ() * 2 - 0.1f);
+	ground->move(Vector3(0, 0, -0.05f));
+
+	cout << ground->halfDistZ.getZ() << endl;
+
 	for (auto cube : cubes)
 		if (!ground->collidesWith(*cube))
 			cube->center += gravity;

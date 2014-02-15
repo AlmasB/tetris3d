@@ -5,6 +5,13 @@ GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBCol
 
 }
 
+void GameObject::move(const Vector3 & v) {
+	center += v;
+}
+
+void GameObject::setDistZ(float dist) {
+	halfDistZ = Vector3(0, 0, dist / 2.0f);
+}
 
 
 Cube::Cube(const Point3 & _center, float size, RGBColor _color) 
@@ -82,8 +89,8 @@ void HorizontalPlane::draw() {
 }
 
 bool HorizontalPlane::collidesWith(const BoundingBox & box) {
-	Rect plane = { (int)-halfDistX.getX(), (int)-halfDistZ.getZ(), 2 * (int)halfDistX.getX(), 2 * (int)halfDistZ.getZ() };
-	Point2 p = { (int)box.center.getX(), (int)box.center.getY() };
+	Rect plane = { (int)(center.getX()-halfDistX.getX()), (int)(center.getZ()-halfDistZ.getZ()), (int)(2*halfDistX.getX()), (int)(2*halfDistZ.getZ()) };
+	Point2 p = { (int)box.center.getX(), (int)box.center.getZ() };
 
 	return center.getY() > box.center.getY() - box.halfDistY.getY() - 0.05
 		&& center.getY() < box.center.getY() - box.halfDistY.getY() + 0.05

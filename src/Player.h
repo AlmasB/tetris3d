@@ -3,9 +3,10 @@
 
 #include "GameObject.h"
 
-class Player : public GameObject {
+class Player : public Cube {
 	private:
 	public:
+		Player();
 };
 
 
