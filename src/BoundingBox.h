@@ -36,9 +36,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 
 
-#ifndef __BOX_H__
-#define __BOX_H__
+#ifndef __BBOX_H__
+#define __BBOX_H__
 
+#include <iostream>
 #include <utility>
 
 #include <SDL_opengl.h>
@@ -51,17 +52,22 @@ static Vector3 UNIT_Z_AXIS(0.0, 0.0, 1.0);
 
 enum AXIS { X, Y, Z };
 
-class Box {
+// only considering symmetric for now
+class BoundingBox {
 	private:
+	protected:
+		
+		
 	public:
-		Point3 center;
+		Vector3 halfDistX, halfDistY, halfDistZ;//make protected
+		BoundingBox(const Point3 &, float, float, float);
+		Point3 center;	// make protected
+		Point3 getCenter();
 
-		Box(const Point3 &);
-		Box(float, float, float);
-		void draw();
-
-		bool collidesWith(const Box &);
-		std::pair<float, float> projectOntoAxis(const Box &, enum AXIS);
+		virtual bool collidesWith(const BoundingBox &);
+		std::pair<float, float> projectOntoAxis(const BoundingBox &, enum AXIS);
 };
+
+typedef BoundingBox BBox;
 
 #endif

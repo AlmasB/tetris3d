@@ -8,8 +8,8 @@ Game::Game() : running(true), gTest(true) {
 
 Game::~Game() {
 	delete b1;
-	delete b2;
-	delete b3;
+	//delete b2;
+	//delete b3;
 	delete camera;
 	delete eventSystem;
 	delete gfx;
@@ -81,12 +81,10 @@ void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
 	if (gTest) {
-		if (b1->center.getY() > 0)
+		//if (b1->getCenter().getY() > 0)
 			b1->center += gravity;
-		if (b2->center.getY() > 0)
+		//if (b2->center.getY() > 0)
 			b2->center += gravity;
-		if (b3->center.getY() > 0)
-			b3->center += gravity;
 	}
 
 	if (camera->getPosition().getY() > 0)
@@ -96,10 +94,15 @@ void Game::update() {
 }
 
 void Game::testCollision() {
-	if (b1->collidesWith(*b2)) {
-		std::cout << "b1 collides with b2" << std::endl;
+	if (ground->collidesWith(*b1)) {
+		if (gTest) {
+			std::cout << "b1 collides with b2" << std::endl;
+			std::cout << b1->center.getY() - b1->halfDistY.getY() << std::endl;
+		}
+		gTest = false;
 	}
 
+	/*
 	if (b2->collidesWith(*b3)) {
 		std::cout << "b2 collides with b3" << std::endl;
 	}
@@ -108,7 +111,7 @@ void Game::testCollision() {
 		if (gTest)
 			std::cout << "b1 collides with b3" << std::endl;
 		gTest = false;
-	}
+	}*/
 }
 
 void Game::render() {
@@ -128,17 +131,12 @@ void Game::render() {
 	// some plane below
 	glColor3f(1.0f, 0.9f, 1.0f);
 
-	glBegin(GL_QUADS);
-	glVertex3f(-5.0f, -1.0f, -50.0f);
-	glVertex3f(-5.0f, -1.0f, 50.0f);
-	glVertex3f(5.0f, -1.0f, 50.0f);
-	glVertex3f(5.0f, -1.0f, -50.0f);
-	glEnd();
+	ground->draw();
 
 	glColor3f(0.5f, 0.5f, 0.2f);
 	b1->draw();
 	b2->draw();
-	b3->draw();
+	//b3->draw();
 
 	gfx->drawUI();
 

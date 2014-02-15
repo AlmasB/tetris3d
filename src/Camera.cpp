@@ -29,7 +29,7 @@ void Camera::moveUp() {
 }
 
 void Camera::moveDown() {
-	position += Vector3(0, -0.5 * speed, 0);
+	position += Vector3(0, -0.5f * speed, 0);
 }
 
 void Camera::lookUp(float units) {

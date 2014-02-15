@@ -5,7 +5,7 @@
 
 #include "GraphicsEngine.h"
 #include "EventEngine.h"
-#include "Box.h"
+#include "GameObject.h"
 
 using namespace std;	// for debugging
 
@@ -15,9 +15,10 @@ class Game {
 		Camera * camera;
 		EventEngine * eventSystem;
 
-		Box * b1 = new Box(5, 3, -7);
-		Box * b2 = new Box(0, 0, -10);
-		Box * b3 = new Box(4, 6, -6);
+		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100);
+
+		Cube * b1 = new Cube(Point3(0, 5, 0), 4.0f);
+		Cube * b2 = new Cube(Point3(4, 6, -6), 5.0f);
 
 		bool running;
 		bool gTest;
