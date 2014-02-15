@@ -67,6 +67,14 @@ void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 	camera->lookRight(pos.x * 0.0035f);
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
+
+	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
+		cout << "Left click" << endl;
+	}
+
+	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
+		cout << "Right click" << endl;
+	}
 }
 
 void Game::update() {
@@ -121,10 +129,10 @@ void Game::render() {
 	glColor3f(1.0f, 0.9f, 1.0f);
 
 	glBegin(GL_QUADS);
-	glVertex3f(-100.0f, -1.0f, -100.0f);
-	glVertex3f(-100.0f, -1.0f, 100.0f);
-	glVertex3f(100.0f, -1.0f, 100.0f);
-	glVertex3f(100.0f, -1.0f, -100.0f);
+	glVertex3f(-5.0f, -1.0f, -50.0f);
+	glVertex3f(-5.0f, -1.0f, 50.0f);
+	glVertex3f(5.0f, -1.0f, 50.0f);
+	glVertex3f(5.0f, -1.0f, -50.0f);
 	glEnd();
 
 	glColor3f(0.5f, 0.5f, 0.2f);

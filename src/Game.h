@@ -7,6 +7,7 @@
 #include "EventEngine.h"
 #include "Box.h"
 
+using namespace std;	// for debugging
 
 class Game {
 	private:

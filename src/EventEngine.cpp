@@ -4,6 +4,9 @@ EventEngine::EventEngine() {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
+
+	buttons[Mouse::BTN_LEFT] = false;
+	buttons[Mouse::BTN_RIGHT] = false;
 }
 
 void EventEngine::pollEvents() {
@@ -11,6 +14,9 @@ void EventEngine::pollEvents() {
 		if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.repeat == 0) {
 			updateKeys(event.key.keysym.sym, event.type == SDL_KEYDOWN);
 		}
+
+		buttons[Mouse::BTN_LEFT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) == 0);
+		buttons[Mouse::BTN_RIGHT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) == 0);
 	}
 }
 
@@ -37,6 +43,24 @@ void EventEngine::updateKeys(const SDL_Keycode &key, bool keyDown) {
 
 bool EventEngine::isPressed(Key key) {
 	return keys[key];
+}
+
+bool EventEngine::isPressed(Mouse btn) {
+	return buttons[btn];
+}
+
+bool EventEngine::mouseClicked(Mouse button) {
+	/*switch (button) {
+		case Mouse::BTN_LEFT:
+			return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
+			break;
+		case Mouse::BTN_RIGHT:
+			return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
+			break;
+		default:
+			return false;
+	}*/
+	return false;
 }
 
 Point2 EventEngine::getMouseDPos() {
