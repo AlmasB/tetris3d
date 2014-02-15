@@ -5,7 +5,6 @@
 
 #include "GraphicsEngine.h"
 #include "EventEngine.h"
-#include "Camera.h"
 #include "Box.h"
 
 
@@ -17,9 +16,10 @@ class Game {
 
 		Box * b1 = new Box(5, 3, -7);
 		Box * b2 = new Box(0, 0, -10);
-		Box * b3 = new Box(0, 6, -4);
+		Box * b3 = new Box(4, 6, -6);
 
 		bool running;
+		bool gTest;
 	public:
 		Game();
 		~Game();
@@ -32,6 +32,8 @@ class Game {
 
 		void update();
 		void render();
+
+		void testCollision();
 };
 
 

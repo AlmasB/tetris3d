@@ -24,6 +24,14 @@ void Camera::moveLeft() {
 	position += Vector3(direction.getZ() * speed, 0, -direction.getX() * speed);
 }
 
+void Camera::moveUp() {
+	position += Vector3(0, 4*speed , 0);
+}
+
+void Camera::moveDown() {
+	position += Vector3(0, -0.5 * speed, 0);
+}
+
 void Camera::lookUp(float units) {
 	direction += Vector3(0, units, 0);
 }

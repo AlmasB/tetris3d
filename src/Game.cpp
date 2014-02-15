@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : running(true) {
+Game::Game() : running(true), gTest(true) {
 	camera = new Camera();
 	gfx = new GraphicsEngine();
 	eventSystem = new EventEngine();
@@ -25,6 +25,8 @@ bool Game::init() {
 
 	return true;
 }
+
+
 
 void Game::runMainLoop() {
 	Uint32 start, end;
@@ -55,6 +57,8 @@ void Game::handleKeyEvents() {
 		camera->moveLeft();
 	if (eventSystem->isPressed(Key::D))
 		camera->moveRight();
+	if (eventSystem->isPressed(Key::SPACE))
+		camera->moveUp();
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
 }
@@ -68,12 +72,35 @@ void Game::handleMouseEvents() {
 void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
-	if (b1->center.getY() > 0)
-		b1->center += gravity;
-	if (b2->center.getY() > 0)
-		b2->center += gravity;
-	if (b3->center.getY() > 0)
-		b3->center += gravity;
+	if (gTest) {
+		if (b1->center.getY() > 0)
+			b1->center += gravity;
+		if (b2->center.getY() > 0)
+			b2->center += gravity;
+		if (b3->center.getY() > 0)
+			b3->center += gravity;
+	}
+
+	if (camera->getPosition().getY() > 0)
+		camera->moveDown();
+
+	testCollision();
+}
+
+void Game::testCollision() {
+	if (b1->collidesWith(*b2)) {
+		std::cout << "b1 collides with b2" << std::endl;
+	}
+
+	if (b2->collidesWith(*b3)) {
+		std::cout << "b2 collides with b3" << std::endl;
+	}
+
+	if (b1->collidesWith(*b3)) {
+		if (gTest)
+			std::cout << "b1 collides with b3" << std::endl;
+		gTest = false;
+	}
 }
 
 void Game::render() {

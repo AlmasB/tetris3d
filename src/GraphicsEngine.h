@@ -1,11 +1,13 @@
-#ifndef __GAME_ENGINE_H__
-#define __GAME_ENGINE_H__
+#ifndef __GFX_ENGINE_H__
+#define __GFX_ENGINE_H__
 
 #include <string>
 
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <GL/glu.h>
+
+#include "Camera.h"
 
 /* STRING LITERALS - ERRORS */
 
