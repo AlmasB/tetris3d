@@ -33,6 +33,9 @@ class Game {
 
 		void buildBlock();
 		bool isGameWon();
+
+		void onPrimaryAction();
+		void onSecondaryAction();
 	public:
 		Game();
 		~Game();

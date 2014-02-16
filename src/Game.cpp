@@ -127,8 +127,6 @@ void Game::handleKeyEvents() {
 			camera->moveLeft();
 		if (eventSystem->isPressed(Key::D))
 			camera->moveRight();
-		if (eventSystem->isPressed(Key::SPACE))
-			camera->moveUp();
 	}
 	else {
 		if (eventSystem->isPressed(Key::W))
@@ -140,6 +138,18 @@ void Game::handleKeyEvents() {
 		if (eventSystem->isPressed(Key::D))
 			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
 	}
+
+	if (eventSystem->isPressed(Key::LEFT))
+		camera->lookRight(-1.0f * 0.035f);
+	if (eventSystem->isPressed(Key::RIGHT))
+		camera->lookRight(1.0f * 0.035f);
+	if (eventSystem->isPressed(Key::UP))
+		camera->lookUp(1.0f * 0.035f);
+	if (eventSystem->isPressed(Key::DOWN))
+		camera->lookUp(-1.0f * 0.035f);
+
+	if (eventSystem->isPressed(Key::SPACE))
+		onPrimaryAction();
 
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
@@ -158,26 +168,32 @@ void Game::handleMouseEvents() {
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
-		bullet->center = camera->getPosition();
-		//bullet->alive = true;
-		while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
-			bullet->move(camera->getDirection());
-			for (auto cube : extraCubes) {
-				if (bullet->collidesWith(*cube)) {
-					cube->setLocked(true);
-					//bullet->alive = false;
-					selected = cube;
-					break;
-				}
-			}
-		}
+		onPrimaryAction();
 	}
 
 	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
-		if (selected != NULL) {
-			selected->setLocked(false);
-			selected = NULL;
+		onSecondaryAction();
+	}
+}
+
+void Game::onPrimaryAction() {
+	bullet->center = camera->getPosition();
+	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
+		bullet->move(camera->getDirection());
+		for (auto cube : extraCubes) {
+			if (bullet->collidesWith(*cube)) {
+				cube->setLocked(true);
+				selected = cube;
+				break;
+			}
 		}
+	}
+}
+
+void Game::onSecondaryAction() {
+	if (selected != NULL) {
+		selected->setLocked(false);
+		selected = NULL;
 	}
 }
 
