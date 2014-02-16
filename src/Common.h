@@ -1,6 +1,8 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#include <math.h>
+
 typedef unsigned int uint;
 
 class Point3;
@@ -53,6 +55,14 @@ class Point3 {
 		inline float getY() const { return y; }
 		inline float getZ() const { return z; }
 };
+
+inline float distanceBetween(const Point3 & p1, const Point3 & p2) {
+	float dx = p2.getX() - p1.getX();
+	float dy = p2.getY() - p1.getY();
+	float dz = p2.getZ() - p1.getZ();
+
+	return sqrt(dx*dx + dy*dy + dz*dz);
+}
 
 struct Point2 {
 	int x, y;

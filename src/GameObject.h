@@ -12,15 +12,18 @@ static const RGBColor COLOR_BLUE = { 0, 0, 255 };
 static const RGBColor COLOR_GRAY = { 128, 128, 128 };
 static const RGBColor COLOR_RED = { 255, 0, 0 };
 static const RGBColor COLOR_GREEN = { 0, 255, 0 };
+static const RGBColor COLOR_YELLOW = { 255, 255, 0 };
 
 class GameObject : public BoundingBox {
 	private:
 	protected:
 		RGBColor color;
+		bool locked;
 	public:
 		GameObject(const Point3 &, float, float, float, RGBColor);
 		void move(const Vector3 &);
 		void setDistZ(float);
+		void setLocked(bool b);
 		bool alive;
 
 		//virtual void draw() = 0;	// revisit that

@@ -6,18 +6,20 @@ Game::Game() : running(true), gTest(true) {
 	eventSystem = new EventEngine();
 
 	cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(4, 6, -6), 4.0f, COLOR_GREEN));
-	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_GREEN));
+	cubes.push_back(new Cube(Point3(4, 6, -6), 4.0f, COLOR_BLUE));
+	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_RED));
 	cubes.push_back(new Cube(Point3(15, 5, -3), 2.0f, COLOR_RED));
 	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));
 
-	bullet = new Cube(Point3(0, 0, 0), 3.0f, COLOR_BLUE);
+	bullet = new Cube(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;
 
 	selected = NULL;
 }
 
 Game::~Game() {
+
+	// TODO: clean after everything is written
 
 	for (auto cube : cubes)
 		delete cube;
@@ -94,14 +96,26 @@ void Game::handleMouseEvents() {
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
-		//cout << "Left click" << endl;
 		bullet->center = camera->getPosition();
-		bullet->alive = true;
+		//bullet->alive = true;
+		while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
+			bullet->move(camera->getDirection());
+			for (auto cube : cubes) {
+				if (bullet->collidesWith(*cube)) {
+					cube->setLocked(true);
+					//bullet->alive = false;
+					selected = cube;
+					break;
+				}
+			}
+		}
 	}
 
 	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
-		//cout << "Right click" << endl;
-		selected = NULL;
+		if (selected != NULL) {
+			selected->setLocked(false);
+			selected = NULL;
+		}
 	}
 }
 
@@ -117,27 +131,8 @@ void Game::update() {
 		if (!ground->collidesWith(*cube) && selected != cube)
 			cube->center += gravity;
 
-	if (camera->getPosition().getY() > 0)
+	if (camera->getPosition().getY() > 0)	// for camera gravity, will be replaced by proper
 		camera->moveDown();
-
-	// test
-	if (bullet->alive) {
-		bullet->move(camera->getDirection());	// only get the value when was "shot"
-		if (bullet->center.getZ() < -50)
-			bullet->alive = false;
-	}
-
-	if (bullet->alive) {
-		for (auto cube : cubes) {
-			if (bullet->collidesWith(*cube)) {
-				//cout << "hit" << endl;
-				bullet->alive = false;
-				selected = cube;
-			}
-		}
-	}
-
-	//testCollision();
 }
 
 void Game::testCollision() {
@@ -162,9 +157,6 @@ void Game::render() {
 
 	for (auto cube : cubes)
 		cube->draw();
-
-	//if (bullet->alive)
-		//bullet->draw();
 
 	gfx->drawUI();
 

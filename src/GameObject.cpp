@@ -3,6 +3,7 @@
 GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z), color(_color) {
 	alive = true;
+	locked = false;
 }
 
 void GameObject::move(const Vector3 & v) {
@@ -13,6 +14,9 @@ void GameObject::setDistZ(float dist) {
 	halfDistZ = Vector3(0, 0, dist / 2.0f);
 }
 
+void GameObject::setLocked(bool b) {
+	locked = b;
+}
 
 Cube::Cube(const Point3 & _center, float size, RGBColor _color) 
 	: GameObject(_center, size, size, size, _color) {
@@ -23,7 +27,12 @@ void Cube::draw() {
 	glPushMatrix();
 	glTranslatef(center.getX(), center.getY(), center.getZ());
 
-	glColor3f(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f);
+	if (locked){
+		glColor3f(COLOR_YELLOW.r / 255.0f, COLOR_YELLOW.g / 255.0f, COLOR_YELLOW.b / 255.0f);
+	}
+	else {
+		glColor3f(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f);
+	}
 
 	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
 	// Top face (y = 1.0f)
