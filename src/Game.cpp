@@ -34,7 +34,7 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	srand(0);
 
-	ground = make_shared<HPlane>(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);	// reconsider ground Y
+	ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
 	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
@@ -144,7 +144,7 @@ void Game::handleMouseEvents() {
 
 void Game::onPrimaryAction() {
 	bullet->center = camera->getPosition();
-	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
+	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
@@ -166,8 +166,10 @@ void Game::onSecondaryAction() {
 void Game::update() {
 	Vector3 gravity(0, -0.01f, 0);
 
-	//ground->setDistZ(ground->halfDistZ.getZ() * 2 - 0.1f);
-	//ground->move(Vector3(0, 0, -0.05f));
+	float value = 0.0025f;
+
+	ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
+	ground->move(Vector3(0, 0, -value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -181,6 +183,7 @@ void Game::update() {
 	buildBlock();
 	
 	if (isGameWon()) {
+		step++;
 		mainBlocks.clear();
 		extraBlocks.clear();
 		newBlocks();
@@ -273,14 +276,14 @@ void Game::newBlocks() {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3 p(getValue(j), i*2.0f, -5.0f - 2*step);
+				Point3 p(getValue(j), i*2.0f, -5.0f - 4*step);
 				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 3.0f*step);
+		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 5.0f*step);
 		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
 	}
 }
