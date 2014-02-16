@@ -63,6 +63,8 @@ Game::Game() : running(true), gTest(true) {
 	extraCubes.push_back(new Cube(Point3(-2, 6, 25), 2.0f, COLOR_RED));
 	extraCubes.push_back(new Cube(Point3(4, 7, 27), 2.0f, COLOR_RED));
 	extraCubes.push_back(new Cube(Point3(3, 8, 35), 2.0f, COLOR_RED));
+	extraCubes.push_back(new Cube(Point3(5, 10, 33), 2.0f, COLOR_RED));
+	extraCubes.push_back(new Cube(Point3(-4, 8, 29), 2.0f, COLOR_RED));
 
 	bullet = new Cube(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;
@@ -188,11 +190,50 @@ void Game::update() {
 	//cout << ground->halfDistZ.getZ() << endl;
 
 	for (auto cube : extraCubes)
-		if (!ground->collidesWith(*cube) && selected != cube)	// kinda gravity for now
+		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
 			cube->center += gravity;
 
 	if (camera->getPosition().getY() > 0)	// for camera gravity, will be replaced by proper
 		camera->moveDown();
+
+	buildBlock();
+	
+	if (isGameWon() && cubes.size() > 0)
+		cubes.clear();
+}
+
+// TODO: clean this
+void Game::buildBlock() {
+	if (selected != NULL) {
+		for (uint i = 0; i < 3; ++i) {
+			for (uint j = 0; j < 5; ++j) {
+				if (!blocks[j][i]) {
+					Point3 c(getValue(j), i*2.0f, -5.0f);
+					if (distanceBetween(c, selected->center) < 5.0f) {
+						selected->center = c;
+						selected->setLocked(false);
+						selected->alive = false;
+						cubes.push_back(selected);
+						blocks[j][i] = true;
+						selected = NULL;
+						return;
+					}
+				}
+			}
+		}
+	}
+}
+
+bool Game::isGameWon() {
+	for (uint i = 0; i < 3; ++i) {
+		for (uint j = 0; j < 5; ++j) {
+			if (!blocks[j][i]) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 void Game::testCollision() {
@@ -218,8 +259,9 @@ void Game::render() {
 	for (auto cube : cubes)
 		cube->draw();
 
-	for (auto cube : extraCubes)
-		cube->draw();
+	for (auto cube : extraCubes)	// TODO: clean
+		if (cube->alive)
+			cube->draw();
 
 	gfx->drawUI();
 

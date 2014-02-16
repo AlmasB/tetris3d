@@ -30,6 +30,9 @@ class Game {
 
 		bool running;
 		bool gTest;
+
+		void buildBlock();
+		bool isGameWon();
 	public:
 		Game();
 		~Game();
