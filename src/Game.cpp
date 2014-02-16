@@ -135,6 +135,12 @@ void Game::handleKeyEvents() {
 
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
+
+	// relative x and y are wrong on VM Fedora 20
+	// TODO: check on real machine
+
+	cout << pos.x << " " << pos.y << endl;
+
 	camera->lookRight(pos.x * 0.0035f);
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
 

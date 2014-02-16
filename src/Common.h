@@ -14,14 +14,14 @@ class Vector3 {
 	public:
 		Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 
-		inline Vector3& operator += (const Vector3 & v) {
+		inline Vector3& operator += (Vector3 v) {
 			this->x += v.getX();
 			this->y += v.getY();
 			this->z += v.getZ();
 			return *this;
 		}
 
-		inline Vector3 operator + (const Vector3 & v) {
+		inline Vector3 operator + (Vector3 v) {
 			return Vector3(x + v.x, y + v.y, z + v.z);
 		}
 
@@ -40,11 +40,11 @@ class Point3 {
 	public:
 		Point3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 		
-		inline Point3 operator + (Vector3 & v) const {
+		inline Point3 operator + (Vector3 v) const {
 			return Point3(this->x + v.getX(), this->y + v.getY(), this->z + v.getZ());
 		}
 
-		inline Point3& operator += (const Vector3 & v) {
+		inline Point3& operator += (Vector3 v) {
 			this->x += v.getX();
 			this->y += v.getY();
 			this->z += v.getZ();
