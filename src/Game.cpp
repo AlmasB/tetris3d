@@ -22,6 +22,16 @@ Game::Game() : running(true), gTest(true) {
 	gfx = new GraphicsEngine();
 	eventSystem = new EventEngine();
 
+	// some platform related experiments
+
+#if defined(_WIN64)
+	cout << "WIN64" << endl;
+#elif defined(_WIN32)
+	cout << "WIN32" << endl;
+#elif defined(__linux__)
+	cout << "LINUX" << endl;
+#endif
+
 	srand(0);
 
 	/*cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
@@ -138,8 +148,9 @@ void Game::handleMouseEvents() {
 
 	// relative x and y are wrong on VM Fedora 20
 	// TODO: check on real machine
+	// POSSIBLE FIX:  since values are 20000+ for relative, perhaps divide by 1000 or adjust just for VM for now ?
 
-	cout << pos.x << " " << pos.y << endl;
+	//cout << pos.x << " " << pos.y << endl;
 
 	camera->lookRight(pos.x * 0.0035f);
 	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
