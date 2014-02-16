@@ -74,12 +74,9 @@ void Game::runMainLoop() {
 
 	while (running) {
 		start = SDL_GetTicks();
-
-		
-
 		eventSystem->pollEvents();
 
-		cout << "Polled Events" << endl;
+		//cout << "Polled Events" << endl;
 
 		handleKeyEvents();
 		handleMouseEvents();
