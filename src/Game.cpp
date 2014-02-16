@@ -18,9 +18,12 @@ float getValue(uint n) {
 }
 
 Game::Game() : running(true), gTest(true), step(0) {
-	camera = make_unique<Camera>();
-	gfx =  make_unique<GraphicsEngine>();
-	eventSystem = make_unique<EventEngine>();
+	//camera = make_unique<Camera>();
+	camera = unique_ptr<Camera>(new Camera());
+	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
+	eventSystem = unique_ptr<EventEngine>(new EventEngine());
+	//gfx =  make_unique<GraphicsEngine>();
+	//eventSystem = make_unique<EventEngine>();
 
 	// some platform related experiments
 
@@ -44,6 +47,8 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;
+
+	cout << "Game::Game() finished" << endl;
 }
 
 Game::~Game() {
@@ -64,11 +69,17 @@ bool Game::init() {
 }
 
 void Game::runMainLoop() {
+	cout << "Entered Main Loop" << endl;
 	Uint32 start, end;
 
 	while (running) {
 		start = SDL_GetTicks();
+
+		
+
 		eventSystem->pollEvents();
+
+		cout << "Polled Events" << endl;
 
 		handleKeyEvents();
 		handleMouseEvents();
