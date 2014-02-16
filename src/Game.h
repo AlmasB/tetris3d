@@ -18,12 +18,15 @@ class Game {
 		Camera * camera;
 		EventEngine * eventSystem;
 
-		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);
+		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);	// reconsider ground Y
 
 		Cube * bullet;
 		Cube * selected;
 
+		bool blocks[5][3];
+
 		vector<Cube*> cubes;
+		vector<Cube*> extraCubes;
 
 		bool running;
 		bool gTest;

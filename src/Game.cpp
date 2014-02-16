@@ -1,15 +1,58 @@
 #include "Game.h"
 
+float getValue(uint n) {
+	switch (n) {
+		case 0:
+			return -4;
+		case 1:
+			return -2;
+		case 2:
+			return 0;
+		case 3:
+			return 2;
+		case 4:
+			return 4;
+	}
+
+	return -20;	// will fix
+}
+
 Game::Game() : running(true), gTest(true) {
 	camera = new Camera();
 	gfx = new GraphicsEngine();
 	eventSystem = new EventEngine();
 
-	cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
+	srand(0);
+
+	/*cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
 	cubes.push_back(new Cube(Point3(4, 6, -6), 4.0f, COLOR_BLUE));
 	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_RED));
 	cubes.push_back(new Cube(Point3(15, 5, -3), 2.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));
+	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));*/
+
+	// where do we want to "actually" draw the ground line 0,0,0 ?
+	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
+
+	for (uint i = 0; i < 3; ++i) {
+		for (uint j = 0; j < 5; ++j) {
+			blocks[j][i] = rand() % 2 == 1;
+			if (blocks[j][i]) {
+				cubes.push_back(new Cube(Point3(getValue(j),i*2.0f,-5.0f), 2.0f, COLOR_BLUE));
+			}
+		}
+	}
+
+
+	cubes.push_back(new Cube(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA));
+
+	/*cubes.push_back(new Cube(Point3(0, 0, -5), 2.0f, COLOR_BLUE));
+	cubes.push_back(new Cube(Point3(0, 2, -5), 2.0f, COLOR_RED));
+	cubes.push_back(new Cube(Point3(0, 4, -5), 2.0f, COLOR_BLUE)); */
+
+	extraCubes.push_back(new Cube(Point3(-4, 5, 30), 2.0f, COLOR_RED));
+	extraCubes.push_back(new Cube(Point3(-2, 6, 25), 2.0f, COLOR_RED));
+	extraCubes.push_back(new Cube(Point3(4, 7, 27), 2.0f, COLOR_RED));
+	extraCubes.push_back(new Cube(Point3(3, 8, 35), 2.0f, COLOR_RED));
 
 	bullet = new Cube(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;
@@ -100,7 +143,7 @@ void Game::handleMouseEvents() {
 		//bullet->alive = true;
 		while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
 			bullet->move(camera->getDirection());
-			for (auto cube : cubes) {
+			for (auto cube : extraCubes) {
 				if (bullet->collidesWith(*cube)) {
 					cube->setLocked(true);
 					//bullet->alive = false;
@@ -127,8 +170,8 @@ void Game::update() {
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
-	for (auto cube : cubes)
-		if (!ground->collidesWith(*cube) && selected != cube)
+	for (auto cube : extraCubes)
+		if (!ground->collidesWith(*cube) && selected != cube)	// kinda gravity for now
 			cube->center += gravity;
 
 	if (camera->getPosition().getY() > 0)	// for camera gravity, will be replaced by proper
@@ -156,6 +199,9 @@ void Game::render() {
 	ground->draw();
 
 	for (auto cube : cubes)
+		cube->draw();
+
+	for (auto cube : extraCubes)
 		cube->draw();
 
 	gfx->drawUI();

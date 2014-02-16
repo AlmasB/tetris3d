@@ -13,6 +13,9 @@ static const RGBColor COLOR_GRAY = { 128, 128, 128 };
 static const RGBColor COLOR_RED = { 255, 0, 0 };
 static const RGBColor COLOR_GREEN = { 0, 255, 0 };
 static const RGBColor COLOR_YELLOW = { 255, 255, 0 };
+static const RGBColor COLOR_GOLD = { 255, 215, 0 };
+static const RGBColor COLOR_BLACK = { 0, 0, 0 };
+static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 
 class GameObject : public BoundingBox {
 	private:
