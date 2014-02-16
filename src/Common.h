@@ -1,6 +1,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#include <cstdlib>
 #include <math.h>
 
 typedef unsigned int uint;
@@ -79,6 +80,13 @@ struct Rectangle2 {
 
 typedef Rectangle2 Rect;
 
+/**
+ * @return
+ *			a random integer value between "min" and "max", both inclusive
+ */
+inline int getRandom(int min, int max) {	// atm no need for random seed
+	return (int)(rand() % (max - min)) + min;
+}
 
 
 

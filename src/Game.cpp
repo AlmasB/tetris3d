@@ -17,10 +17,10 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), gTest(true) {
-	camera = new Camera();
-	gfx = new GraphicsEngine();
-	eventSystem = new EventEngine();
+Game::Game() : running(true), gTest(true), step(0) {
+	camera = make_unique<Camera>();
+	gfx =  make_unique<GraphicsEngine>();
+	eventSystem = make_unique<EventEngine>();
 
 	// some platform related experiments
 
@@ -34,56 +34,22 @@ Game::Game() : running(true), gTest(true) {
 
 	srand(0);
 
-	/*cubes.push_back(new Cube(Point3(-8, 5, 0), 4.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(4, 6, -6), 4.0f, COLOR_BLUE));
-	cubes.push_back(new Cube(Point3(0, 9, -10), 2.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(15, 5, -3), 2.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(3, 10, 15), 3.0f, COLOR_BLUE));*/
+	ground = make_shared<HPlane>(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);	// reconsider ground Y
+	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 
-	for (uint i = 0; i < 3; ++i) {
-		for (uint j = 0; j < 5; ++j) {
-			blocks[j][i] = rand() % 2 == 1;
-			if (blocks[j][i]) {
-				cubes.push_back(new Cube(Point3(getValue(j),i*2.0f,-5.0f), 2.0f, COLOR_BLUE));
-			}
-		}
-	}
+	newBlocks();
 
-
-	cubes.push_back(new Cube(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA));
-
-	/*cubes.push_back(new Cube(Point3(0, 0, -5), 2.0f, COLOR_BLUE));
-	cubes.push_back(new Cube(Point3(0, 2, -5), 2.0f, COLOR_RED));
-	cubes.push_back(new Cube(Point3(0, 4, -5), 2.0f, COLOR_BLUE)); */
-
-	extraCubes.push_back(new Cube(Point3(-4, 5, 30), 2.0f, COLOR_RED));
-	extraCubes.push_back(new Cube(Point3(-2, 6, 25), 2.0f, COLOR_RED));
-	extraCubes.push_back(new Cube(Point3(4, 7, 27), 2.0f, COLOR_RED));
-	extraCubes.push_back(new Cube(Point3(3, 8, 35), 2.0f, COLOR_RED));
-	extraCubes.push_back(new Cube(Point3(5, 10, 33), 2.0f, COLOR_RED));
-	extraCubes.push_back(new Cube(Point3(-4, 8, 29), 2.0f, COLOR_RED));
-
-	bullet = new Cube(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
+	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;
-
-	selected = NULL;
 }
 
 Game::~Game() {
 
 	// TODO: clean after everything is written
-
-	for (auto cube : cubes)
-		delete cube;
-
-	delete ground;
-
-	delete camera;
-	delete eventSystem;
-	delete gfx;
+	// atm only smart pointers, they clean up after themselves dont they?
 }
 
 bool Game::init() {
@@ -180,7 +146,7 @@ void Game::onPrimaryAction() {
 	bullet->center = camera->getPosition();
 	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 25.0f) {
 		bullet->move(camera->getDirection());
-		for (auto cube : extraCubes) {
+		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
 				cube->setLocked(true);
 				selected = cube;
@@ -205,7 +171,7 @@ void Game::update() {
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
-	for (auto cube : extraCubes)
+	for (auto cube : extraBlocks)
 		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
 			cube->center += gravity;
 
@@ -214,8 +180,11 @@ void Game::update() {
 
 	buildBlock();
 	
-	if (isGameWon() && cubes.size() > 0)
-		cubes.clear();
+	if (isGameWon()) {
+		mainBlocks.clear();
+		extraBlocks.clear();
+		newBlocks();
+	}
 }
 
 // TODO: clean this
@@ -229,9 +198,10 @@ void Game::buildBlock() {
 						selected->center = c;
 						selected->setLocked(false);
 						selected->alive = false;
-						cubes.push_back(selected);
+						mainBlocks.push_back(selected);
+						extraBlocks.remove(selected);	// addition
 						blocks[j][i] = true;
-						selected = NULL;
+						selected = NULL;	// or selected.reset() ?
 						return;
 					}
 				}
@@ -271,15 +241,46 @@ void Game::render() {
 		up.getX(), up.getY(), up.getZ());
 
 	ground->draw();
+	prize->draw();
 
-	for (auto cube : cubes)
+	for (auto cube : mainBlocks)
 		cube->draw();
 
-	for (auto cube : extraCubes)	// TODO: clean
+	for (auto cube : extraBlocks)	// TODO: clean
 		if (cube->alive)
 			cube->draw();
 
 	gfx->drawUI();
 
 	gfx->showScreen();
+}
+
+uint Game::numberOfBlocksRequired() {
+	uint count = 0;
+	for (uint i = 0; i < 3; ++i) {
+		for (uint j = 0; j < 5; ++j) {
+			if (!blocks[j][i]) {
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
+void Game::newBlocks() {
+	for (uint i = 0; i < 3; ++i) {
+		for (uint j = 0; j < 5; ++j) {
+			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
+			if (blocks[j][i]) {
+				Point3 p(getValue(j), i*2.0f, -5.0f - 2*step);
+				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
+			}
+		}
+	}
+
+	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
+		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 3.0f*step);
+		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
+	}
 }

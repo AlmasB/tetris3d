@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
+#include <memory>	// for shared_ptr, will add later
 
 #include "GraphicsEngine.h"
 #include "EventEngine.h"
@@ -14,28 +16,35 @@ using namespace std;	// for debugging
 
 class Game {
 	private:
-		GraphicsEngine * gfx;
-		Camera * camera;
-		EventEngine * eventSystem;
+		unique_ptr<GraphicsEngine> gfx;
+		unique_ptr<Camera> camera;
+		unique_ptr<EventEngine> eventSystem;
 
-		HPlane * ground = new HPlane(Point3(0, -1, 0), 10, 0, 100, COLOR_GRAY);	// reconsider ground Y
+		// game objects
+		shared_ptr<HPlane> ground;
 
-		Cube * bullet;
-		Cube * selected;
+		shared_ptr<Cube> prize;
+		shared_ptr<Cube> bullet;
+		shared_ptr<Cube> selected;
 
 		bool blocks[5][3];
 
-		vector<Cube*> cubes;
-		vector<Cube*> extraCubes;
+		list<shared_ptr<Cube>> mainBlocks;
+		list<shared_ptr<Cube>> extraBlocks;
 
 		bool running;
 		bool gTest;
 
+		uint step;
+
 		void buildBlock();
 		bool isGameWon();
+		void newBlocks();
 
 		void onPrimaryAction();
 		void onSecondaryAction();
+
+		uint numberOfBlocksRequired();
 	public:
 		Game();
 		~Game();
