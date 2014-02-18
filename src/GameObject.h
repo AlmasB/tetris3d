@@ -53,8 +53,8 @@ void main()                                                                     
 
 static const char* pVS = "                                                          \n\
 #version 120                                                                        \n\
-								\n\
-attribute vec3 Position;                                                        \n\
+								                                                    \n\
+attribute vec3 Position;                                                            \n\
                                                                                     \n\
 uniform mat4 gWVP;                                                                  \n\
                                                                                     \n\
@@ -63,23 +63,15 @@ void main()                                                                     
     gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
 }";
 
-
 static const char* pFS = "                                                          \n\
 #version 120                                                                        \n\
+						                                                            \n\
+uniform vec4 color;                                                                 \n\
                                                                                     \n\
 void main()                                                                         \n\
 {                                                                                   \n\
-	gl_FragColor = vec4(0.0,0.0,1.0,1.0);  					    \n\
+	gl_FragColor = color;  					                                        \n\
 }";
-
-static const char* pFS2 = "                                                          \n\
-#version 120                                                                        \n\
-                                                                                    \n\
-void main()                                                                         \n\
-{                                                                                   \n\
-	gl_FragColor = vec4(1.0,0.0,0.0,1.0);  					    \n\
-}";
-
 
 
 
@@ -100,38 +92,54 @@ static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 class GameObject : public BoundingBox {
 	private:
 	protected:
-		RGBColor color;
+		
 		bool locked;
+
+		GLuint VBO;
+		GLuint IBO;
+		GLuint gWVPLocation;
+
+		GLuint mycolor;
+
+		int numOfTriangles;
+
+		void AddShader(GLuint, const char*, GLenum);
+		void CompileShaders();
 	public:
-		GameObject(const Point3 &, float, float, float, RGBColor);
+		GameObject(const Point3 &, float, float, float);
 		void move(const Vector3 &);
 		void setDistZ(float);
 		void setLocked(bool b);
 		bool alive;
 
+		RGBColor color;
+
+		void draw(std::shared_ptr<Camera>);
 		//virtual void draw() = 0;	// revisit that
 };
 
-class Cube {
+class Cube : public GameObject {
 	public:
-		GLuint VBO;
+		/*GLuint VBO;
 		GLuint IBO;
 		GLuint gWVPLocation;
 
 		Point3 center;
-
-
-		Cube(const Point3 &, int color);
-		void draw(std::shared_ptr<Camera>);
 		void AddShader(GLuint, const char* , GLenum);
-		void CompileShaders(int color);
+		void CompileShaders();
+		*/
+
+
+		Cube(const Point3 &);
+		//void draw(std::shared_ptr<Camera>);
+		
 };
 
 class HorizontalPlane : public GameObject {
 	public:
-		HorizontalPlane(const Point3 &, float, float, float, RGBColor);
+		HorizontalPlane(const Point3 &, float, float, float);
 		bool collidesWith(const BoundingBox &);
-		void draw();
+		//void draw();
 };
 
 typedef HorizontalPlane HPlane;

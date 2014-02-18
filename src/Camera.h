@@ -16,72 +16,55 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CAMERA_H
-#define	CAMERA_H
+#ifndef __CAMERA_H__
+#define	__CAMERA_H__
 
 #include "Math_3d.h"
 
 class Camera {
+	private:
+		void Init();
+		void Update();
 
-private:
+		Vector3f m_pos;
+		Vector3f m_target;
+		Vector3f m_up;
 
-	void Init();
-	void Update();
+		float m_AngleH;
+		float m_AngleV;
 
-	Vector3f m_pos;
-	Vector3f m_target;
-	Vector3f m_up;
+		float speed;
+	public:
 
-	int m_windowWidth;
-	int m_windowHeight;
+		Camera();	// make singleton
+		Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
 
-	float m_AngleH;
-	float m_AngleV;
+		const Vector3f& GetPos() const
+		{
+			return m_pos;
+		}
 
-	bool m_OnUpperEdge;
-	bool m_OnLowerEdge;
-	bool m_OnLeftEdge;
-	bool m_OnRightEdge;
+		const Vector3f& GetTarget() const
+		{
+			return m_target;
+		}
 
-	Vector2i m_mousePos;
-public:
+		const Vector3f& GetUp() const
+		{
+			return m_up;
+		}
 
-    Camera(int WindowWidth, int WindowHeight);
+		//////////////////////////////////////////////////////
 
-    Camera(int WindowWidth, int WindowHeight, const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
+		void moveForward();
+		void moveBackward();
+		void moveRight();
+		void moveLeft();
 
-    bool OnKeyboard(int Key);
-
-    void OnMouse(int x, int y);
-
-    void OnRender();
-
-    const Vector3f& GetPos() const
-    {
-        return m_pos;
-    }
-
-    const Vector3f& GetTarget() const
-    {
-        return m_target;
-    }
-
-    const Vector3f& GetUp() const
-    {
-        return m_up;
-    }
-
-	//////////////////////////////////////////////////////
-
-	void moveForward();
-	void moveBackward();
-	void moveRight();
-	void moveLeft();
-
-	void lookUp(float);
-	void lookRight(float);
+		void lookUp(float);
+		void lookRight(float);
 
 };
 
-#endif	/* CAMERA_H */
+#endif
 

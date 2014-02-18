@@ -5,7 +5,6 @@
 
 #include <SDL.h>
 #include <GL/glew.h>
-//#include <SDL_opengl.h>
 #include <GL/glu.h>
 
 #include "Camera.h"
@@ -19,6 +18,7 @@
 #define _SDL_ERROR_INIT_OPENGL		    "Failed to create OpenGL context"
 
 #define _GL_ERROR_VSYNC					"Failed to set VSync"
+#define _GL_ERROR_GLEW					"Failed to init GLEW"
 
 #define _ENGINE_ERROR_NONE     ""
 #define _ENGINE_ERROR_INIT_GFX "Failed to init graphics"

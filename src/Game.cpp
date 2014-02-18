@@ -18,14 +18,9 @@ float getValue(uint n) {
 }
 
 Game::Game() : running(true), gTest(true), step(0) {
-	//camera = make_unique<Camera>();
-	camera = shared_ptr<Camera>(new Camera(800, 600));
+	camera = shared_ptr<Camera>(new Camera());
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
-	//gfx =  make_unique<GraphicsEngine>();
-	//eventSystem = make_unique<EventEngine>();
-
-	// some platform related experiments
 
 #if defined(_WIN64)
 	cout << "WIN64" << endl;
@@ -49,11 +44,6 @@ Game::Game() : running(true), gTest(true), step(0) {
 	bullet->alive = false;*/
 
 	cout << "Game::Game() finished" << endl;
-
-	if (camera != NULL)
-		cout << "camera not null" << endl;
-
-	
 }
 
 Game::~Game() {
@@ -75,10 +65,16 @@ bool Game::init() {
 
 void Game::runMainLoop() {
 
-	mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,15.0f),1));
+	/*mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,15.0f),1));
 	mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,25.0f),0));
 
+	mainBlocks.push_back(make_shared<Cube>(Point3(5.0f, 5.0f, 15.0f), 0));
+	mainBlocks.push_back(make_shared<Cube>(Point3(-5.0f, 0.0f, 25.0f), 0));*/
 
+	ground = make_shared<HorizontalPlane>(Point3(0, -2, 15), 10.0f, 1.0f, 50.0f);
+	ground->color = COLOR_GRAY;
+
+	newBlocks();
 
 	cout << "Entered Main Loop" << endl;
 	Uint32 start, end;
@@ -113,23 +109,6 @@ void Game::handleKeyEvents() {
 		camera->moveRight();
 
 
-
-
-
-
-
-
-	//if (selected == NULL) {
-		/*if (eventSystem->isPressed(Key::W))
-			camera->OnKeyboard(1);
-		if (eventSystem->isPressed(Key::S))
-			camera->OnKeyboard(2);
-		if (eventSystem->isPressed(Key::A))
-			camera->OnKeyboard(3);
-		if (eventSystem->isPressed(Key::D))
-			camera->OnKeyboard(4);
-			*/
-	//}
 	//else {
 		/*if (eventSystem->isPressed(Key::W))
 			selected->move(camera->getDirection());
@@ -141,17 +120,18 @@ void Game::handleKeyEvents() {
 			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));*/
 	//}
 
+	// values need tweaking for greater experience
 	if (eventSystem->isPressed(Key::LEFT))
-		camera->OnKeyboard(6);
+		camera->lookRight(-20 * 0.035f);
 	if (eventSystem->isPressed(Key::RIGHT))
-		camera->OnKeyboard(5);
+		camera->lookRight(20 * 0.035f);
 	if (eventSystem->isPressed(Key::UP))
-		camera->OnKeyboard(8);
+		camera->lookUp(-20 * 0.035f);
 	if (eventSystem->isPressed(Key::DOWN))
-		camera->OnKeyboard(7);
+		camera->lookUp(20 * 0.035f);
 
-	//if (eventSystem->isPressed(Key::SPACE))
-		//onPrimaryAction();
+	if (eventSystem->isPressed(Key::SPACE))
+		onPrimaryAction();
 
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
@@ -160,23 +140,8 @@ void Game::handleKeyEvents() {
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
-	/*if (pos.x > 0)
-		camera->OnKeyboard(5);
-	if (pos.x < 0)
-		camera->OnKeyboard(6);
-	if (pos.y > 0)
-		camera->OnKeyboard(7);
-	if (pos.y < 0)
-		camera->OnKeyboard(8);*/
-
-	// relative x and y are wrong on VM Fedora 20
-	// TODO: check on real machine
-	// POSSIBLE FIX:  since values are 20000+ for relative, perhaps divide by 1000 or adjust just for VM for now ?
-
-	//cout << pos.x << " " << pos.y << endl;
-
-	camera->lookRight(pos.x * 0.035f);
-	camera->lookUp(pos.y * 0.035f);
+	camera->lookRight(pos.x * 0.05f);
+	camera->lookUp(pos.y * 0.05f);
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -209,9 +174,6 @@ void Game::onSecondaryAction() {
 }
 
 void Game::update() {
-
-	
-
 	/*Vector3 gravity(0, -0.01f, 0);
 
 	float value = 0.0025f;
@@ -305,13 +267,18 @@ void Game::render() {
 
 	//gfx->showScreen();
 
-	camera->OnRender();
+	//camera->OnRender();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 
 	for (auto cube : mainBlocks)
 		cube->draw(camera);
+
+	for (auto cube : extraBlocks)
+		cube->draw(camera);
+
+	ground->draw(camera);
 	
 
 	//SDL_GL_SwapWindow(gfx->window);
@@ -321,30 +288,30 @@ void Game::render() {
 
 uint Game::numberOfBlocksRequired() {
 	uint count = 0;
-	/*for (uint i = 0; i < 3; ++i) {
+	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
 				count++;
 			}
 		}
-	}*/
+	}
 
 	return count;
 }
 
 void Game::newBlocks() {
-	/*for (uint i = 0; i < 3; ++i) {
+	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3 p(getValue(j), i*2.0f, -5.0f - 4*step);
-				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
+				Point3 p(getValue(j), i*2.0f, 5.0f + 4*step);
+				mainBlocks.push_back(make_shared<Cube>(p));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 5.0f*step);
-		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
-	}*/
+		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
+		extraBlocks.push_back(make_shared<Cube>(p));
+	}
 }

@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <math.h>
+#include <iostream>
 
 typedef unsigned int uint;
 
@@ -87,8 +88,6 @@ typedef Rectangle2 Rect;
 inline int getRandom(int min, int max) {	// atm no need for random seed
 	return (int)(rand() % (max - min)) + min;
 }
-
-
 
 
 
