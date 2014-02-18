@@ -94,43 +94,26 @@ void Game::runMainLoop() {
 
 void Game::handleKeyEvents() {
 	if (selected == NULL) {
-
-		if (eventSystem->isPressed(Key::W))
-			camera->moveForward();
-		if (eventSystem->isPressed(Key::S))
-			camera->moveBackward();
-		if (eventSystem->isPressed(Key::A))
-			camera->moveLeft();
-		if (eventSystem->isPressed(Key::D))
-			camera->moveRight();
-
+		if (eventSystem->isPressed(Key::W)) camera->moveForward();
+		if (eventSystem->isPressed(Key::S)) camera->moveBackward();
+		if (eventSystem->isPressed(Key::A)) camera->moveLeft();
+		if (eventSystem->isPressed(Key::D)) camera->moveRight();
 	}
 	else {
-		if (eventSystem->isPressed(Key::W))
-			selected->move(camera->getDirection());
-		if (eventSystem->isPressed(Key::S))
-			selected->move(camera->getDirection()*(-1.0f));
-		if (eventSystem->isPressed(Key::D))
-			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
-		if (eventSystem->isPressed(Key::A))
-			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::W)) selected->move(camera->getDirection());
+		if (eventSystem->isPressed(Key::S)) selected->move(camera->getDirection()*(-1.0f));
+		if (eventSystem->isPressed(Key::A)) selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::D)) selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
 	}
 
 	// values need tweaking for greater experience
-	if (eventSystem->isPressed(Key::LEFT))
-		camera->lookRight(-20 * 0.035f);
-	if (eventSystem->isPressed(Key::RIGHT))
-		camera->lookRight(20 * 0.035f);
-	if (eventSystem->isPressed(Key::UP))
-		camera->lookUp(-20 * 0.035f);
-	if (eventSystem->isPressed(Key::DOWN))
-		camera->lookUp(20 * 0.035f);
+	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.035f);
+	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.035f);
+	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.035f);
+	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.035f);
 
-	if (eventSystem->isPressed(Key::SPACE))
-		onPrimaryAction();
-
-	if (eventSystem->isPressed(Key::ESC))
-		running = false;
+	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
+	if (eventSystem->isPressed(Key::ESC)) running = false;
 }
 
 void Game::handleMouseEvents() {

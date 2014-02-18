@@ -8,75 +8,65 @@ GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBCol
 	color = _color;
 }
 
-void GameObject::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
-{
-	GLuint ShaderObj = glCreateShader(ShaderType);
-
-	if (ShaderObj == 0) {
-		fprintf(stderr, "Error creating shader type %d\n", ShaderType);
-		getchar();
-		exit(0);
+GLuint GameObject::createShader(const char * shaderCode, GLenum shaderType) {
+	GLuint shader = glCreateShader(shaderType);
+	if (shader == 0) {
+		// couldn't create shader, how do we wanna exit?
 	}
 
-	const GLchar* p[1];
-	p[0] = pShaderText;
-	GLint Lengths[1];
-	Lengths[0] = strlen(pShaderText);
-	glShaderSource(ShaderObj, 1, p, Lengths);
-	glCompileShader(ShaderObj);
-	GLint success;
-	glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
-	if (!success) {
+	const GLchar* strings[1];	// shader code strings
+	strings[0] = shaderCode;
+
+	GLint lengths[1];			// shader code lengths
+	lengths[0] = strlen(shaderCode);
+
+	glShaderSource(shader, 1, strings, lengths);
+	glCompileShader(shader);
+
+	GLint ok;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
+	if (!ok) {
+		cout << "Failed compile" << endl;
+		/*
 		GLchar InfoLog[1024];
 		glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
-		fprintf(stderr, "Error compiling shader type %d: '%s'\n", ShaderType, InfoLog);
+		fprintf(stderr, "Error compiling shader type %d: '%s'\n", ShaderType, InfoLog);	// use here to determine error
+		*/
 		getchar();
-		exit(1);
 	}
 
-	glAttachShader(ShaderProgram, ShaderObj);
+	return shader;
 }
 
-void GameObject::CompileShaders() {
-	GLuint ShaderProgram = glCreateProgram();
-
-	if (ShaderProgram == 0) {
-		fprintf(stderr, "Error creating shader program\n");
-		getchar();
-		exit(1);
+void GameObject::compileShaders() {
+	GLuint program = glCreateProgram();
+	if (program == 0) {
+		// bad
 	}
 
+	glAttachShader(program, createShader(pVS, GL_VERTEX_SHADER));
+	glAttachShader(program, createShader(pFS, GL_FRAGMENT_SHADER));
+	glLinkProgram(program);
 
-	AddShader(ShaderProgram, pVS, GL_VERTEX_SHADER);
-	AddShader(ShaderProgram, pFS, GL_FRAGMENT_SHADER);
-
-	GLint Success = 0;
-	GLchar ErrorLog[1024] = { 0 };
-
-	glLinkProgram(ShaderProgram);
-	glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &Success);
-	if (Success == 0) {
-		glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
-		fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
-		getchar();
-		exit(1);
+	GLint ok;
+	glGetProgramiv(program, GL_LINK_STATUS, &ok);
+	//GLchar ErrorLog[1024] = { 0 };
+	if (!ok) {
+		//glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
+		//fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
 	}
 
-	glValidateProgram(ShaderProgram);
-	glGetProgramiv(ShaderProgram, GL_VALIDATE_STATUS, &Success);
-	if (!Success) {
-		glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
-		fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
-		getchar();
-		exit(1);
+	glValidateProgram(program);
+	glGetProgramiv(program, GL_VALIDATE_STATUS, &ok);
+	if (!ok) {
+		//glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
+		//fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
 	}
 
-	glUseProgram(ShaderProgram);
+	glUseProgram(program);
 
-	gWVPLocation = glGetUniformLocation(ShaderProgram, "gWVP");
-	assert(gWVPLocation != 0xFFFFFFFF);
-
-	mycolor = glGetUniformLocation(ShaderProgram, "color");
+	gWVPLocation = glGetUniformLocation(program, "gWVP");
+	mycolor = glGetUniformLocation(program, "color");
 }
 
 void GameObject::draw(std::shared_ptr<Camera> cam) {
@@ -89,12 +79,16 @@ void GameObject::draw(std::shared_ptr<Camera> cam) {
 	p.SetPerspectiveProj(60.0f, 800, 600, 1.0f, 100.0f);	// 45.0 is a good value
 
 	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
-	glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// color changer
+
+	if (!locked)
+		glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// color changer
+	else
+		glUniform4f(mycolor, COLOR_YELLOW.r / 255.0f, COLOR_YELLOW.g / 255.0f, COLOR_YELLOW.b / 255.0f, 1.0f);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	//glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, 0);
 	glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
@@ -116,7 +110,6 @@ void GameObject::setLocked(bool b) {
 Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 2, _color) {
 	numOfTriangles = 12;
 	//vertex buffer
-	cout << "started creating cube"<<endl;
 
 	Vector3f Vertices[8];
     Vertices[0] = Vector3f(-1.0f, -1.0f, 1.0f);
@@ -129,45 +122,36 @@ Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 
 	Vertices[6] = Vector3f(1.0f, 1.0f, -1.0f);
 	Vertices[7] = Vector3f(-1.0f, 1.0f, -1.0f);
 
-	cout << "assigned vectors" << endl;
 
- 	glGenBuffers(1, &VBO);
-
-	cout <<"genBuffers finished" << endl;
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	cout << "bind buffer finished " << endl;
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-
-
-	cout << "VErtex created" << endl;
+	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
 
 	//element buffer
-	unsigned int Indices[] = { 0, 1, 2,
-                               2, 3, 0,
-                               3, 2, 6,
-                               6, 7, 3,
-								7, 6, 5,
-								5, 4, 7,
-								4,5,1,
-								1,0,4,
-								4,0,3,	
-								3,7,4,
-								1,5,6,
-								6,2,1};
+	unsigned int Indices[] = {
+		0, 1, 2,
+		2, 3, 0,
+		3, 2, 6,
+		6, 7, 3,
+		7, 6, 5,
+		5, 4, 7,
+		4, 5, 1,
+		1, 0, 4,
+		4, 0, 3,
+		3, 7, 4,
+		1, 5, 6,
+		6, 2, 1 
+	};
 
-    glGenBuffers(1, &IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
 
-	cout << "elements created" << endl;
+	compileShaders();
+}
 
-
-	CompileShaders();
-
-	cout << "Compiled shaders" << endl;
+GLuint GameObject::createBuffer(GLenum bufferType, const void *bufferData, GLsizei bufferSize) {
+	GLuint buffer;
+	glGenBuffers(1, &buffer);
+	glBindBuffer(bufferType, buffer);
+	glBufferData(bufferType, bufferSize, bufferData, GL_STATIC_DRAW);
+	return buffer;
 }
 
 HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RGBColor _color)
@@ -218,30 +202,9 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 	Vertices[6] = Vector3f(x/2, y/2, -z/2);
 	Vertices[7] = Vector3f(-x/2, y/2, -z/2);
 
-	/*Vertices[0] = Vector3f(-2.0f, -2.0f, 2.0f);
-	Vertices[1] = Vector3f(2.0f, -2.0f, 2.0f);
-	Vertices[2] = Vector3f(2.0f, 2.0f, 2.0);
-	Vertices[3] = Vector3f(-2.0f, 2.0f, 2.0f);
-
-	Vertices[4] = Vector3f(-2.0f, -2.0f, -2.0f);
-	Vertices[5] = Vector3f(2.0f, -2.0f, -2.0f);
-	Vertices[6] = Vector3f(2.0f, 2.0f, -2.0f);
-	Vertices[7] = Vector3f(-2.0f, 2.0f, -2.0f);*/
-
-	cout << "assigned vectors" << endl;
-
 	glGenBuffers(1, &VBO);
-
-	cout << "genBuffers finished" << endl;
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	cout << "bind buffer finished " << endl;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-
-
-	cout << "VErtex PLANCE created" << endl;
 
 	//element buffer
 	unsigned int Indices[] = { 0, 1, 2,
@@ -257,14 +220,14 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 		1, 5, 6,
 		6, 2, 1 };
 
-	glGenBuffers(1, &IBO);
+
+	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
+
+	/*glGenBuffers(1, &IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);*/
 
-	cout << "elements created" << endl;
-
-
-	CompileShaders();
+	compileShaders();
 }
 
 

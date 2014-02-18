@@ -96,15 +96,17 @@ class GameObject : public BoundingBox {
 		bool locked;
 
 		GLuint VBO;
-		GLuint IBO;
+		GLuint EBO;
 		GLuint gWVPLocation;
 
 		GLuint mycolor;
 
 		int numOfTriangles;
 
-		void AddShader(GLuint, const char*, GLenum);
-		void CompileShaders();
+		GLuint createBuffer(GLenum, const void *, GLsizei);
+		GLuint createShader(const char * shaderCode, GLenum shaderType);
+		void compileShaders();
+
 	public:
 		GameObject(const Point3 &, float, float, float, RGBColor);
 		void move(const Vector3 &);
@@ -120,16 +122,6 @@ class GameObject : public BoundingBox {
 
 class Cube : public GameObject {
 	public:
-		/*GLuint VBO;
-		GLuint IBO;
-		GLuint gWVPLocation;
-
-		Point3 center;
-		void AddShader(GLuint, const char* , GLenum);
-		void CompileShaders();
-		*/
-
-
 		Cube(const Point3 &, RGBColor);
 		//void draw(std::shared_ptr<Camera>);
 		
