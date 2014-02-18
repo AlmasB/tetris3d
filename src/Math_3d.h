@@ -27,8 +27,12 @@
 #include <math.h>
 #endif
 
+#include <iostream>
+
 #define ToRadian(x) (float)(((x) * M_PI / 180.0f))
 #define ToDegree(x) (float)(((x) * 180.0f / M_PI))
+
+using namespace std;
 
 struct Vector2i
 {
@@ -88,7 +92,8 @@ struct Vector3f
 
     void Print() const
     {
-        printf("(%.02f, %.02f, %.02f", x, y, z);
+        //printf("(%.02f, %.02f, %.02f", x, y, z);
+		cout << x << " " << y << " " << z << endl;
     }
 };
 

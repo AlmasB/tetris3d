@@ -21,9 +21,29 @@
 
 #include "Math_3d.h"
 
+class Camera {
 
-class Camera
-{
+private:
+
+	void Init();
+	void Update();
+
+	Vector3f m_pos;
+	Vector3f m_target;
+	Vector3f m_up;
+
+	int m_windowWidth;
+	int m_windowHeight;
+
+	float m_AngleH;
+	float m_AngleV;
+
+	bool m_OnUpperEdge;
+	bool m_OnLowerEdge;
+	bool m_OnLeftEdge;
+	bool m_OnRightEdge;
+
+	Vector2i m_mousePos;
 public:
 
     Camera(int WindowWidth, int WindowHeight);
@@ -51,27 +71,16 @@ public:
         return m_up;
     }
 
-private:
+	//////////////////////////////////////////////////////
 
-    void Init();
-    void Update();
+	void moveForward();
+	void moveBackward();
+	void moveRight();
+	void moveLeft();
 
-    Vector3f m_pos;
-    Vector3f m_target;
-    Vector3f m_up;
+	void lookUp(float);
+	void lookRight(float);
 
-    int m_windowWidth;
-    int m_windowHeight;
-
-    float m_AngleH;
-    float m_AngleV;
-
-    bool m_OnUpperEdge;
-    bool m_OnLowerEdge;
-    bool m_OnLeftEdge;
-    bool m_OnRightEdge;
-
-    Vector2i m_mousePos;
 };
 
 #endif	/* CAMERA_H */

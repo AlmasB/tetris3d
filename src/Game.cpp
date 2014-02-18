@@ -103,8 +103,24 @@ void Game::runMainLoop() {
 }
 
 void Game::handleKeyEvents() {
+	if (eventSystem->isPressed(Key::W))
+		camera->moveForward();
+	if (eventSystem->isPressed(Key::S))
+		camera->moveBackward();
+	if (eventSystem->isPressed(Key::A))
+		camera->moveLeft();
+	if (eventSystem->isPressed(Key::D))
+		camera->moveRight();
+
+
+
+
+
+
+
+
 	//if (selected == NULL) {
-		if (eventSystem->isPressed(Key::W))
+		/*if (eventSystem->isPressed(Key::W))
 			camera->OnKeyboard(1);
 		if (eventSystem->isPressed(Key::S))
 			camera->OnKeyboard(2);
@@ -112,6 +128,7 @@ void Game::handleKeyEvents() {
 			camera->OnKeyboard(3);
 		if (eventSystem->isPressed(Key::D))
 			camera->OnKeyboard(4);
+			*/
 	//}
 	//else {
 		/*if (eventSystem->isPressed(Key::W))
@@ -129,9 +146,9 @@ void Game::handleKeyEvents() {
 	if (eventSystem->isPressed(Key::RIGHT))
 		camera->OnKeyboard(5);
 	if (eventSystem->isPressed(Key::UP))
-		camera->OnKeyboard(7);
-	if (eventSystem->isPressed(Key::DOWN))
 		camera->OnKeyboard(8);
+	if (eventSystem->isPressed(Key::DOWN))
+		camera->OnKeyboard(7);
 
 	//if (eventSystem->isPressed(Key::SPACE))
 		//onPrimaryAction();
@@ -143,14 +160,23 @@ void Game::handleKeyEvents() {
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
+	/*if (pos.x > 0)
+		camera->OnKeyboard(5);
+	if (pos.x < 0)
+		camera->OnKeyboard(6);
+	if (pos.y > 0)
+		camera->OnKeyboard(7);
+	if (pos.y < 0)
+		camera->OnKeyboard(8);*/
+
 	// relative x and y are wrong on VM Fedora 20
 	// TODO: check on real machine
 	// POSSIBLE FIX:  since values are 20000+ for relative, perhaps divide by 1000 or adjust just for VM for now ?
 
 	//cout << pos.x << " " << pos.y << endl;
 
-	//camera->lookRight(pos.x * 0.0035f);
-	//camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
+	camera->lookRight(pos.x * 0.035f);
+	camera->lookUp(pos.y * 0.035f);
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -287,8 +313,6 @@ void Game::render() {
 	for (auto cube : mainBlocks)
 		cube->draw(camera);
 	
-
-
 
 	//SDL_GL_SwapWindow(gfx->window);
 	gfx->showScreen();

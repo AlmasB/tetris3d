@@ -101,14 +101,20 @@ bool Camera::OnKeyboard(int Key)
 
     case 1:
         {
-            m_pos += (m_target * STEP_SCALE);
+            //m_pos += (m_target * STEP_SCALE);
+			  Vector3f tmp = m_target * STEP_SCALE;
+			  tmp.y = 0.0f;
+			  m_pos += tmp;
             Ret = true;
         }
         break;
 
     case 2:
         {
-            m_pos -= (m_target * STEP_SCALE);
+            //m_pos -= (m_target * STEP_SCALE);
+			Vector3f tmp = m_target * STEP_SCALE;
+			tmp.y = 0.0f;
+			m_pos -= tmp;
             Ret = true;
         }
         break;
@@ -138,7 +144,7 @@ bool Camera::OnKeyboard(int Key)
 	case 5:
         {
 						
-            OnMouse(5.0f, 0);
+            OnMouse(10.0f, 0);
             Ret = true;
         }
         break;
@@ -146,7 +152,7 @@ bool Camera::OnKeyboard(int Key)
 	case 6:
         {
 						
-            OnMouse(-5.0f, 0);
+            OnMouse(-10.0f, 0);
             Ret = true;
         }
         break;
@@ -154,7 +160,7 @@ bool Camera::OnKeyboard(int Key)
 	case 7:
         {
 						
-            OnMouse(0, 5.0f);
+            OnMouse(0, 10.0f);
             Ret = true;
         }
         break;
@@ -162,12 +168,15 @@ bool Camera::OnKeyboard(int Key)
 	case 8:
         {
 						
-            OnMouse(0, -5.0f);
+            OnMouse(0, -10.0f);
             Ret = true;
         }
         break;
 
     }
+
+	//m_target.Print();
+	//m_pos.Print();
 
     return Ret;
 }
@@ -280,3 +289,43 @@ void Camera::Update()
     m_up = m_target.Cross(Haxis);
     m_up.Normalize();
 }
+
+
+//////////////////////////////////////////////////////////////////////
+
+void Camera::moveForward() {
+	Vector3f tmp = m_target * STEP_SCALE;
+	tmp.y = 0.0f;
+	m_pos += tmp;
+}
+
+void Camera::moveBackward() {
+	Vector3f tmp = m_target * STEP_SCALE;
+	tmp.y = 0.0f;
+	m_pos -= tmp;
+}
+
+void Camera::moveRight() {
+	Vector3f Right = m_up.Cross(m_target);
+	Right.Normalize();
+	Right *= STEP_SCALE;
+	m_pos += Right;
+}
+
+void Camera::moveLeft() {
+	Vector3f Left = m_target.Cross(m_up);
+	Left.Normalize();
+	Left *= STEP_SCALE;
+	m_pos += Left;
+}
+
+void Camera::lookUp(float units) {
+	m_AngleV += units;
+	Update();
+}
+
+void Camera::lookRight(float units) {
+	m_AngleH += units;
+	Update();
+}
+

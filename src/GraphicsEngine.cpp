@@ -86,7 +86,7 @@ std::string GraphicsEngine::init() {
 void GraphicsEngine::initGL() {
 	SDL_GL_SetSwapInterval(1);
 
-	resize();
+	//resize();
 
 	/*****************************************************************************
 	* Taken from LazyFoo tutorials for proper OpenGL init
@@ -95,12 +95,12 @@ void GraphicsEngine::initGL() {
 
 	// TODO: can anything from below fail ? gluErrorString(glGetError()) ?
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+	/*glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 	glClearDepth(1.0f);                   // Set background depth to farthest
 	glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
 	glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
 	glShadeModel(GL_SMOOTH);   // Enable smooth shading
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections*/
 }
 
 /*****************************************************************************
@@ -201,6 +201,13 @@ void GraphicsEngine::showScreen() {
 }
 
 void GraphicsEngine::drawUI() {
+	/*SDL_SetRenderDrawColor(renderer, 255, 10, 10, 255);
+	SDL_RenderDrawLine(renderer, 5, 0, 5 + 10, +0);
+	SDL_RenderDrawLine(renderer, -5, 0, -5 - 10, +0);
+	SDL_RenderDrawLine(renderer, 0, 0, +0, +10);
+	SDL_RenderDrawLine(renderer, 0, 0, +0, -10);*/
+
+
 	/*glPushMatrix();
 	glLoadIdentity();
 	glOrtho(-400, 400, 300, -300, 0, 1);
