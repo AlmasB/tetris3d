@@ -6,9 +6,10 @@
 #include <list>
 #include <memory>	// for shared_ptr, will add later
 
-#include "GraphicsEngine.h"
+
 #include "EventEngine.h"
 #include "GameObject.h"
+#include "GraphicsEngine.h"
 
 using namespace std;	// for debugging
 
@@ -17,7 +18,7 @@ using namespace std;	// for debugging
 class Game {
 	private:
 		unique_ptr<GraphicsEngine> gfx;
-		unique_ptr<Camera> camera;
+		shared_ptr<Camera> camera;
 		unique_ptr<EventEngine> eventSystem;
 
 		// game objects
@@ -26,6 +27,8 @@ class Game {
 		shared_ptr<Cube> prize;
 		shared_ptr<Cube> bullet;
 		shared_ptr<Cube> selected;
+
+		Cube * c;
 
 		bool blocks[5][3];
 

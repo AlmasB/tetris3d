@@ -4,10 +4,13 @@
 #include <string>
 
 #include <SDL.h>
-#include <SDL_opengl.h>
+#include <GL/glew.h>
+//#include <SDL_opengl.h>
 #include <GL/glu.h>
 
 #include "Camera.h"
+
+#include <iostream>
 
 /* STRING LITERALS - ERRORS */
 
@@ -33,12 +36,13 @@
 
 class GraphicsEngine {
 	private:
-		SDL_Window * window;
+		
 		SDL_GLContext glContext;
 		SDL_Renderer * renderer;
 		GLfloat rot;
 
 	public:
+		SDL_Window * window;
 		GraphicsEngine();
 		~GraphicsEngine();
 		std::string init();

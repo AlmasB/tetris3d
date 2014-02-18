@@ -1,7 +1,87 @@
 #ifndef __GAME_OBJ_H__
 #define __GAME_OBJ_H__
 
+#include <GL/glew.h>
+#include <GL/gl.h>
+
 #include "BoundingBox.h"
+
+#include <memory>
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>
+
+#include <iostream>
+
+
+#include "Pipeline.h"
+#include "Camera.h"
+
+using namespace std;
+
+
+
+
+/*static const char* pVS = "                                                          \n\
+#version 330                                                                        \n\
+                                                                                    \n\
+layout (location = 0) in vec3 Position;                                             \n\
+                                                                                    \n\
+uniform mat4 gWVP;                                                                  \n\
+                                                                                    \n\
+out vec4 Color;                                                                     \n\
+                                                                                    \n\
+void main()                                                                         \n\
+{                                                                                   \n\
+    gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
+    Color = vec4(clamp(Position, 0.0, 1.0), 1.0);                                   \n\
+}";
+
+static const char* pFS = "                                                          \n\
+#version 330                                                                        \n\
+                                                                                    \n\
+in vec4 Color;                                                                      \n\
+                                                                                    \n\
+out vec4 FragColor;                                                                 \n\
+                                                                                    \n\
+void main()                                                                         \n\
+{                                                                                   \n\
+    FragColor = Color;                                                              \n\
+}";*/
+
+
+static const char* pVS = "                                                          \n\
+#version 120                                                                        \n\
+								\n\
+attribute vec3 Position;                                                        \n\
+                                                                                    \n\
+uniform mat4 gWVP;                                                                  \n\
+                                                                                    \n\
+void main()                                                                         \n\
+{                                                                                   \n\
+    gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
+}";
+
+
+static const char* pFS = "                                                          \n\
+#version 120                                                                        \n\
+                                                                                    \n\
+void main()                                                                         \n\
+{                                                                                   \n\
+	gl_FragColor = vec4(0.0,0.0,1.0,1.0);  					    \n\
+}";
+
+static const char* pFS2 = "                                                          \n\
+#version 120                                                                        \n\
+                                                                                    \n\
+void main()                                                                         \n\
+{                                                                                   \n\
+	gl_FragColor = vec4(1.0,0.0,0.0,1.0);  					    \n\
+}";
+
+
+
 
 // TODO: autocast to float, maybe even macro
 struct RGBColor {
@@ -32,10 +112,19 @@ class GameObject : public BoundingBox {
 		//virtual void draw() = 0;	// revisit that
 };
 
-class Cube : public GameObject {
+class Cube {
 	public:
-		Cube(const Point3 &, float, RGBColor);
-		void draw();
+		GLuint VBO;
+		GLuint IBO;
+		GLuint gWVPLocation;
+
+		Point3 center;
+
+
+		Cube(const Point3 &, int color);
+		void draw(std::shared_ptr<Camera>);
+		void AddShader(GLuint, const char* , GLenum);
+		void CompileShaders(int color);
 };
 
 class HorizontalPlane : public GameObject {

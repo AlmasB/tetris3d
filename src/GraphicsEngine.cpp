@@ -12,13 +12,13 @@ std::string GraphicsEngine::init() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		return _SDL_ERROR_INIT + std::string(SDL_GetError());
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
 	window = SDL_CreateWindow(_ENGINE_TITLE,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		__ENGINE_WINDOW_W, __ENGINE_WINDOW_H,
-		SDL_WINDOW_OPENGL);	// shown?
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);	// shown?
 
 	if (window == NULL)
 		return _SDL_ERROR_INIT_WINDOW + std::string(SDL_GetError());
@@ -27,7 +27,27 @@ std::string GraphicsEngine::init() {
 
 	if (glContext == NULL)
 		return _SDL_ERROR_INIT_OPENGL + std::string(SDL_GetError());
+	else
+		std::cout << "created context" << std::endl;
 
+
+
+
+
+
+		// Enable depth test
+	//glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	//glDepthFunc(GL_LESS);
+
+    // Must be done after glut is initialized!
+    GLenum res = glewInit();
+    if (res != GLEW_OK) {
+      fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+      return "BAD";
+    }
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 
@@ -89,7 +109,7 @@ void GraphicsEngine::initGL() {
  *
  ****************************************************************************/
 void GraphicsEngine::resize() {
-	GLfloat aspect = (GLfloat)__ENGINE_WINDOW_W / (GLfloat)__ENGINE_WINDOW_H;
+	/*GLfloat aspect = (GLfloat)__ENGINE_WINDOW_W / (GLfloat)__ENGINE_WINDOW_H;
 
 	// Set the viewport to cover the new window
 	glViewport(0, 0, __ENGINE_WINDOW_W, __ENGINE_WINDOW_H);
@@ -98,7 +118,7 @@ void GraphicsEngine::resize() {
 	glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
 	glLoadIdentity();             // Reset
 	// Enable perspective projection with fovy, aspect, zNear and zFar
-	gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+	gluPerspective(45.0f, aspect, 0.1f, 100.0f);*/
 }
 
 /*void GraphicsEngine::drawCube(GLfloat x, GLfloat y, GLfloat z) {
@@ -181,7 +201,7 @@ void GraphicsEngine::showScreen() {
 }
 
 void GraphicsEngine::drawUI() {
-	glPushMatrix();
+	/*glPushMatrix();
 	glLoadIdentity();
 	glOrtho(-400, 400, 300, -300, 0, 1);
 	glColor4f(0, 0, 1.0f, 1.0f);
@@ -192,5 +212,5 @@ void GraphicsEngine::drawUI() {
 	SDL_RenderDrawLine(renderer, -5, 0, -5-10, +0);
 	SDL_RenderDrawLine(renderer, 0, 0, +0, +10);
 	SDL_RenderDrawLine(renderer, 0, 0, +0, -10);
-	glPopMatrix();
+	glPopMatrix();*/
 }

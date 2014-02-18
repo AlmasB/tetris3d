@@ -19,7 +19,7 @@ float getValue(uint n) {
 
 Game::Game() : running(true), gTest(true), step(0) {
 	//camera = make_unique<Camera>();
-	camera = unique_ptr<Camera>(new Camera());
+	camera = shared_ptr<Camera>(new Camera(800, 600));
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
 	//gfx =  make_unique<GraphicsEngine>();
@@ -37,7 +37,7 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	srand(0);
 
-	ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
+	/*ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
 	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
@@ -46,9 +46,14 @@ Game::Game() : running(true), gTest(true), step(0) {
 	newBlocks();
 
 	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
-	bullet->alive = false;
+	bullet->alive = false;*/
 
 	cout << "Game::Game() finished" << endl;
+
+	if (camera != NULL)
+		cout << "camera not null" << endl;
+
+	
 }
 
 Game::~Game() {
@@ -69,6 +74,12 @@ bool Game::init() {
 }
 
 void Game::runMainLoop() {
+
+	mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,15.0f),1));
+	mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,25.0f),0));
+
+
+
 	cout << "Entered Main Loop" << endl;
 	Uint32 start, end;
 
@@ -92,38 +103,38 @@ void Game::runMainLoop() {
 }
 
 void Game::handleKeyEvents() {
-	if (selected == NULL) {
+	//if (selected == NULL) {
 		if (eventSystem->isPressed(Key::W))
-			camera->moveForward();
+			camera->OnKeyboard(1);
 		if (eventSystem->isPressed(Key::S))
-			camera->moveBack();
+			camera->OnKeyboard(2);
 		if (eventSystem->isPressed(Key::A))
-			camera->moveLeft();
+			camera->OnKeyboard(3);
 		if (eventSystem->isPressed(Key::D))
-			camera->moveRight();
-	}
-	else {
-		if (eventSystem->isPressed(Key::W))
+			camera->OnKeyboard(4);
+	//}
+	//else {
+		/*if (eventSystem->isPressed(Key::W))
 			selected->move(camera->getDirection());
 		if (eventSystem->isPressed(Key::S))
 			selected->move(camera->getDirection()*(-1.0f));
 		if (eventSystem->isPressed(Key::A))
 			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
 		if (eventSystem->isPressed(Key::D))
-			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
-	}
+			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));*/
+	//}
 
 	if (eventSystem->isPressed(Key::LEFT))
-		camera->lookRight(-1.0f * 0.035f);
+		camera->OnKeyboard(6);
 	if (eventSystem->isPressed(Key::RIGHT))
-		camera->lookRight(1.0f * 0.035f);
+		camera->OnKeyboard(5);
 	if (eventSystem->isPressed(Key::UP))
-		camera->lookUp(1.0f * 0.035f);
+		camera->OnKeyboard(7);
 	if (eventSystem->isPressed(Key::DOWN))
-		camera->lookUp(-1.0f * 0.035f);
+		camera->OnKeyboard(8);
 
-	if (eventSystem->isPressed(Key::SPACE))
-		onPrimaryAction();
+	//if (eventSystem->isPressed(Key::SPACE))
+		//onPrimaryAction();
 
 	if (eventSystem->isPressed(Key::ESC))
 		running = false;
@@ -138,8 +149,8 @@ void Game::handleMouseEvents() {
 
 	//cout << pos.x << " " << pos.y << endl;
 
-	camera->lookRight(pos.x * 0.0035f);
-	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
+	//camera->lookRight(pos.x * 0.0035f);
+	//camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -151,7 +162,7 @@ void Game::handleMouseEvents() {
 }
 
 void Game::onPrimaryAction() {
-	bullet->center = camera->getPosition();
+	/*bullet->center = camera->getPosition();
 	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
@@ -161,18 +172,21 @@ void Game::onPrimaryAction() {
 				break;
 			}
 		}
-	}
+	}*/
 }
 
 void Game::onSecondaryAction() {
-	if (selected != NULL) {
+	/*if (selected != NULL) {
 		selected->setLocked(false);
 		selected = NULL;
-	}
+	}*/
 }
 
 void Game::update() {
-	Vector3 gravity(0, -0.01f, 0);
+
+	
+
+	/*Vector3 gravity(0, -0.01f, 0);
 
 	float value = 0.0025f;
 
@@ -195,12 +209,12 @@ void Game::update() {
 		mainBlocks.clear();
 		extraBlocks.clear();
 		newBlocks();
-	}
+	}*/
 }
 
 // TODO: clean this
 void Game::buildBlock() {
-	if (selected != NULL) {
+	/*if (selected != NULL) {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
@@ -218,17 +232,17 @@ void Game::buildBlock() {
 				}
 			}
 		}
-	}
+	}*/
 }
 
 bool Game::isGameWon() {
-	for (uint i = 0; i < 3; ++i) {
+	/*for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
 				return false;
 			}
 		}
-	}
+	}*/
 
 	return true;
 }
@@ -238,9 +252,9 @@ void Game::testCollision() {
 }
 
 void Game::render() {
-	gfx->clearScreen();
+	//gfx->clearScreen();
 
-	glMatrixMode(GL_MODELVIEW);
+	/*glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	Point3 pos = camera->getPosition();
@@ -261,26 +275,41 @@ void Game::render() {
 		if (cube->alive)
 			cube->draw();
 
-	gfx->drawUI();
+	gfx->drawUI();*/
 
+	//gfx->showScreen();
+
+	camera->OnRender();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+
+	for (auto cube : mainBlocks)
+		cube->draw(camera);
+	
+
+
+
+	//SDL_GL_SwapWindow(gfx->window);
 	gfx->showScreen();
+
 }
 
 uint Game::numberOfBlocksRequired() {
 	uint count = 0;
-	for (uint i = 0; i < 3; ++i) {
+	/*for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
 				count++;
 			}
 		}
-	}
+	}*/
 
 	return count;
 }
 
 void Game::newBlocks() {
-	for (uint i = 0; i < 3; ++i) {
+	/*for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
@@ -293,5 +322,5 @@ void Game::newBlocks() {
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
 		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 5.0f*step);
 		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
-	}
+	}*/
 }
