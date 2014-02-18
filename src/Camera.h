@@ -20,6 +20,7 @@
 #define	__CAMERA_H__
 
 #include "Math_3d.h"
+#include "Common.h"
 
 class Camera {
 	private:
@@ -63,6 +64,9 @@ class Camera {
 
 		void lookUp(float);
 		void lookRight(float);
+
+		Point3 getPosition();
+		Vector3 getDirection();
 
 };
 

@@ -1,11 +1,11 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const Point3 & _center, float x, float y, float z)
+GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z) {
 	alive = true;
 	locked = false;
 
-	color = COLOR_BLUE;
+	color = _color;
 }
 
 void GameObject::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -113,7 +113,7 @@ void GameObject::setLocked(bool b) {
 	locked = b;
 }
 
-Cube::Cube(const Point3 & _center) : GameObject(_center, 2, 2, 2) {
+Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 2, _color) {
 	numOfTriangles = 12;
 	//vertex buffer
 	cout << "started creating cube"<<endl;
@@ -170,8 +170,8 @@ Cube::Cube(const Point3 & _center) : GameObject(_center, 2, 2, 2) {
 	cout << "Compiled shaders" << endl;
 }
 
-HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z)
-: GameObject(c, x, y, z) {
+HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RGBColor _color)
+: GameObject(c, x, y, z, _color) {
 
 	numOfTriangles = 12;
 

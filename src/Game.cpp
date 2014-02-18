@@ -65,14 +65,8 @@ bool Game::init() {
 
 void Game::runMainLoop() {
 
-	/*mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,15.0f),1));
-	mainBlocks.push_back(make_shared<Cube>(Point3(0.0f,0.0f,25.0f),0));
-
-	mainBlocks.push_back(make_shared<Cube>(Point3(5.0f, 5.0f, 15.0f), 0));
-	mainBlocks.push_back(make_shared<Cube>(Point3(-5.0f, 0.0f, 25.0f), 0));*/
-
-	ground = make_shared<HorizontalPlane>(Point3(0, -2, 15), 10.0f, 1.0f, 50.0f);
-	ground->color = COLOR_GRAY;
+	ground = make_shared<HorizontalPlane>(Point3(0, -1.1, 15), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
+	bullet = make_shared<Cube>(Point3(0, 0, 0), COLOR_YELLOW);
 
 	newBlocks();
 
@@ -99,26 +93,28 @@ void Game::runMainLoop() {
 }
 
 void Game::handleKeyEvents() {
-	if (eventSystem->isPressed(Key::W))
-		camera->moveForward();
-	if (eventSystem->isPressed(Key::S))
-		camera->moveBackward();
-	if (eventSystem->isPressed(Key::A))
-		camera->moveLeft();
-	if (eventSystem->isPressed(Key::D))
-		camera->moveRight();
+	if (selected == NULL) {
 
+		if (eventSystem->isPressed(Key::W))
+			camera->moveForward();
+		if (eventSystem->isPressed(Key::S))
+			camera->moveBackward();
+		if (eventSystem->isPressed(Key::A))
+			camera->moveLeft();
+		if (eventSystem->isPressed(Key::D))
+			camera->moveRight();
 
-	//else {
-		/*if (eventSystem->isPressed(Key::W))
+	}
+	else {
+		if (eventSystem->isPressed(Key::W))
 			selected->move(camera->getDirection());
 		if (eventSystem->isPressed(Key::S))
 			selected->move(camera->getDirection()*(-1.0f));
-		if (eventSystem->isPressed(Key::A))
-			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
 		if (eventSystem->isPressed(Key::D))
-			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));*/
-	//}
+			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::A))
+			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
+	}
 
 	// values need tweaking for greater experience
 	if (eventSystem->isPressed(Key::LEFT))
@@ -153,7 +149,7 @@ void Game::handleMouseEvents() {
 }
 
 void Game::onPrimaryAction() {
-	/*bullet->center = camera->getPosition();
+	bullet->center = camera->getPosition();
 	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
@@ -163,23 +159,23 @@ void Game::onPrimaryAction() {
 				break;
 			}
 		}
-	}*/
+	}
 }
 
 void Game::onSecondaryAction() {
-	/*if (selected != NULL) {
+	if (selected != NULL) {
 		selected->setLocked(false);
 		selected = NULL;
-	}*/
+	}
 }
 
 void Game::update() {
-	/*Vector3 gravity(0, -0.01f, 0);
+	Vector3 gravity(0, -0.01f, 0);
 
 	float value = 0.0025f;
 
-	ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
-	ground->move(Vector3(0, 0, -value/2.0f));
+	//ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
+	//ground->move(Vector3(0, 0, -value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -187,8 +183,6 @@ void Game::update() {
 		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
 			cube->center += gravity;
 
-	if (camera->getPosition().getY() > 0)	// for camera gravity, will be replaced by proper
-		camera->moveDown();
 
 	buildBlock();
 	
@@ -197,16 +191,16 @@ void Game::update() {
 		mainBlocks.clear();
 		extraBlocks.clear();
 		newBlocks();
-	}*/
+	}
 }
 
 // TODO: clean this
 void Game::buildBlock() {
-	/*if (selected != NULL) {
+	if (selected != NULL) {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					Point3 c(getValue(j), i*2.0f, -5.0f);
+					Point3 c(getValue(j), i*2.0f, 5.0f + 4 * step);
 					if (distanceBetween(c, selected->center) < 5.0f) {
 						selected->center = c;
 						selected->setLocked(false);
@@ -220,17 +214,17 @@ void Game::buildBlock() {
 				}
 			}
 		}
-	}*/
+	}
 }
 
 bool Game::isGameWon() {
-	/*for (uint i = 0; i < 3; ++i) {
+	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
 				return false;
 			}
 		}
-	}*/
+	}
 
 	return true;
 }
@@ -269,7 +263,7 @@ void Game::render() {
 
 	//camera->OnRender();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	gfx->clearScreen();
 	
 
 	for (auto cube : mainBlocks)
@@ -305,13 +299,13 @@ void Game::newBlocks() {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
 				Point3 p(getValue(j), i*2.0f, 5.0f + 4*step);
-				mainBlocks.push_back(make_shared<Cube>(p));
+				mainBlocks.push_back(make_shared<Cube>(p, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
 		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
-		extraBlocks.push_back(make_shared<Cube>(p));
+		extraBlocks.push_back(make_shared<Cube>(p, COLOR_RED));
 	}
 }

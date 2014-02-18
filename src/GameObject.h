@@ -106,7 +106,7 @@ class GameObject : public BoundingBox {
 		void AddShader(GLuint, const char*, GLenum);
 		void CompileShaders();
 	public:
-		GameObject(const Point3 &, float, float, float);
+		GameObject(const Point3 &, float, float, float, RGBColor);
 		void move(const Vector3 &);
 		void setDistZ(float);
 		void setLocked(bool b);
@@ -130,14 +130,14 @@ class Cube : public GameObject {
 		*/
 
 
-		Cube(const Point3 &);
+		Cube(const Point3 &, RGBColor);
 		//void draw(std::shared_ptr<Camera>);
 		
 };
 
 class HorizontalPlane : public GameObject {
 	public:
-		HorizontalPlane(const Point3 &, float, float, float);
+		HorizontalPlane(const Point3 &, float, float, float, RGBColor);
 		bool collidesWith(const BoundingBox &);
 		//void draw();
 };

@@ -131,3 +131,10 @@ void Camera::lookRight(float units) {
 	Update();
 }
 
+Point3 Camera::getPosition() {
+	return Point3(m_pos.x, m_pos.y, m_pos.z);
+}
+
+Vector3 Camera::getDirection() {
+	return Vector3(m_target.x, m_target.y, m_target.z);
+}
