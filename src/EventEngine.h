@@ -1,7 +1,7 @@
 #ifndef __EVENT_ENGINE_H__
 #define __EVENT_ENGINE_H__
 
-#include "Common.h"
+#include "GameMath.h"
 
 #include <SDL.h>
 

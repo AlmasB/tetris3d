@@ -1,14 +1,14 @@
 #include "BoundingBox.h"
 
-BoundingBox::BoundingBox(const Point3 & _center, float x, float y, float z) 
+BoundingBox::BoundingBox(const Point3f & _center, float x, float y, float z) 
 	: center(_center), 
-	halfDistX(Vector3(x / 2.0f, 0, 0)), 
-	halfDistY(Vector3(0, y / 2.0f, 0)), 
-	halfDistZ(Vector3(0, 0, z / 2.0f)) {
+	halfDistX(Vector3f(x / 2.0f, 0, 0)), 
+	halfDistY(Vector3f(0, y / 2.0f, 0)), 
+	halfDistZ(Vector3f(0, 0, z / 2.0f)) {
 
 }
 
-Point3 BoundingBox::getCenter() {
+Point3f BoundingBox::getCenter() {
 	return center;
 }
 
@@ -16,11 +16,11 @@ bool between(const std::pair<float, float> & a, const std::pair<float, float> & 
 	return (a.first >= b.first && a.first <= b.second) || (a.second >= b.first && a.second <= b.second);
 }
 
-inline float projection(const Point3 & pnt, const Vector3 & unitVec) {
+inline float projection(const Point3f & pnt, const Vector3f & unitVec) {
 	float result;
-	result = (pnt.getX() * unitVec.getX());
-	result = (result + (pnt.getY() * unitVec.getY()));
-	result = (result + (pnt.getZ() * unitVec.getZ()));
+	result = (pnt.x * unitVec.x);
+	result = (result + (pnt.y * unitVec.y));
+	result = (result + (pnt.z * unitVec.z));
 	return result;
 }
 
@@ -35,16 +35,16 @@ std::pair<float, float> BoundingBox::projectOntoAxis(const BoundingBox & b, enum
 
 	switch (axis) {
 		case X:
-			lo = projection(Point3(b.center + (halfDistX * -1.0f)), UNIT_X_AXIS);
-			hi = projection(Point3(b.center + halfDistX), UNIT_X_AXIS);
+			lo = projection(Point3f(b.center + (halfDistX * -1.0f)), UNIT_X_AXIS);
+			hi = projection(Point3f(b.center + halfDistX), UNIT_X_AXIS);
 			break;
 		case Y:
-			lo = projection(Point3(b.center + (halfDistY * -1.0f)), UNIT_Y_AXIS);
-			hi = projection(Point3(b.center + halfDistY), UNIT_Y_AXIS);
+			lo = projection(Point3f(b.center + (halfDistY * -1.0f)), UNIT_Y_AXIS);
+			hi = projection(Point3f(b.center + halfDistY), UNIT_Y_AXIS);
 			break;
 		case Z:
-			lo = projection(Point3(b.center + (halfDistZ * -1.0f)), UNIT_Z_AXIS);
-			hi = projection(Point3(b.center + halfDistZ), UNIT_Z_AXIS);
+			lo = projection(Point3f(b.center + (halfDistZ * -1.0f)), UNIT_Z_AXIS);
+			hi = projection(Point3f(b.center + halfDistZ), UNIT_Z_AXIS);
 			break;
 	}
 

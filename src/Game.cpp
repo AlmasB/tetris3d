@@ -68,9 +68,9 @@ bool Game::init() {
 
 void Game::runMainLoop() {
 	// move to init or smth
-	ground = make_shared<HorizontalPlane>(Point3(0, -1.1f, 0.0f), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
-	bullet = make_shared<Cube>(Point3(0, 0, 0), COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3(0, 0.0f, 48.5), COLOR_AQUA);
+	ground = make_shared<HorizontalPlane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
+	bullet = make_shared<Cube>(Point3f(0, 0, 0), COLOR_YELLOW);
+	prize = make_shared<Cube>(Point3f(0, 0.0f, 48.5), COLOR_AQUA);
 
 	newBlocks();
 
@@ -104,8 +104,8 @@ void Game::handleKeyEvents() {
 	else {
 		if (eventSystem->isPressed(Key::W)) selected->move(camera->getDirection());
 		if (eventSystem->isPressed(Key::S)) selected->move(camera->getDirection()*(-1.0f));
-		if (eventSystem->isPressed(Key::A)) selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
-		if (eventSystem->isPressed(Key::D)) selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::A)) selected->move(Vector3f(-camera->getDirection().z, 0, camera->getDirection().x));
+		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(camera->getDirection().z, 0, -camera->getDirection().x));
 	}
 
 	// values need tweaking for greater experience
@@ -155,12 +155,12 @@ void Game::onSecondaryAction() {
 }
 
 void Game::update() {
-	Vector3 gravity(0, -0.01f, 0);
+	Vector3f gravity(0, -0.01f, 0);
 
 	float value = 0.0025f;
 
-	ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
-	ground->move(Vector3(0, 0, value/2.0f));
+	ground->setDistZ(ground->halfDistZ.z * 2 - value);
+	ground->move(Vector3f(0, 0, value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -185,7 +185,7 @@ void Game::buildBlock() {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					Point3 c(getValue(j), i*2.0f, 5.0f + 4 * step);
+					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
 					if (distanceBetween(c, selected->center) < 5.0f) {
 						selected->center = c;
 						selected->setLocked(false);
@@ -247,14 +247,14 @@ void Game::newBlocks() {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3 p(getValue(j), i*2.0f, 5.0f + 4*step);
+				Point3f p(getValue(j), i*2.0f, 5.0f + 4*step);
 				mainBlocks.push_back(make_shared<Cube>(p, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
+		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
 		extraBlocks.push_back(make_shared<Cube>(p, COLOR_RED));
 	}
 }

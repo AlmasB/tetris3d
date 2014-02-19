@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const Point3 & _center, float x, float y, float z, RGBColor _color)
+GameObject::GameObject(const Point3f & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z) {
 	alive = true;
 	locked = false;
@@ -73,7 +73,7 @@ void GameObject::draw(std::shared_ptr<Camera> cam) {
 	Pipeline p;
 	//p.Rotate(0.0f, Scale, 0.0f);
 	//p.WorldPos(0.0f, 0.0f, 7.0f);
-	p.WorldPos(center.getX(), center.getY(), center.getZ());
+	p.WorldPos(center.x, center.y, center.z);
 
 	p.SetCamera(cam->GetPos(), cam->GetTarget(), cam->GetUp());
 	p.SetPerspectiveProj(60.0f, 800, 600, 1.0f, 100.0f);	// 45.0 is a good value
@@ -95,19 +95,19 @@ void GameObject::draw(std::shared_ptr<Camera> cam) {
 	glDisableVertexAttribArray(0);
 }
 
-void GameObject::move(const Vector3 & v) {
+void GameObject::move(const Vector3f & v) {
 	center += v;
 }
 
 void GameObject::setDistZ(float dist) {
-	halfDistZ = Vector3(0, 0, dist / 2.0f);
+	halfDistZ = Vector3f(0, 0, dist / 2.0f);
 }
 
 void GameObject::setLocked(bool b) {
 	locked = b;
 }
 
-Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 2, _color) {
+Cube::Cube(const Point3f & _center, RGBColor _color) : GameObject(_center, 2, 2, 2, _color) {
 	numOfTriangles = 12;
 	//vertex buffer
 
@@ -152,7 +152,7 @@ GLuint GameObject::createBuffer(GLenum bufferType, const void *bufferData, GLsiz
 	return buffer;
 }
 
-HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RGBColor _color)
+HorizontalPlane::HorizontalPlane(const Point3f & c, float x, float y, float z, RGBColor _color)
 : GameObject(c, x, y, z, _color) {
 
 	numOfTriangles = 12;
@@ -190,12 +190,12 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 
 
 bool HorizontalPlane::collidesWith(const BoundingBox & box) {
-	Rect plane = { (int)(center.getX()-halfDistX.getX()), (int)(center.getZ()-halfDistZ.getZ()), (int)(2*halfDistX.getX()), (int)(2*halfDistZ.getZ()) };
-	Point2 p = { (int)box.center.getX(), (int)box.center.getZ() };
+	Rect plane = { (int)(center.x-halfDistX.x), (int)(center.z-halfDistZ.z), (int)(2*halfDistX.x), (int)(2*halfDistZ.z) };
+	Point2 p = { (int)box.center.x, (int)box.center.z };
 
 	// further check the whole plane around center point
 
-	return center.getY() > box.center.getY() - box.halfDistY.getY() - 0.05
-		&& center.getY() < box.center.getY() - box.halfDistY.getY() + 0.05
+	return center.y > box.center.y - box.halfDistY.y - 0.05
+		&& center.y < box.center.y - box.halfDistY.y + 0.05
 		&& plane.contains(p);
 }

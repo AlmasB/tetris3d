@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MATH_3D_H
+/*#ifndef MATH_3D_H
 #define	MATH_3D_H
 
 #include <stdio.h>
@@ -183,5 +183,5 @@ Quaternion operator*(const Quaternion& l, const Quaternion& r);
 
 Quaternion operator*(const Quaternion& q, const Vector3f& v);
 
-#endif	/* MATH_3D_H */
+#endif*/	/* MATH_3D_H */
 

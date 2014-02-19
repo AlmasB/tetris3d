@@ -23,7 +23,7 @@
 Camera::Camera() : speed(0.15f) {
     m_pos          = Vector3f(0.0f, 0.0f, 0.0f);
     m_target       = Vector3f(0.0f, 0.0f, 1.0f);
-    m_target.Normalize();
+    m_target.normalize();
     m_up           = Vector3f(0.0f, 1.0f, 0.0f);
 
     Init();
@@ -34,42 +34,42 @@ Camera::Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up) 
     m_pos = Pos;
 
     m_target = Target;
-    m_target.Normalize();
+    m_target.normalize();
 
     m_up = Up;
-    m_up.Normalize();
+    m_up.normalize();
 
     Init();
 }
 
 void Camera::Init() {
     Vector3f HTarget(m_target.x, 0.0, m_target.z);
-    HTarget.Normalize();
+    HTarget.normalize();
     
     if (HTarget.z >= 0.0f)
     {
         if (HTarget.x >= 0.0f)
         {
-            m_AngleH = 360.0f - ToDegree(asin(HTarget.z));
+            m_AngleH = 360.0f - toDegree(asin(HTarget.z));
         }
         else
         {
-            m_AngleH = 180.0f + ToDegree(asin(HTarget.z));
+            m_AngleH = 180.0f + toDegree(asin(HTarget.z));
         }
     }
     else
     {
         if (HTarget.x >= 0.0f)
         {
-            m_AngleH = ToDegree(asin(-HTarget.z));
+            m_AngleH = toDegree(asin(-HTarget.z));
         }
         else
         {
-            m_AngleH = 90.0f + ToDegree(asin(-HTarget.z));
+            m_AngleH = 90.0f + toDegree(asin(-HTarget.z));
         }
     }
     
-    m_AngleV = -ToDegree(asin(m_target.y));
+    m_AngleV = -toDegree(asin(m_target.y));
 }
 
 void Camera::Update() {
@@ -77,23 +77,20 @@ void Camera::Update() {
 
     // Rotate the view vector by the horizontal angle around the vertical axis
     Vector3f View(1.0f, 0.0f, 0.0f);
-    View.Rotate(m_AngleH, Vaxis);
-    View.Normalize();
+    View.rotate(m_AngleH, Vaxis);
+    View.normalize();
 
     // Rotate the view vector by the vertical angle around the horizontal axis
-    Vector3f Haxis = Vaxis.Cross(View);
-    Haxis.Normalize();
-    View.Rotate(m_AngleV, Haxis);
+    Vector3f Haxis = Vaxis.cross(View);
+    Haxis.normalize();
+    View.rotate(m_AngleV, Haxis);
        
     m_target = View;
-    m_target.Normalize();
+    m_target.normalize();
 
-    m_up = m_target.Cross(Haxis);
-    m_up.Normalize();
+    m_up = m_target.cross(Haxis);
+    m_up.normalize();
 }
-
-
-//////////////////////////////////////////////////////////////////////
 
 void Camera::moveForward() {
 	Vector3f tmp = m_target * speed;
@@ -108,15 +105,15 @@ void Camera::moveBackward() {
 }
 
 void Camera::moveRight() {
-	Vector3f Right = m_up.Cross(m_target);
-	Right.Normalize();
+	Vector3f Right = m_up.cross(m_target);
+	Right.normalize();
 	Right *= speed;
 	m_pos += Right;
 }
 
 void Camera::moveLeft() {
-	Vector3f Left = m_target.Cross(m_up);
-	Left.Normalize();
+	Vector3f Left = m_target.cross(m_up);
+	Left.normalize();
 	Left *= speed;
 	m_pos += Left;
 }
@@ -131,10 +128,10 @@ void Camera::lookRight(float units) {
 	Update();
 }
 
-Point3 Camera::getPosition() {
-	return Point3(m_pos.x, m_pos.y, m_pos.z);
+Point3f Camera::getPosition() {
+	return Point3f(m_pos.x, m_pos.y, m_pos.z);
 }
 
-Vector3 Camera::getDirection() {
-	return Vector3(m_target.x, m_target.y, m_target.z);
+Vector3f Camera::getDirection() {
+	return Vector3f(m_target.x, m_target.y, m_target.z);
 }

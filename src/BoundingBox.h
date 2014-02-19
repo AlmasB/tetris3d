@@ -42,13 +42,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <utility>
 
-#include <SDL_opengl.h>
+//#include <SDL_opengl.h>
 
-#include "Common.h"
+//#include "Common.h"
+#include "GameMath.h"
 
-static Vector3 UNIT_X_AXIS(1.0, 0.0, 0.0);
-static Vector3 UNIT_Y_AXIS(0.0, 1.0, 0.0);
-static Vector3 UNIT_Z_AXIS(0.0, 0.0, 1.0);
+static Vector3f UNIT_X_AXIS(1.0, 0.0, 0.0);
+static Vector3f UNIT_Y_AXIS(0.0, 1.0, 0.0);
+static Vector3f UNIT_Z_AXIS(0.0, 0.0, 1.0);
 
 enum AXIS { X, Y, Z };
 
@@ -59,10 +60,10 @@ class BoundingBox {
 		
 		
 	public:
-		Vector3 halfDistX, halfDistY, halfDistZ;//make protected
-		BoundingBox(const Point3 &, float, float, float);
-		Point3 center;	// make protected
-		Point3 getCenter();
+		Vector3f halfDistX, halfDistY, halfDistZ;//make protected
+		BoundingBox(const Point3f &, float, float, float);
+		Point3f center;	// make protected
+		Point3f getCenter();
 
 		virtual bool collidesWith(const BoundingBox &);
 		std::pair<float, float> projectOntoAxis(const BoundingBox &, enum AXIS);

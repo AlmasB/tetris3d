@@ -18,7 +18,7 @@
 #ifndef PIPELINE_H
 #define	PIPELINE_H
 
-#include "Math_3d.h"
+#include "GameMath.h"
 
 class Pipeline
 {

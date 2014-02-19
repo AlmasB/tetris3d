@@ -2,15 +2,21 @@
 #define __GAME_MATH_H__
 
 #ifdef _WIN32
-#define _USE_MATH_DEFINES 
+//#define _USE_MATH_DEFINES 
 #include <cmath>
 #else
 #include <math.h>
 #endif
 
-#define toRadian(x) (float)(((x) * M_PI / 180.0f))
-#define toDegree(x) (float)(((x) * 180.0f / M_PI))
+#include <cstdlib>
 
+#define __PI       3.14159265358979323846
+#define toRadian(x) (float)(((x) * __PI / 180.0f))
+#define toDegree(x) (float)(((x) * 180.0f / __PI))
+
+typedef unsigned int uint;
+
+//struct Vector3f;
 
 struct Quaternion {
 	float x, y, z, w;
@@ -35,9 +41,20 @@ struct Quaternion {
 		Quaternion ret(-x, -y, -z, w);
 		return ret;
 	}
+
+	Quaternion mult(const Quaternion& r) {
+		const float _w = (w * r.w) - (x * r.x) - (y * r.y) - (z * r.z);
+		const float _x = (x * r.w) + (w * r.x) + (y * r.z) - (z * r.y);
+		const float _y = (y * r.w) + (w * r.y) + (z * r.x) - (x * r.z);
+		const float _z = (z * r.w) + (w * r.z) + (x * r.y) - (y * r.x);
+
+		Quaternion ret(_x, _y, _z, _w);
+
+		return ret;
+	}
 };
 
-Quaternion operator*(const Quaternion& l, const Quaternion& r) {
+/*Quaternion operator*(const Quaternion& l, const Quaternion& r) {
 	const float w = (l.w * r.w) - (l.x * r.x) - (l.y * r.y) - (l.z * r.z);
 	const float x = (l.x * r.w) + (l.w * r.x) + (l.y * r.z) - (l.z * r.y);
 	const float y = (l.y * r.w) + (l.w * r.y) + (l.z * r.x) - (l.x * r.z);
@@ -46,18 +63,7 @@ Quaternion operator*(const Quaternion& l, const Quaternion& r) {
 	Quaternion ret(x, y, z, w);
 
 	return ret;
-}
-
-Quaternion operator*(const Quaternion& q, const Vector3f& v) {
-	const float w = -(q.x * v.x) - (q.y * v.y) - (q.z * v.z);
-	const float x = (q.w * v.x) + (q.y * v.z) - (q.z * v.y);
-	const float y = (q.w * v.y) + (q.z * v.x) - (q.x * v.z);
-	const float z = (q.w * v.z) + (q.x * v.y) - (q.y * v.x);
-
-	Quaternion ret(x, y, z, w);
-
-	return ret;
-}
+}*/
 
 struct Vector3f {
 	float x;
@@ -117,8 +123,8 @@ struct Vector3f {
 	}
 
 	void rotate(float angle, const Vector3f& axis) {
-		const float sinHalfAngle = sinf(ToRadian(angle/2));
-    	const float cosHalfAngle = cosf(ToRadian(angle/2));
+		const float sinHalfAngle = sinf(toRadian(angle/2));
+    	const float cosHalfAngle = cosf(toRadian(angle/2));
 
     	const float Rx = axis.x * sinHalfAngle;
     	const float Ry = axis.y * sinHalfAngle;
@@ -128,13 +134,38 @@ struct Vector3f {
 
    	 	Quaternion ConjugateQ = RotationQ.conjugate();
  	    //  ConjugateQ.Normalize();
-    	Quaternion W = RotationQ * (*this) * ConjugateQ;
+    	//Quaternion W = RotationQ * (*this) * ConjugateQ;
+		//Quaternion W = this->multQuaternion(RotationQ) * ConjugateQ;
+		Quaternion W = this->multQuaternion(RotationQ).mult(ConjugateQ);
 
     	x = W.x;
     	y = W.y;
    	 	z = W.z;
 	}
+
+	Quaternion multQuaternion(const Quaternion& q) {
+		const float _w = -(q.x * x) - (q.y * y) - (q.z * z);
+		const float _x = (q.w * x) + (q.y * z) - (q.z * y);
+		const float _y = (q.w * y) + (q.z * x) - (q.x * z);
+		const float _z = (q.w * z) + (q.x * y) - (q.y * x);
+
+		Quaternion ret(_x, _y, _z, _w);
+
+		return ret;
+	}
 };
+
+
+/*Quaternion operator*(const Quaternion& q, const Vector3f& v) {
+	const float w = -(q.x * v.x) - (q.y * v.y) - (q.z * v.z);
+	const float x = (q.w * v.x) + (q.y * v.z) - (q.z * v.y);
+	const float y = (q.w * v.y) + (q.z * v.x) - (q.x * v.z);
+	const float z = (q.w * v.z) + (q.x * v.y) - (q.y * v.x);
+
+	Quaternion ret(x, y, z, w);
+
+	return ret;
+}*/
 
 inline Vector3f operator+(const Vector3f& l, const Vector3f& r) {
 	Vector3f Ret(l.x + r.x, l.y + r.y, l.z + r.z);
@@ -255,7 +286,7 @@ struct Point3f {
 		x = _x; y = _y; z = _z;
 	}
 
-	inline Point3& operator += (Vector3f v) {
+	inline Point3f& operator += (Vector3f v) {
 		this->x += v.x;
 		this->y += v.y;
 		this->z += v.z;
@@ -263,8 +294,8 @@ struct Point3f {
 	}
 };
 
-inline Point3f operator + (Point3f p, Vector3f v) const {
-	return Point3(p.x + v.x, p.y + v.y, p.z + v.z);
+inline Point3f operator + (Point3f p, Vector3f v) {
+	return Point3f(p.x + v.x, p.y + v.y, p.z + v.z);
 }
 
 inline float distanceBetween(const Point3f & p1, const Point3f & p2) {
@@ -275,7 +306,28 @@ inline float distanceBetween(const Point3f & p1, const Point3f & p2) {
 	return sqrt(dx*dx + dy*dy + dz*dz);
 }
 
+struct Point2 {
+	int x, y;
+};
 
+struct Rectangle2 {
+	int x, y, w, h;
+
+	inline bool contains(const Point2 & p) {
+		return p.x >= x && p.x <= x + w
+			&& p.y >= y && p.y <= y + h;
+	}
+};
+
+typedef Rectangle2 Rect;
+
+/**
+* @return
+*			a random integer value between "min" and "max", both inclusive
+*/
+inline int getRandom(int min, int max) {	// atm no need for random seed
+	return (int)(rand() % (max - min)) + min;
+}
 
 
 

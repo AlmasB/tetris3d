@@ -75,7 +75,7 @@ void GraphicsEngine::resize() {
 }
 
 void GraphicsEngine::setWindowTitle(const char * title) {
-	string t = string(title) + string(_ENGINE_TITLE);	// check for memory
+	std::string t = std::string(title) + std::string(_ENGINE_TITLE);	// check for memory
 	SDL_SetWindowTitle(window, t.c_str());
 }
 
