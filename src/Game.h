@@ -21,7 +21,7 @@ static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
 class Game {
 	private:
 		unique_ptr<GraphicsEngine> gfx;
-		shared_ptr<Camera> camera;
+		Camera * camera;
 		unique_ptr<EventEngine> eventSystem;
 
 		// game objects

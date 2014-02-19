@@ -21,36 +21,6 @@
 using namespace std;
 
 
-
-
-/*static const char* pVS = "                                                          \n\
-#version 330                                                                        \n\
-                                                                                    \n\
-layout (location = 0) in vec3 Position;                                             \n\
-                                                                                    \n\
-uniform mat4 gWVP;                                                                  \n\
-                                                                                    \n\
-out vec4 Color;                                                                     \n\
-                                                                                    \n\
-void main()                                                                         \n\
-{                                                                                   \n\
-    gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
-    Color = vec4(clamp(Position, 0.0, 1.0), 1.0);                                   \n\
-}";
-
-static const char* pFS = "                                                          \n\
-#version 330                                                                        \n\
-                                                                                    \n\
-in vec4 Color;                                                                      \n\
-                                                                                    \n\
-out vec4 FragColor;                                                                 \n\
-                                                                                    \n\
-void main()                                                                         \n\
-{                                                                                   \n\
-    FragColor = Color;                                                              \n\
-}";*/
-
-
 static const char* pVS = "                                                          \n\
 #version 120                                                                        \n\
 								                                                    \n\
@@ -62,6 +32,8 @@ void main()                                                                     
 {                                                                                   \n\
     gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
 }";
+
+
 
 static const char* pFS = "                                                          \n\
 #version 120                                                                        \n\
@@ -101,6 +73,8 @@ class GameObject : public BoundingBox {
 
 		GLuint mycolor;
 
+		CameraTransformer transformer;
+
 		int numOfTriangles;
 
 		GLuint createBuffer(GLenum, const void *, GLsizei);
@@ -116,7 +90,13 @@ class GameObject : public BoundingBox {
 
 		RGBColor color;
 
-		void draw(std::shared_ptr<Camera>);
+		void draw();
+
+		void scale(float, float, float);
+		void setCenter(float, float, float);
+		void rotate(float, float, float);
+
+
 		//virtual void draw() = 0;	// revisit that
 };
 

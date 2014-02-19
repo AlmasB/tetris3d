@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 GameObject::GameObject(const Point3f & _center, float x, float y, float z, RGBColor _color)
-	: BoundingBox(_center, x, y, z) {
+	: BoundingBox(_center, x, y, z), transformer(CameraTransformer(_center)) {
 	alive = true;
 	locked = false;
 
@@ -69,16 +69,19 @@ void GameObject::compileShaders() {
 	mycolor = glGetUniformLocation(program, "color");
 }
 
-void GameObject::draw(std::shared_ptr<Camera> cam) {
-	Pipeline p;
+void GameObject::draw() {
+	CameraTransformer t(center);
+	//Pipeline p;
 	//p.Rotate(0.0f, Scale, 0.0f);
 	//p.WorldPos(0.0f, 0.0f, 7.0f);
-	p.WorldPos(center.x, center.y, center.z);
+	//p.WorldPos(center.x, center.y, center.z);
 
-	p.SetCamera(cam->GetPos(), cam->GetTarget(), cam->GetUp());
-	p.SetPerspectiveProj(60.0f, 800, 600, 1.0f, 100.0f);	// 45.0 is a good value
+	//p.SetCamera(cam->GetPos(), cam->GetTarget(), cam->GetUp());
+	//p.SetPerspectiveProj(60.0f, 800, 600, 1.0f, 100.0f);	// 45.0 is a good value
 
-	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
+	//glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
+
+	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)t.transform());
 
 	if (!locked)
 		glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// color changer
@@ -88,11 +91,23 @@ void GameObject::draw(std::shared_ptr<Camera> cam) {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-	//glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
 	glDisableVertexAttribArray(0);
+}
+
+void GameObject::scale(float x, float y, float z) {
+	transformer.scale = Vector3f(x, y, z);
+}
+
+void GameObject::rotate(float x, float y, float z) {
+	transformer.rotate = Vector3f(x, y, z);
+}
+
+void GameObject::setCenter(float x, float y, float z) {
+	center = Point3f(x, y, z);
+	transformer.center = Vector3f(x, y, z);
 }
 
 void GameObject::move(const Vector3f & v) {
@@ -187,7 +202,6 @@ HorizontalPlane::HorizontalPlane(const Point3f & c, float x, float y, float z, R
 
 	compileShaders();
 }
-
 
 bool HorizontalPlane::collidesWith(const BoundingBox & box) {
 	Rect plane = { (int)(center.x-halfDistX.x), (int)(center.z-halfDistZ.z), (int)(2*halfDistX.x), (int)(2*halfDistZ.z) };

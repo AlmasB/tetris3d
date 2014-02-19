@@ -18,7 +18,7 @@ float getValue(uint n) {
 }
 
 Game::Game() : running(true), gTest(true), step(0) {
-	camera = shared_ptr<Camera>(new Camera());
+	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
 
@@ -191,9 +191,9 @@ void Game::buildBlock() {
 						selected->setLocked(false);
 						selected->alive = false;
 						mainBlocks.push_back(selected);
-						extraBlocks.remove(selected);	// addition
+						extraBlocks.remove(selected);
 						blocks[j][i] = true;
-						selected = nullptr;	// or selected.reset() ?
+						selected = nullptr;
 						return;
 					}
 				}
@@ -218,13 +218,13 @@ void Game::render() {
 	gfx->clearScreen();
 	
 	for (auto cube : mainBlocks)
-		cube->draw(camera);
+		cube->draw();
 
 	for (auto cube : extraBlocks)
-		cube->draw(camera);
+		cube->draw();
 
-	ground->draw(camera);
-	prize->draw(camera);
+	ground->draw();
+	prize->draw();
 
 	gfx->showScreen();
 }

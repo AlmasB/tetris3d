@@ -1,27 +1,16 @@
-/*
-
-	Copyright 2010 Etay Meiri
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #ifndef __CAMERA_H__
 #define	__CAMERA_H__
 
-//#include "Math_3d.h"
-//#include "Common.h"
+#include <memory>
+
 #include "GameMath.h"
+
+#define __FOV 60.0f
+#define __WIDTH 800
+#define __HEIGHT 600
+#define __Z_NEAR 1.0f
+#define __Z_FAR 100.0f;
+
 
 class Camera {
 	private:
@@ -36,10 +25,17 @@ class Camera {
 		float m_AngleV;
 
 		float speed;
+
+		//static std::shared_ptr<Camera> instance;
+		static Camera * instance;
+
+		Camera();
 	public:
 
-		Camera();	// make singleton
-		Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
+		//static std::shared_ptr<Camera> getInstance();
+		static Camera * getInstance();
+		//Camera();	// make singleton
+		//Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
 
 		const Vector3f& GetPos() const
 		{
@@ -56,8 +52,6 @@ class Camera {
 			return m_up;
 		}
 
-		//////////////////////////////////////////////////////
-
 		void moveForward();
 		void moveBackward();
 		void moveRight();
@@ -68,7 +62,29 @@ class Camera {
 
 		Point3f getPosition();
 		Vector3f getDirection();
+		Vector3f getCameraUp();
+};
 
+class CameraTransformer {
+	private:
+
+		
+
+		Matrix4f transformation;
+	public:
+		CameraTransformer(Point3f _center);
+		Vector3f scale;
+		Vector3f center;
+		Vector3f rotate;
+		Matrix4f* transform();
+
+		struct {
+			float fov;	// field of view
+			float width;
+			float height;
+			float zNear;
+			float zFar;
+		} perspective;
 };
 
 #endif

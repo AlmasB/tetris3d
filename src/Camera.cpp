@@ -1,24 +1,9 @@
-/*
-
-	Copyright 2010 Etay Meiri
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "Camera.h"
 
 #include <iostream>
+
+//std::shared_ptr<Camera> Camera::instance = nullptr;
+Camera * Camera::instance = nullptr;
 
 Camera::Camera() : speed(0.15f) {
     m_pos          = Vector3f(0.0f, 0.0f, 0.0f);
@@ -29,8 +14,13 @@ Camera::Camera() : speed(0.15f) {
     Init();
 }
 
+Camera* Camera::getInstance() {
+	if (instance == nullptr)
+		instance = new Camera();
+	return instance;
+}
 
-Camera::Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up) : speed(0.15f) {
+/*Camera::Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up) : speed(0.15f) {
     m_pos = Pos;
 
     m_target = Target;
@@ -40,7 +30,7 @@ Camera::Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up) 
     m_up.normalize();
 
     Init();
-}
+}*/
 
 void Camera::Init() {
     Vector3f HTarget(m_target.x, 0.0, m_target.z);
@@ -134,4 +124,39 @@ Point3f Camera::getPosition() {
 
 Vector3f Camera::getDirection() {
 	return Vector3f(m_target.x, m_target.y, m_target.z);
+}
+
+Vector3f Camera::getCameraUp() {
+	return Vector3f(m_up.x, m_up.y, m_up.z);
+}
+
+/* CAMERA TRANSFORMER CLASS DEFINITION BEGIN */
+
+CameraTransformer::CameraTransformer(Point3f _center) 
+	: scale(Vector3f(1.0f, 1.0f, 1.0f)), center(Vector3f(_center.x,_center.y,_center.z)), rotate(Vector3f(0,0,0)) {
+	perspective.fov = 60.0f;
+	perspective.width = 800;
+	perspective.height = 600;
+	perspective.zNear = 1.0f;
+	perspective.zFar = 100.0f;
+}
+
+Matrix4f * CameraTransformer::transform() {
+	Matrix4f scaleTrans, rotateTrans, translationTrans, cameraTranslationTrans, cameraRotateTrans, persProjTrans;
+
+	// scale, rotate, translate
+	scaleTrans.initScaleTransform(scale.x, scale.y, scale.z);
+	rotateTrans.initRotateTransform(rotate.x, rotate.y, rotate.z);
+	translationTrans.initTranslationTransform(center.x, center.y, center.z);
+
+	Camera * camera = Camera::getInstance();
+
+	// camera transformations
+	cameraTranslationTrans.initTranslationTransform(-camera->getPosition().x, -camera->getPosition().y, -camera->getPosition().z);
+	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getCameraUp());	// careful passing references
+	persProjTrans.initPersProjTransform(perspective.fov, perspective.width, perspective.height, perspective.zNear, perspective.zFar);
+
+	transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
+	// perhaps send a new pointer so it doesn't change the member
+	return &transformation;
 }
