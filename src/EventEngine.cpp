@@ -49,20 +49,6 @@ bool EventEngine::isPressed(Mouse btn) {
 	return buttons[btn];
 }
 
-bool EventEngine::mouseClicked(Mouse button) {
-	/*switch (button) {
-		case Mouse::BTN_LEFT:
-			return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
-			break;
-		case Mouse::BTN_RIGHT:
-			return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
-			break;
-		default:
-			return false;
-	}*/
-	return false;
-}
-
 Point2 EventEngine::getMouseDPos() {
 	SDL_GetRelativeMouseState(&mouseDPos.x, &mouseDPos.y);
 	return mouseDPos;

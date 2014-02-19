@@ -95,7 +95,7 @@ void Game::handleAllEvents() {
 }
 
 void Game::handleKeyEvents() {
-	if (selected == NULL) {
+	if (selected == nullptr) {
 		if (eventSystem->isPressed(Key::W)) camera->moveForward();
 		if (eventSystem->isPressed(Key::S)) camera->moveBackward();
 		if (eventSystem->isPressed(Key::A)) camera->moveLeft();
@@ -135,7 +135,7 @@ void Game::handleMouseEvents() {
 
 void Game::onPrimaryAction() {
 	bullet->center = camera->getPosition();
-	while (selected == NULL && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
+	while (selected == nullptr && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
@@ -148,9 +148,9 @@ void Game::onPrimaryAction() {
 }
 
 void Game::onSecondaryAction() {
-	if (selected != NULL) {
+	if (selected != nullptr) {
 		selected->setLocked(false);
-		selected = NULL;
+		selected = nullptr;
 	}
 }
 
@@ -159,8 +159,8 @@ void Game::update() {
 
 	float value = 0.0025f;
 
-	ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
-	//ground->move(Vector3f(0, 0, value/2.0f));
+	//ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
+	ground->move(Vector3f(0, 0, value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -181,7 +181,7 @@ void Game::update() {
 
 // TODO: clean this
 void Game::buildBlock() {
-	if (selected != NULL) {
+	if (selected != nullptr) {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
@@ -193,7 +193,7 @@ void Game::buildBlock() {
 						mainBlocks.push_back(selected);
 						extraBlocks.remove(selected);	// addition
 						blocks[j][i] = true;
-						selected = NULL;	// or selected.reset() ?
+						selected = nullptr;	// or selected.reset() ?
 						return;
 					}
 				}

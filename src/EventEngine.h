@@ -33,8 +33,6 @@ class EventEngine {
 		
 		bool isPressed(Key);
 		bool isPressed(Mouse);
-
-		bool mouseClicked(Mouse);
 		
 		/**
 		* Returns mouse's delta position
