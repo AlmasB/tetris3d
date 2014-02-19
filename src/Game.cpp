@@ -109,10 +109,10 @@ void Game::handleKeyEvents() {
 	}
 
 	// values need tweaking for greater experience
-	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.035f);
-	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.035f);
-	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.035f);
-	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.035f);
+	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.05f);
+	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.05f);
 
 	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
 	if (eventSystem->isPressed(Key::ESC)) running = false;
