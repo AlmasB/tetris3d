@@ -42,7 +42,7 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
 	bullet->alive = false;*/
-
+	
 	cout << "Game::Game() finished" << endl;
 }
 
@@ -60,36 +60,38 @@ bool Game::init() {
 		return false;
 	}
 
+	// do the rest of game init here, at this point GL SDL GLEW are OK
+	gfx->setWindowTitle("Tetris3D ~ ");
+
 	return true;
 }
 
 void Game::runMainLoop() {
-
-	ground = make_shared<HorizontalPlane>(Point3(0, -1.1, 15), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
+	// move to init or smth
+	ground = make_shared<HorizontalPlane>(Point3(0, -1.1f, 0.0f), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3(0, 0, 0), COLOR_YELLOW);
+	prize = make_shared<Cube>(Point3(0, 0.0f, 48.5), COLOR_AQUA);
 
 	newBlocks();
 
 	cout << "Entered Main Loop" << endl;
-	Uint32 start, end;
 
 	while (running) {
-		start = SDL_GetTicks();
+		gfx->setFrameStart();
+
 		eventSystem->pollEvents();
-
-		//cout << "Polled Events" << endl;
-
-		handleKeyEvents();
-		handleMouseEvents();
+		handleAllEvents();
 
 		update();
 		render();
 
-		end = SDL_GetTicks() - start;
-		if (end < 20) {
-			SDL_Delay(20 - end);
-		}
+		gfx->adjustFPSDelay(GAME_FPS_DELAY);
 	}
+}
+
+void Game::handleAllEvents() {
+	handleKeyEvents();
+	handleMouseEvents();
 }
 
 void Game::handleKeyEvents() {
@@ -157,8 +159,8 @@ void Game::update() {
 
 	float value = 0.0025f;
 
-	//ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
-	//ground->move(Vector3(0, 0, -value/2.0f));
+	ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
+	ground->move(Vector3(0, 0, value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -212,43 +214,9 @@ bool Game::isGameWon() {
 	return true;
 }
 
-void Game::testCollision() {
-
-}
-
 void Game::render() {
-	//gfx->clearScreen();
-
-	/*glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	Point3 pos = camera->getPosition();
-	Point3 look = pos + camera->getDirection();
-	Vector3 up = camera->getUP();
-
-	gluLookAt(pos.getX(), pos.getY(), pos.getZ(),
-		look.getX(), look.getY(), look.getZ(),
-		up.getX(), up.getY(), up.getZ());
-
-	ground->draw();
-	prize->draw();
-
-	for (auto cube : mainBlocks)
-		cube->draw();
-
-	for (auto cube : extraBlocks)	// TODO: clean
-		if (cube->alive)
-			cube->draw();
-
-	gfx->drawUI();*/
-
-	//gfx->showScreen();
-
-	//camera->OnRender();
-
 	gfx->clearScreen();
 	
-
 	for (auto cube : mainBlocks)
 		cube->draw(camera);
 
@@ -256,11 +224,9 @@ void Game::render() {
 		cube->draw(camera);
 
 	ground->draw(camera);
-	
+	prize->draw(camera);
 
-	//SDL_GL_SwapWindow(gfx->window);
 	gfx->showScreen();
-
 }
 
 uint Game::numberOfBlocksRequired() {

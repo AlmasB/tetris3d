@@ -31,15 +31,14 @@
 #define __ENGINE_WINDOW_W 800
 #define __ENGINE_WINDOW_H 600
 
-
-
-
 class GraphicsEngine {
 	private:
 		
 		SDL_GLContext glContext;
 		SDL_Renderer * renderer;
 		GLfloat rot;
+
+		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
 	public:
 		SDL_Window * window;
@@ -48,11 +47,17 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 		void resize();
-		//void drawCube(GLfloat x, GLfloat y, GLfloat z);
-		//void drawCube(GLfloat x, GLfloat y, GLfloat z, RGB);
 		void drawUI();
 		void clearScreen();
 		void showScreen();
+
+		//void setWindowIcon(const char *);
+		void setWindowSize(const int &, const int &);
+		void setWindowTitle(const char *title);
+
+		void setFrameStart();
+		void adjustFPSDelay(const Uint32 &);
+		Uint32 getAverageFPS();
 };
 
 

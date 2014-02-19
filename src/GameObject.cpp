@@ -122,9 +122,6 @@ Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 
 	Vertices[6] = Vector3f(1.0f, 1.0f, -1.0f);
 	Vertices[7] = Vector3f(-1.0f, 1.0f, -1.0f);
 
-
-	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
-
 	//element buffer
 	unsigned int Indices[] = {
 		0, 1, 2,
@@ -141,6 +138,7 @@ Cube::Cube(const Point3 & _center, RGBColor _color) : GameObject(_center, 2, 2, 
 		6, 2, 1 
 	};
 
+	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
 	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
 
 	compileShaders();
@@ -159,38 +157,6 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 
 	numOfTriangles = 12;
 
-	/*Vector3f Vertices[3];
-	Vertices[0] = Vector3f(x/2, 0.0f, z/2);
-	Vertices[1] = Vector3f(-x/2, 0.0f, z/2);
-	Vertices[2] = Vector3f(-x/2, 0.0f, -z/2);
-	//Vertices[3] = Vector3f(x/2, 0.0f, -z/2);
-
-	cout << "assigned vectors" << endl;
-
-	glGenBuffers(1, &VBO);
-
-	cout << "genBuffers finished" << endl;
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	cout << "bind buffer finished " << endl;
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-
-
-	cout << "VErtex PLANE created" << endl;
-
-	//element buffer
-	unsigned int Indices[] = { 5, 1, 2
-		//2, 0, 3 
-	};
-
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
-
-	CompileShaders();*/
-
 	Vector3f Vertices[8];
 	Vertices[0] = Vector3f(-x/2, -y/2, z/2);
 	Vertices[1] = Vector3f(x/2, -y/2, z/2);
@@ -201,10 +167,6 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 	Vertices[5] = Vector3f(x/2, -y/2, -z/2);
 	Vertices[6] = Vector3f(x/2, y/2, -z/2);
 	Vertices[7] = Vector3f(-x/2, y/2, -z/2);
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 
 	//element buffer
 	unsigned int Indices[] = { 0, 1, 2,
@@ -220,12 +182,8 @@ HorizontalPlane::HorizontalPlane(const Point3 & c, float x, float y, float z, RG
 		1, 5, 6,
 		6, 2, 1 };
 
-
+	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
 	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
-
-	/*glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);*/
 
 	compileShaders();
 }

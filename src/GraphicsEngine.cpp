@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-GraphicsEngine::GraphicsEngine() : rot(0.0f) {}
+GraphicsEngine::GraphicsEngine() : rot(0.0f), fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
 
 GraphicsEngine::~GraphicsEngine() {
 	SDL_GL_DeleteContext(glContext);
@@ -75,6 +75,11 @@ void GraphicsEngine::resize() {
 
 }
 
+void GraphicsEngine::setWindowTitle(const char * title) {
+	string t = string(title) + string(_ENGINE_TITLE);	// check for memory
+	SDL_SetWindowTitle(window, t.c_str());
+}
+
 void GraphicsEngine::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -104,4 +109,33 @@ void GraphicsEngine::drawUI() {
 	SDL_RenderDrawLine(renderer, 0, 0, +0, +10);
 	SDL_RenderDrawLine(renderer, 0, 0, +0, -10);
 	glPopMatrix();*/
+}
+
+/*void GraphicsEngine::setWindowIcon(const char *iconFileName) {
+	SDL_Surface * icon = IMG_Load(iconFileName);
+	SDL_SetWindowIcon(window, icon);
+	SDL_FreeSurface(icon);
+}*/
+
+void GraphicsEngine::setWindowSize(const int &w, const int &h) {
+	SDL_SetWindowSize(window, w, h);
+}
+
+void GraphicsEngine::setFrameStart() {
+	fpsStart = SDL_GetTicks();
+}
+
+void GraphicsEngine::adjustFPSDelay(const Uint32 &delay) {
+	fpsEnd = SDL_GetTicks() - fpsStart;
+	if (fpsEnd < delay) {
+		SDL_Delay(delay - fpsEnd);
+	}
+
+	Uint32 fpsCurrent = 1000 / (SDL_GetTicks() - fpsStart);
+	fpsAverage = (fpsCurrent + fpsPrevious + fpsAverage * 8) / 10;	// average, 10 values / 10
+	fpsPrevious = fpsCurrent;
+}
+
+Uint32 GraphicsEngine::getAverageFPS() {
+	return fpsAverage;
 }
