@@ -68,9 +68,10 @@ bool Game::init() {
 
 void Game::runMainLoop() {
 	// move to init or smth
-	ground = make_shared<HorizontalPlane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
+	float length = 50.0f;
+	ground = make_shared<HorizontalPlane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3f(0, 0.0f, 48.5), COLOR_AQUA);
+	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), COLOR_AQUA);
 
 	newBlocks();
 
@@ -165,11 +166,12 @@ void Game::update() {
 
 	//ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
 	ground->move(Vector3f(0, 0, value/2.0f));
+	prize->move(Vector3f(0, 0, value / 2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
 	for (auto cube : extraBlocks)
-		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
+		if (!ground->collidesWith(*cube) && selected != cube)
 			cube->move(gravity);
 
 
@@ -193,7 +195,6 @@ void Game::buildBlock() {
 					if (distanceBetween(c, selected->center) < 3.0f) {
 						selected->setCenter(c.x, c.y, c.z);
 						selected->setLocked(false);
-						selected->alive = false;
 						mainBlocks.push_back(selected);
 						extraBlocks.remove(selected);
 						blocks[j][i] = true;

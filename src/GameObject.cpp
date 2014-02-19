@@ -2,7 +2,6 @@
 
 GameObject::GameObject(const Point3f & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z), transformer(CameraTransformer(_center)) {
-	alive = true;
 	locked = false;
 
 	color = _color;
@@ -70,29 +69,12 @@ void GameObject::compileShaders() {
 }
 
 void GameObject::draw() {
-	/*CameraTransformer t(center);
-	std::cout << "T" << std::endl;
-	t.printDebug();
-	std::cout << "T2" << std::endl;
-	transformer.printDebug();*/
-	//Pipeline p;
-	//p.Rotate(0.0f, Scale, 0.0f);
-	//p.WorldPos(0.0f, 0.0f, 7.0f);
-	//p.WorldPos(center.x, center.y, center.z);
-
-	//p.SetCamera(cam->GetPos(), cam->GetTarget(), cam->GetUp());
-	//p.SetPerspectiveProj(60.0f, 800, 600, 1.0f, 100.0f);	// 45.0 is a good value
-
-	//glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
-
+	// calculate 3D position and place it
 	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
-	//std::cout << "T3" << std::endl;
-	//transformer.printDebug();
 
-	//glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)t.transform());
-
+	// give color
 	if (!locked)
-		glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// color changer
+		glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);
 	else
 		glUniform4f(mycolor, COLOR_YELLOW.r / 255.0f, COLOR_YELLOW.g / 255.0f, COLOR_YELLOW.b / 255.0f, 1.0f);
 

@@ -85,7 +85,6 @@ class GameObject : public BoundingBox {
 		void move(const Vector3f &);
 		void setDistZ(float);
 		void setLocked(bool b);
-		bool alive;
 
 		RGBColor color;
 
