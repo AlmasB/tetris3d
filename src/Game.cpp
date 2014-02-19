@@ -159,8 +159,8 @@ void Game::update() {
 
 	float value = 0.0025f;
 
-	ground->setDistZ(ground->halfDistZ.z * 2 - value);
-	ground->move(Vector3f(0, 0, value/2.0f));
+	ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
+	//ground->move(Vector3f(0, 0, value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -186,7 +186,7 @@ void Game::buildBlock() {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
 					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
-					if (distanceBetween(c, selected->center) < 5.0f) {
+					if (distanceBetween(c, selected->center) < 3.0f) {
 						selected->center = c;
 						selected->setLocked(false);
 						selected->alive = false;
