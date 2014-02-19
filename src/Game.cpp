@@ -135,6 +135,10 @@ void Game::handleMouseEvents() {
 
 void Game::onPrimaryAction() {
 	bullet->center = camera->getPosition();
+
+	//mainBlocks.front()->transformer.printDebug();
+	//camera->printDebug();
+
 	while (selected == nullptr && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
@@ -166,7 +170,7 @@ void Game::update() {
 
 	for (auto cube : extraBlocks)
 		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
-			cube->center += gravity;
+			cube->move(gravity);
 
 
 	buildBlock();
@@ -187,7 +191,7 @@ void Game::buildBlock() {
 				if (!blocks[j][i]) {
 					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
 					if (distanceBetween(c, selected->center) < 3.0f) {
-						selected->center = c;
+						selected->setCenter(c.x, c.y, c.z);
 						selected->setLocked(false);
 						selected->alive = false;
 						mainBlocks.push_back(selected);

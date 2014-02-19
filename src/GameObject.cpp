@@ -70,7 +70,11 @@ void GameObject::compileShaders() {
 }
 
 void GameObject::draw() {
-	CameraTransformer t(center);
+	/*CameraTransformer t(center);
+	std::cout << "T" << std::endl;
+	t.printDebug();
+	std::cout << "T2" << std::endl;
+	transformer.printDebug();*/
 	//Pipeline p;
 	//p.Rotate(0.0f, Scale, 0.0f);
 	//p.WorldPos(0.0f, 0.0f, 7.0f);
@@ -81,7 +85,11 @@ void GameObject::draw() {
 
 	//glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
 
-	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)t.transform());
+	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
+	//std::cout << "T3" << std::endl;
+	//transformer.printDebug();
+
+	//glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)t.transform());
 
 	if (!locked)
 		glUniform4f(mycolor, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// color changer
@@ -112,6 +120,7 @@ void GameObject::setCenter(float x, float y, float z) {
 
 void GameObject::move(const Vector3f & v) {
 	center += v;
+	transformer.center = Vector3f(center.x, center.y, center.z);
 }
 
 void GameObject::setDistZ(float dist) {

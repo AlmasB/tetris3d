@@ -2,7 +2,7 @@
 #define	__CAMERA_H__
 
 #include <memory>
-
+#include <iostream>
 #include "GameMath.h"
 
 #define __FOV 60.0f
@@ -63,6 +63,8 @@ class Camera {
 		Point3f getPosition();
 		Vector3f getDirection();
 		Vector3f getCameraUp();
+
+		void printDebug();
 };
 
 class CameraTransformer {
@@ -76,7 +78,9 @@ class CameraTransformer {
 		Vector3f scale;
 		Vector3f center;
 		Vector3f rotate;
-		Matrix4f* transform();
+		const Matrix4f* transform();
+
+		void printDebug();
 
 		struct {
 			float fov;	// field of view

@@ -73,7 +73,7 @@ class GameObject : public BoundingBox {
 
 		GLuint mycolor;
 
-		CameraTransformer transformer;
+		
 
 		int numOfTriangles;
 
@@ -89,6 +89,8 @@ class GameObject : public BoundingBox {
 		bool alive;
 
 		RGBColor color;
+
+		CameraTransformer transformer;
 
 		void draw();
 

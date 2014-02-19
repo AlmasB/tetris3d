@@ -130,6 +130,12 @@ Vector3f Camera::getCameraUp() {
 	return Vector3f(m_up.x, m_up.y, m_up.z);
 }
 
+void Camera::printDebug() {
+	std::cout << "POS:" << m_pos.x << " " << m_pos.y << " " << m_pos.z << std::endl;
+	std::cout << "DIR:" << m_target.x << " " << m_target.y << " " << m_target.z << std::endl;
+	std::cout << "UP:" << m_up.x << " " << m_up.y << " " << m_up.z << std::endl;
+}
+
 /* CAMERA TRANSFORMER CLASS DEFINITION BEGIN */
 
 CameraTransformer::CameraTransformer(Point3f _center) 
@@ -141,7 +147,7 @@ CameraTransformer::CameraTransformer(Point3f _center)
 	perspective.zFar = 100.0f;
 }
 
-Matrix4f * CameraTransformer::transform() {
+const Matrix4f * CameraTransformer::transform() {
 	Matrix4f scaleTrans, rotateTrans, translationTrans, cameraTranslationTrans, cameraRotateTrans, persProjTrans;
 
 	// scale, rotate, translate
@@ -156,7 +162,21 @@ Matrix4f * CameraTransformer::transform() {
 	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getCameraUp());	// careful passing references
 	persProjTrans.initPersProjTransform(perspective.fov, perspective.width, perspective.height, perspective.zNear, perspective.zFar);
 
-	transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
+	//transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
+
+	Matrix4f * trans = &(persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans);
+
 	// perhaps send a new pointer so it doesn't change the member
-	return &transformation;
+	//return &transformation;
+	return trans;
+}
+
+void CameraTransformer::printDebug() {
+	/*std::cout << perspective.fov << std::endl;
+	std::cout << perspective.width << std::endl;
+	std::cout << perspective.height << std::endl;
+	std::cout << perspective.zNear << std::endl;
+	std::cout << perspective.zFar << std::endl;*/
+
+	std::cout << center.x << " " << center.y << " " << center.z << std::endl;
 }
