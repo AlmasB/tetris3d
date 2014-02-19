@@ -36,7 +36,6 @@ class GraphicsEngine {
 		
 		SDL_GLContext glContext;
 		SDL_Renderer * renderer;
-		GLfloat rot;
 
 		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 

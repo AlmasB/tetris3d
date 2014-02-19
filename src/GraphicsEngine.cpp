@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-GraphicsEngine::GraphicsEngine() : rot(0.0f), fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
+GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
 
 GraphicsEngine::~GraphicsEngine() {
 	SDL_GL_DeleteContext(glContext);
@@ -28,8 +28,7 @@ std::string GraphicsEngine::init() {
 	if (glContext == NULL)
 		return _SDL_ERROR_INIT_OPENGL + std::string(SDL_GetError());
 
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
+	glEnable(GL_DEPTH_TEST);	// when do we do that? before/after
 	glDepthFunc(GL_LESS);
 
 	if (glewInit() != GLEW_OK)
