@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "BoundingBox.h"
+
 
 #include <memory>
 #include <stdio.h>
@@ -14,8 +14,7 @@
 
 #include <iostream>
 
-
-#include "Pipeline.h"
+#include "BoundingBox.h"
 #include "Camera.h"
 
 using namespace std;
