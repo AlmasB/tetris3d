@@ -37,14 +37,22 @@ GLuint GameObject::createShader(const char * shaderCode, GLenum shaderType) {
 	return shader;
 }
 
+GLuint GameObject::createBuffer(GLenum bufferType, const void *bufferData, GLsizei bufferSize) {
+	GLuint buffer;
+	glGenBuffers(1, &buffer);
+	glBindBuffer(bufferType, buffer);
+	glBufferData(bufferType, bufferSize, bufferData, GL_STATIC_DRAW);
+	return buffer;
+}
+
 void GameObject::compileShaders() {
 	GLuint program = glCreateProgram();
 	if (program == 0) {
 		// bad
 	}
 
-	glAttachShader(program, createShader(pVS, GL_VERTEX_SHADER));
-	glAttachShader(program, createShader(pFS, GL_FRAGMENT_SHADER));
+	glAttachShader(program, createShader(vertexShaderCode, GL_VERTEX_SHADER));
+	glAttachShader(program, createShader(fragmentShaderCode, GL_FRAGMENT_SHADER));
 	glLinkProgram(program);
 
 	GLint ok;
@@ -99,6 +107,10 @@ void GameObject::setCenter(float x, float y, float z) {
 	center = Point3f(x, y, z);
 	transformer.center = Vector3f(x, y, z);
 }
+// or the other way around
+void GameObject::setCenter(const Point3f & _center) {
+	setCenter(_center.x, _center.y, _center.z);
+}
 
 void GameObject::move(const Vector3f & v) {
 	center += v;
@@ -113,23 +125,24 @@ void GameObject::setLocked(bool b) {
 	locked = b;
 }
 
-Cube::Cube(const Point3f & _center, RGBColor _color) : GameObject(_center, 2, 2, 2, _color) {
+/* CUBE CLASS DEFINITION BEGIN */
+
+Cube::Cube(const Point3f & _center, const float & size, RGBColor _color) 
+: GameObject(_center, size, size, size, _color) {
 	numOfTriangles = 12;
-	//vertex buffer
 
-	Vector3f Vertices[8];
-    Vertices[0] = Vector3f(-1.0f, -1.0f, 1.0f);
-    Vertices[1] = Vector3f(1.0f, -1.0f, 1.0f);
-    Vertices[2] = Vector3f(1.0f, 1.0f, 1.0);
-    Vertices[3] = Vector3f(-1.0f, 1.0f, 1.0f);
+	Vector3f vertices[8];
+	vertices[0] = Vector3f(-size / 2, -size / 2, size / 2);
+	vertices[1] = Vector3f(size / 2, -size / 2, size / 2);
+	vertices[2] = Vector3f(size / 2, size / 2, size / 2);
+	vertices[3] = Vector3f(-size / 2, size / 2, size / 2);
 
-	Vertices[4] = Vector3f(-1.0f, -1.0f, -1.0f);
-	Vertices[5] = Vector3f(1.0f, -1.0f, -1.0f);
-	Vertices[6] = Vector3f(1.0f, 1.0f, -1.0f);
-	Vertices[7] = Vector3f(-1.0f, 1.0f, -1.0f);
+	vertices[4] = Vector3f(-size / 2, -size / 2, -size / 2);
+	vertices[5] = Vector3f(size / 2, -size / 2, -size / 2);
+	vertices[6] = Vector3f(size / 2, size / 2, -size / 2);
+	vertices[7] = Vector3f(-size / 2, size / 2, -size / 2);
 
-	//element buffer
-	unsigned int Indices[] = {
+	unsigned int elements[] = {
 		0, 1, 2,
 		2, 3, 0,
 		3, 2, 6,
@@ -144,38 +157,30 @@ Cube::Cube(const Point3f & _center, RGBColor _color) : GameObject(_center, 2, 2,
 		6, 2, 1 
 	};
 
-	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
-	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
-
+	VBO = createBuffer(GL_ARRAY_BUFFER, vertices, sizeof(vertices));
+	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, elements, sizeof(elements));
 	compileShaders();
 }
 
-GLuint GameObject::createBuffer(GLenum bufferType, const void *bufferData, GLsizei bufferSize) {
-	GLuint buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(bufferType, buffer);
-	glBufferData(bufferType, bufferSize, bufferData, GL_STATIC_DRAW);
-	return buffer;
-}
+/* PLANE CLASS DEFINITION BEGIN */
 
-HorizontalPlane::HorizontalPlane(const Point3f & c, float x, float y, float z, RGBColor _color)
+Plane::Plane(const Point3f & c, float x, float y, float z, RGBColor _color)
 : GameObject(c, x, y, z, _color) {
-
 	numOfTriangles = 12;
 
-	Vector3f Vertices[8];
-	Vertices[0] = Vector3f(-x/2, -y/2, z/2);
-	Vertices[1] = Vector3f(x/2, -y/2, z/2);
-	Vertices[2] = Vector3f(x/2, y/2, z/2);
-	Vertices[3] = Vector3f(-x/2, y/2, z/2);
+	Vector3f vertices[8];
+	vertices[0] = Vector3f(-x / 2, -y / 2, z / 2);
+	vertices[1] = Vector3f(x / 2, -y / 2, z / 2);
+	vertices[2] = Vector3f(x / 2, y / 2, z / 2);
+	vertices[3] = Vector3f(-x / 2, y / 2, z / 2);
 
-	Vertices[4] = Vector3f(-x/2, -y/2, -z/2);
-	Vertices[5] = Vector3f(x/2, -y/2, -z/2);
-	Vertices[6] = Vector3f(x/2, y/2, -z/2);
-	Vertices[7] = Vector3f(-x/2, y/2, -z/2);
+	vertices[4] = Vector3f(-x / 2, -y / 2, -z / 2);
+	vertices[5] = Vector3f(x / 2, -y / 2, -z / 2);
+	vertices[6] = Vector3f(x / 2, y / 2, -z / 2);
+	vertices[7] = Vector3f(-x / 2, y / 2, -z / 2);
 
-	//element buffer
-	unsigned int Indices[] = { 0, 1, 2,
+	unsigned int elements[] = { 
+		0, 1, 2,
 		2, 3, 0,
 		3, 2, 6,
 		6, 7, 3,
@@ -186,21 +191,21 @@ HorizontalPlane::HorizontalPlane(const Point3f & c, float x, float y, float z, R
 		4, 0, 3,
 		3, 7, 4,
 		1, 5, 6,
-		6, 2, 1 };
+		6, 2, 1
+	};
 
-	VBO = createBuffer(GL_ARRAY_BUFFER, Vertices, sizeof(Vertices));
-	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, Indices, sizeof(Indices));
-
+	VBO = createBuffer(GL_ARRAY_BUFFER, vertices, sizeof(vertices));
+	EBO = createBuffer(GL_ELEMENT_ARRAY_BUFFER, elements, sizeof(elements));
 	compileShaders();
 }
 
-bool HorizontalPlane::collidesWith(const BoundingBox & box) {
+bool Plane::collidesWith(const BoundingBox & box) {
 	Rect plane = { (int)(center.x-halfDistX.x), (int)(center.z-halfDistZ.z), (int)(2*halfDistX.x), (int)(2*halfDistZ.z) };
-	Point2 p = { (int)box.center.x, (int)box.center.z };
+	Point2 p = { (int)box.getCenter().x, (int)box.getCenter().z };
 
 	// further check the whole plane around center point
 
-	return center.y > box.center.y - box.halfDistY.y - 0.05
-		&& center.y < box.center.y - box.halfDistY.y + 0.05
+	return center.y > box.getCenter().y - box.getHalfDistY() - 0.05
+		&& center.y < box.getCenter().y - box.getHalfDistY() + 0.05
 		&& plane.contains(p);
 }

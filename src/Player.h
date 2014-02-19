@@ -3,10 +3,11 @@
 
 #include "GameObject.h"
 
-class Player {
+class Player : public Cube {
 	private:
+		uint score;
 	public:
-		Player();
+		Player(const Point3f & center);
 };
 
 

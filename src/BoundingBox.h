@@ -56,17 +56,22 @@ enum AXIS { X, Y, Z };
 // only considering symmetric for now
 class BoundingBox {
 	private:
+		std::pair<float, float> projectOntoAxis(const BoundingBox &, enum AXIS);
 	protected:
-		
-		
+		Point3f center;
+		Vector3f halfDistX, halfDistY, halfDistZ;	// TODO: decide what to keep
+		float _halfDistX, _halfDistY, _halfDistZ;	// halved lengths in each direction
 	public:
-		Vector3f halfDistX, halfDistY, halfDistZ;//make protected
-		BoundingBox(const Point3f &, float, float, float);
-		Point3f center;	// make protected
-		Point3f getCenter();
+		BoundingBox(const Point3f & center, float distX, float distY, float distZ);
+
+		/**
+		* @return the center point of this bounding box
+		*/
+		Point3f getCenter() const;
+
+		float getHalfDistY() const;
 
 		virtual bool collidesWith(const BoundingBox &);
-		std::pair<float, float> projectOntoAxis(const BoundingBox &, enum AXIS);
 };
 
 typedef BoundingBox BBox;

@@ -20,7 +20,7 @@
 using namespace std;
 
 
-static const char* pVS = "                                                          \n\
+static const char* vertexShaderCode = "                                                          \n\
 #version 120                                                                        \n\
 								                                                    \n\
 attribute vec3 Position;                                                            \n\
@@ -34,7 +34,7 @@ void main()                                                                     
 
 
 
-static const char* pFS = "                                                          \n\
+static const char* fragmentShaderCode = "                                                          \n\
 #version 120                                                                        \n\
 						                                                            \n\
 uniform vec4 color;                                                                 \n\
@@ -63,57 +63,46 @@ static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 class GameObject : public BoundingBox {
 	private:
 	protected:
+		RGBColor color;
+		uint numOfTriangles;
 		
 		bool locked;
+
+		CameraTransformer transformer;
 
 		GLuint VBO;
 		GLuint EBO;
 		GLuint gWVPLocation;
-
 		GLuint mycolor;
 
 		
-
-		int numOfTriangles;
-
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 		GLuint createShader(const char * shaderCode, GLenum shaderType);
 		void compileShaders();
 
 	public:
 		GameObject(const Point3f &, float, float, float, RGBColor);
-		void move(const Vector3f &);
 		void setDistZ(float);
 		void setLocked(bool b);
 
-		RGBColor color;
-
-		CameraTransformer transformer;
-
-		void draw();
-
+		void move(const Vector3f &);
 		void scale(float, float, float);
 		void setCenter(float, float, float);
+		void setCenter(const Point3f & center);
 		void rotate(float, float, float);
 
-
-		//virtual void draw() = 0;	// revisit that
+		void draw();
 };
 
 class Cube : public GameObject {
 	public:
-		Cube(const Point3f &, RGBColor);
-		//void draw(std::shared_ptr<Camera>);
-		
+		Cube(const Point3f &, const float& size, RGBColor);
 };
 
-class HorizontalPlane : public GameObject {
+class Plane : public GameObject {
 	public:
-		HorizontalPlane(const Point3f &, float, float, float, RGBColor);
+		Plane(const Point3f &, float, float, float, RGBColor);
 		bool collidesWith(const BoundingBox &);
-		//void draw();
 };
-
-typedef HorizontalPlane HPlane;
 
 #endif

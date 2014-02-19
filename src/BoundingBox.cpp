@@ -2,14 +2,18 @@
 
 BoundingBox::BoundingBox(const Point3f & _center, float x, float y, float z) 
 	: center(_center), 
-	halfDistX(Vector3f(x / 2.0f, 0, 0)), 
-	halfDistY(Vector3f(0, y / 2.0f, 0)), 
-	halfDistZ(Vector3f(0, 0, z / 2.0f)) {
+	halfDistX(Vector3f(x / 2.0f, 0, 0)), _halfDistX(x/2),
+	halfDistY(Vector3f(0, y / 2.0f, 0)), _halfDistY(y/2),
+	halfDistZ(Vector3f(0, 0, z / 2.0f)), _halfDistZ(z/2) {
 
 }
 
-Point3f BoundingBox::getCenter() {
+Point3f BoundingBox::getCenter() const {
 	return center;
+}
+
+float BoundingBox::getHalfDistY() const {
+	return _halfDistY;
 }
 
 bool between(const std::pair<float, float> & a, const std::pair<float, float> & b) {

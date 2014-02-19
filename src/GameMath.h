@@ -61,7 +61,7 @@
 #include <cstdlib>
 
 #define __PI       3.14159265358979323846
-#define toRadian(x) (float)(((x) * __PI / 180.0f))
+#define toRadian(x) (float)(((x) * __PI / 180.0f))	// TODO: precalculate
 #define toDegree(x) (float)(((x) * 180.0f / __PI))
 
 typedef unsigned int uint;
@@ -238,16 +238,14 @@ public:
 	}
 
 
-	inline void initIdentity()
-	{
+	inline void initIdentity() {
 		m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
 		m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = 0.0f;
 		m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = 0.0f;
 		m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 	}
 
-	inline Matrix4f operator*(const Matrix4f& right) const
-	{
+	inline Matrix4f operator*(const Matrix4f& right) const {
 		Matrix4f Ret;
 
 		for (unsigned int i = 0; i < 4; i++) {

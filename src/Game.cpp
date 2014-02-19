@@ -37,11 +37,7 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
-
-	newBlocks();
-
-	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
-	bullet->alive = false;*/
+	*/
 	
 	cout << "Game::Game() finished" << endl;
 }
@@ -69,9 +65,9 @@ bool Game::init() {
 void Game::runMainLoop() {
 	// move to init or smth
 	float length = 50.0f;
-	ground = make_shared<HorizontalPlane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
-	bullet = make_shared<Cube>(Point3f(0, 0, 0), COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), COLOR_AQUA);
+	ground = make_shared<Plane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
+	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
+	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), 2.0f, COLOR_AQUA);
 
 	newBlocks();
 
@@ -135,12 +131,12 @@ void Game::handleMouseEvents() {
 }
 
 void Game::onPrimaryAction() {
-	bullet->center = camera->getPosition();
+	bullet->setCenter(camera->getPosition());
 
 	//mainBlocks.front()->transformer.printDebug();
 	//camera->printDebug();
 
-	while (selected == nullptr && distanceBetween(camera->getPosition(), bullet->center) < 20.0f) {
+	while (selected == nullptr && distanceBetween(camera->getPosition(), bullet->getCenter()) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
@@ -192,7 +188,7 @@ void Game::buildBlock() {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
 					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
-					if (distanceBetween(c, selected->center) < 3.0f) {
+					if (distanceBetween(c, selected->getCenter()) < 3.0f) {
 						selected->setCenter(c.x, c.y, c.z);
 						selected->setLocked(false);
 						mainBlocks.push_back(selected);
@@ -247,19 +243,20 @@ uint Game::numberOfBlocksRequired() {
 	return count;
 }
 
+// use the length of the platform to determine where to spawn red blocks
 void Game::newBlocks() {
 	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
 				Point3f p(getValue(j), i*2.0f, 5.0f + 4*step);
-				mainBlocks.push_back(make_shared<Cube>(p, COLOR_BLUE));
+				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
 		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
-		extraBlocks.push_back(make_shared<Cube>(p, COLOR_RED));
+		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
 	}
 }

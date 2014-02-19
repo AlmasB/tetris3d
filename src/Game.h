@@ -4,8 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
-#include <memory>	// for shared_ptr, will add later
-
+#include <memory>
 
 #include "EventEngine.h"
 #include "GameObject.h"
@@ -15,17 +14,16 @@
 
 using namespace std;	// for debugging
 
-
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
 
 class Game {
 	private:
 		unique_ptr<GraphicsEngine> gfx;
-		Camera * camera;
 		unique_ptr<EventEngine> eventSystem;
+		Camera * camera;
 
 		// game objects
-		shared_ptr<HPlane> ground;
+		shared_ptr<Plane> ground;
 
 		shared_ptr<Cube> prize;
 		shared_ptr<Cube> bullet;
@@ -76,6 +74,5 @@ class Game {
 		bool init();
 		void runMainLoop();
 };
-
 
 #endif
