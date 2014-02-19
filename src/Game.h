@@ -6,18 +6,22 @@
 #include <list>
 #include <memory>	// for shared_ptr, will add later
 
-#include "GraphicsEngine.h"
+
 #include "EventEngine.h"
 #include "GameObject.h"
+#include "GraphicsEngine.h"
+
+#define __APP_FPS 60
 
 using namespace std;	// for debugging
 
 
+static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
 
 class Game {
 	private:
 		unique_ptr<GraphicsEngine> gfx;
-		unique_ptr<Camera> camera;
+		shared_ptr<Camera> camera;
 		unique_ptr<EventEngine> eventSystem;
 
 		// game objects
@@ -45,22 +49,32 @@ class Game {
 		void onSecondaryAction();
 
 		uint numberOfBlocksRequired();
+
+
+		/**
+		* Handle all generated and currently active events
+		* Includes keyboard/mouse events
+		*/
+		void handleAllEvents();
+		void handleKeyEvents();
+		void handleMouseEvents();
+
+		/**
+		* Updates the game world
+		*/
+		void update();
+
+		/**
+		* Renders the game world
+		*/
+		void render();
+
 	public:
 		Game();
 		~Game();
 
 		bool init();
 		void runMainLoop();
-
-		void handleKeyEvents();
-		void handleMouseEvents();
-
-		void update();
-		void render();
-
-		void testCollision();
-
-		
 };
 
 

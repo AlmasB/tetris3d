@@ -18,14 +18,9 @@ float getValue(uint n) {
 }
 
 Game::Game() : running(true), gTest(true), step(0) {
-	//camera = make_unique<Camera>();
-	camera = unique_ptr<Camera>(new Camera());
+	camera = shared_ptr<Camera>(new Camera());
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
-	//gfx =  make_unique<GraphicsEngine>();
-	//eventSystem = make_unique<EventEngine>();
-
-	// some platform related experiments
 
 #if defined(_WIN64)
 	cout << "WIN64" << endl;
@@ -37,7 +32,7 @@ Game::Game() : running(true), gTest(true), step(0) {
 
 	srand(0);
 
-	ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
+	/*ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
 	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
@@ -46,8 +41,8 @@ Game::Game() : running(true), gTest(true), step(0) {
 	newBlocks();
 
 	bullet = make_shared<Cube>(Point3(0, 0, 0), 2.0f, COLOR_YELLOW);	// invisible anyway
-	bullet->alive = false;
-
+	bullet->alive = false;*/
+	
 	cout << "Game::Game() finished" << endl;
 }
 
@@ -65,81 +60,69 @@ bool Game::init() {
 		return false;
 	}
 
+	// do the rest of game init here, at this point GL SDL GLEW are OK
+	gfx->setWindowTitle("Tetris3D ~ ");
+
 	return true;
 }
 
 void Game::runMainLoop() {
+	// move to init or smth
+	ground = make_shared<HorizontalPlane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, 100.0f, COLOR_GRAY);
+	bullet = make_shared<Cube>(Point3f(0, 0, 0), COLOR_YELLOW);
+	prize = make_shared<Cube>(Point3f(0, 0.0f, 48.5), COLOR_AQUA);
+
+	newBlocks();
+
 	cout << "Entered Main Loop" << endl;
-	Uint32 start, end;
 
 	while (running) {
-		start = SDL_GetTicks();
+		gfx->setFrameStart();
+
 		eventSystem->pollEvents();
-
-		//cout << "Polled Events" << endl;
-
-		handleKeyEvents();
-		handleMouseEvents();
+		handleAllEvents();
 
 		update();
 		render();
 
-		end = SDL_GetTicks() - start;
-		if (end < 20) {
-			SDL_Delay(20 - end);
-		}
+		gfx->adjustFPSDelay(GAME_FPS_DELAY);
 	}
+}
+
+void Game::handleAllEvents() {
+	handleKeyEvents();
+	handleMouseEvents();
 }
 
 void Game::handleKeyEvents() {
 	if (selected == NULL) {
-		if (eventSystem->isPressed(Key::W))
-			camera->moveForward();
-		if (eventSystem->isPressed(Key::S))
-			camera->moveBack();
-		if (eventSystem->isPressed(Key::A))
-			camera->moveLeft();
-		if (eventSystem->isPressed(Key::D))
-			camera->moveRight();
+		if (eventSystem->isPressed(Key::W)) camera->moveForward();
+		if (eventSystem->isPressed(Key::S)) camera->moveBackward();
+		if (eventSystem->isPressed(Key::A)) camera->moveLeft();
+		if (eventSystem->isPressed(Key::D)) camera->moveRight();
 	}
 	else {
-		if (eventSystem->isPressed(Key::W))
-			selected->move(camera->getDirection());
-		if (eventSystem->isPressed(Key::S))
-			selected->move(camera->getDirection()*(-1.0f));
-		if (eventSystem->isPressed(Key::A))
-			selected->move(Vector3(camera->getDirection().getZ(), 0, -camera->getDirection().getX()));
-		if (eventSystem->isPressed(Key::D))
-			selected->move(Vector3(-camera->getDirection().getZ(), 0, camera->getDirection().getX()));
+		if (eventSystem->isPressed(Key::W)) selected->move(camera->getDirection());
+		if (eventSystem->isPressed(Key::S)) selected->move(camera->getDirection()*(-1.0f));
+		if (eventSystem->isPressed(Key::A)) selected->move(Vector3f(-camera->getDirection().z, 0, camera->getDirection().x));
+		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(camera->getDirection().z, 0, -camera->getDirection().x));
 	}
 
-	if (eventSystem->isPressed(Key::LEFT))
-		camera->lookRight(-1.0f * 0.035f);
-	if (eventSystem->isPressed(Key::RIGHT))
-		camera->lookRight(1.0f * 0.035f);
-	if (eventSystem->isPressed(Key::UP))
-		camera->lookUp(1.0f * 0.035f);
-	if (eventSystem->isPressed(Key::DOWN))
-		camera->lookUp(-1.0f * 0.035f);
+	// values need tweaking for greater experience
+	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.05f);
+	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.05f);
 
-	if (eventSystem->isPressed(Key::SPACE))
-		onPrimaryAction();
-
-	if (eventSystem->isPressed(Key::ESC))
-		running = false;
+	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
+	if (eventSystem->isPressed(Key::ESC)) running = false;
 }
 
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
-	// relative x and y are wrong on VM Fedora 20
-	// TODO: check on real machine
-	// POSSIBLE FIX:  since values are 20000+ for relative, perhaps divide by 1000 or adjust just for VM for now ?
-
-	//cout << pos.x << " " << pos.y << endl;
-
-	camera->lookRight(pos.x * 0.0035f);
-	camera->lookUp(-pos.y * 0.0035f);	// - for inverted SDL coords
+	camera->lookRight(pos.x * 0.05f);
+	camera->lookUp(pos.y * 0.05f);
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -172,12 +155,12 @@ void Game::onSecondaryAction() {
 }
 
 void Game::update() {
-	Vector3 gravity(0, -0.01f, 0);
+	Vector3f gravity(0, -0.01f, 0);
 
 	float value = 0.0025f;
 
-	ground->setDistZ(ground->halfDistZ.getZ() * 2 - value);
-	ground->move(Vector3(0, 0, -value/2.0f));
+	ground->setDistZ(ground->halfDistZ.z * 2 - value);
+	ground->move(Vector3f(0, 0, value/2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -185,8 +168,6 @@ void Game::update() {
 		if (!ground->collidesWith(*cube) && cube->alive && selected != cube)	// kinda gravity for now
 			cube->center += gravity;
 
-	if (camera->getPosition().getY() > 0)	// for camera gravity, will be replaced by proper
-		camera->moveDown();
 
 	buildBlock();
 	
@@ -204,7 +185,7 @@ void Game::buildBlock() {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					Point3 c(getValue(j), i*2.0f, -5.0f);
+					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
 					if (distanceBetween(c, selected->center) < 5.0f) {
 						selected->center = c;
 						selected->setLocked(false);
@@ -233,35 +214,17 @@ bool Game::isGameWon() {
 	return true;
 }
 
-void Game::testCollision() {
-
-}
-
 void Game::render() {
 	gfx->clearScreen();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	Point3 pos = camera->getPosition();
-	Point3 look = pos + camera->getDirection();
-	Vector3 up = camera->getUP();
-
-	gluLookAt(pos.getX(), pos.getY(), pos.getZ(),
-		look.getX(), look.getY(), look.getZ(),
-		up.getX(), up.getY(), up.getZ());
-
-	ground->draw();
-	prize->draw();
-
+	
 	for (auto cube : mainBlocks)
-		cube->draw();
+		cube->draw(camera);
 
-	for (auto cube : extraBlocks)	// TODO: clean
-		if (cube->alive)
-			cube->draw();
+	for (auto cube : extraBlocks)
+		cube->draw(camera);
 
-	gfx->drawUI();
+	ground->draw(camera);
+	prize->draw(camera);
 
 	gfx->showScreen();
 }
@@ -284,14 +247,14 @@ void Game::newBlocks() {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3 p(getValue(j), i*2.0f, -5.0f - 4*step);
-				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
+				Point3f p(getValue(j), i*2.0f, 5.0f + 4*step);
+				mainBlocks.push_back(make_shared<Cube>(p, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3 p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, getRandom(25, 35)*1.0f - 5.0f*step);
-		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
+		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
+		extraBlocks.push_back(make_shared<Cube>(p, COLOR_RED));
 	}
 }

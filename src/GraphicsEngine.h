@@ -4,10 +4,12 @@
 #include <string>
 
 #include <SDL.h>
-#include <SDL_opengl.h>
+#include <GL/glew.h>
 #include <GL/glu.h>
 
 #include "Camera.h"
+
+#include <iostream>
 
 /* STRING LITERALS - ERRORS */
 
@@ -16,6 +18,7 @@
 #define _SDL_ERROR_INIT_OPENGL		    "Failed to create OpenGL context"
 
 #define _GL_ERROR_VSYNC					"Failed to set VSync"
+#define _GL_ERROR_GLEW					"Failed to init GLEW"
 
 #define _ENGINE_ERROR_NONE     ""
 #define _ENGINE_ERROR_INIT_GFX "Failed to init graphics"
@@ -28,27 +31,32 @@
 #define __ENGINE_WINDOW_W 800
 #define __ENGINE_WINDOW_H 600
 
-
-
-
 class GraphicsEngine {
 	private:
-		SDL_Window * window;
+		
 		SDL_GLContext glContext;
 		SDL_Renderer * renderer;
-		GLfloat rot;
+
+		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
 	public:
+		SDL_Window * window;
 		GraphicsEngine();
 		~GraphicsEngine();
 		std::string init();
 		void initGL();
 		void resize();
-		//void drawCube(GLfloat x, GLfloat y, GLfloat z);
-		//void drawCube(GLfloat x, GLfloat y, GLfloat z, RGB);
 		void drawUI();
 		void clearScreen();
 		void showScreen();
+
+		//void setWindowIcon(const char *);
+		void setWindowSize(const int &, const int &);
+		void setWindowTitle(const char *title);
+
+		void setFrameStart();
+		void adjustFPSDelay(const Uint32 &);
+		Uint32 getAverageFPS();
 };
 
 
