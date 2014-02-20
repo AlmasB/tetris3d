@@ -47,9 +47,9 @@ POSSIBILITY OF SUCH DAMAGE.
 //#include "Common.h"
 #include "GameMath.h"
 
-static Vector3f UNIT_X_AXIS(1.0, 0.0, 0.0);
-static Vector3f UNIT_Y_AXIS(0.0, 1.0, 0.0);
-static Vector3f UNIT_Z_AXIS(0.0, 0.0, 1.0);
+static const Vector3f UNIT_X_AXIS(1.0, 0.0, 0.0);
+static const Vector3f UNIT_Y_AXIS(0.0, 1.0, 0.0);
+static const Vector3f UNIT_Z_AXIS(0.0, 0.0, 1.0);
 
 enum AXIS { X, Y, Z };
 

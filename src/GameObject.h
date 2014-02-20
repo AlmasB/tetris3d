@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "BoundingBox.h"
+#include "Movable.h"
 #include "Camera.h"
 
 using namespace std;
@@ -60,7 +61,7 @@ static const RGBColor COLOR_GOLD = { 255, 215, 0 };
 static const RGBColor COLOR_BLACK = { 0, 0, 0 };
 static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 
-class GameObject : public BoundingBox {
+class GameObject : public BoundingBox, public Movable {
 	private:
 	protected:
 		RGBColor color;
@@ -80,8 +81,13 @@ class GameObject : public BoundingBox {
 		GLuint createShader(const char * shaderCode, GLenum shaderType);
 		void compileShaders();
 
+		//////////////////////////////////////////////////////
+
+
+
 	public:
 		GameObject(const Point3f &, float, float, float, RGBColor);
+		GameObject(const Point3f &center);	// for dummy objects
 		void setDistZ(float);
 		void setLocked(bool b);
 
@@ -90,8 +96,11 @@ class GameObject : public BoundingBox {
 		void setCenter(float, float, float);
 		void setCenter(const Point3f & center);
 		void rotate(float, float, float);
+		Point3f getCenter();
 
 		void draw();
+
+
 };
 
 class Cube : public GameObject {

@@ -3,8 +3,15 @@
 GameObject::GameObject(const Point3f & _center, float x, float y, float z, RGBColor _color)
 	: BoundingBox(_center, x, y, z), transformer(CameraTransformer(_center)) {
 	locked = false;
-
 	color = _color;
+
+
+}
+
+GameObject::GameObject(const Point3f &_center) : BoundingBox(_center, 0, 0, 0), transformer(CameraTransformer(_center)) {
+	locked = false;
+	color = COLOR_BLACK;
+	//GameObject(_center, 0, 0, 0, COLOR_BLACK);	// TODO: maybe a better way to do delegating constructor ?
 }
 
 GLuint GameObject::createShader(const char * shaderCode, GLenum shaderType) {
@@ -123,6 +130,10 @@ void GameObject::setDistZ(float dist) {
 
 void GameObject::setLocked(bool b) {
 	locked = b;
+}
+
+Point3f GameObject::getCenter() {
+	return BoundingBox::getCenter();
 }
 
 /* CUBE CLASS DEFINITION BEGIN */

@@ -69,6 +69,9 @@ void Game::runMainLoop() {
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), 2.0f, COLOR_AQUA);
 
+	player = make_shared<Player>(Point3f(0, 0, 0));
+	camera->follow(player);
+
 	newBlocks();
 
 	cout << "Entered Main Loop" << endl;
@@ -92,8 +95,8 @@ void Game::handleAllEvents() {
 }
 
 void Game::handleKeyEvents() {
-	if (selected == nullptr) {
-		if (eventSystem->isPressed(Key::W)) camera->moveForward();
+	/*if (selected == nullptr) {
+		if (eventSystem->isPressed(Key::W)) camera->moveForward();	// move player and assign camera to player eyes
 		if (eventSystem->isPressed(Key::S)) camera->moveBackward();
 		if (eventSystem->isPressed(Key::A)) camera->moveLeft();
 		if (eventSystem->isPressed(Key::D)) camera->moveRight();
@@ -109,7 +112,26 @@ void Game::handleKeyEvents() {
 	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.05f);
 	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.05f);
 	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.05f);
+	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.05f);*/
+
+	if (selected == nullptr) {
+		if (eventSystem->isPressed(Key::W)) player->moveForward();	// move player and assign camera to player eyes
+		if (eventSystem->isPressed(Key::S)) player->moveBackward();
+		if (eventSystem->isPressed(Key::A)) player->moveLeft();
+		if (eventSystem->isPressed(Key::D)) player->moveRight();
+	}
+	else {
+		if (eventSystem->isPressed(Key::W)) selected->move(player->getDirection());
+		if (eventSystem->isPressed(Key::S)) selected->move(player->getDirection()*(-1.0f));
+		if (eventSystem->isPressed(Key::A)) selected->move(Vector3f(-player->getDirection().z, 0, player->getDirection().x));
+		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(player->getDirection().z, 0, -player->getDirection().x));
+	}
+
+	// values need tweaking for greater experience
+	if (eventSystem->isPressed(Key::UP)) player->lookUp(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(20 * 0.05f);
+	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20 * 0.05f);
+	if (eventSystem->isPressed(Key::RIGHT)) player->lookRight(20 * 0.05f);
 
 	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
 	if (eventSystem->isPressed(Key::ESC)) running = false;
@@ -118,8 +140,11 @@ void Game::handleKeyEvents() {
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
-	camera->lookRight(pos.x * 0.05f);
-	camera->lookUp(pos.y * 0.05f);
+	//camera->lookRight(pos.x * 0.05f);
+	//camera->lookUp(pos.y * 0.05f);
+	player->lookRight(pos.x * 0.05f);
+	player->lookUp(pos.y * 0.05f);
+
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -131,12 +156,12 @@ void Game::handleMouseEvents() {
 }
 
 void Game::onPrimaryAction() {
-	bullet->setCenter(camera->getPosition());
+	bullet->setCenter(player->getCenter());
 
 	//mainBlocks.front()->transformer.printDebug();
 	//camera->printDebug();
 
-	while (selected == nullptr && distanceBetween(camera->getPosition(), bullet->getCenter()) < 20.0f) {
+	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < 20.0f) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
@@ -179,6 +204,9 @@ void Game::update() {
 		extraBlocks.clear();
 		newBlocks();
 	}
+
+	// after updating positions of objects, update camera too
+	camera->updateView();
 }
 
 // TODO: clean this

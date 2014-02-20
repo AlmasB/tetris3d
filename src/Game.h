@@ -8,6 +8,7 @@
 
 #include "EventEngine.h"
 #include "GameObject.h"
+#include "Player.h"
 #include "GraphicsEngine.h"
 
 #define __APP_FPS 60
@@ -23,6 +24,7 @@ class Game {
 		Camera * camera;
 
 		// game objects
+		shared_ptr<Player> player;
 		shared_ptr<Plane> ground;
 
 		shared_ptr<Cube> prize;
@@ -33,6 +35,8 @@ class Game {
 
 		list<shared_ptr<Cube>> mainBlocks;
 		list<shared_ptr<Cube>> extraBlocks;
+
+		/////////////////////////////////////
 
 		bool running;
 		bool gTest;

@@ -338,6 +338,13 @@ struct Point3f {
 		this->z += v.z;
 		return *this;
 	}
+
+	inline Point3f& operator -= (Vector3f v) {
+		this->x -= v.x;
+		this->y -= v.y;
+		this->z -= v.z;
+		return *this;
+	}
 };
 
 inline Point3f operator + (Point3f p, Vector3f v) {
