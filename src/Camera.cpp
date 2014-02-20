@@ -162,13 +162,13 @@ const Matrix4f * CameraTransformer::transform() {
 	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getCameraUp());	// careful passing references
 	persProjTrans.initPersProjTransform(perspective.fov, perspective.width, perspective.height, perspective.zNear, perspective.zFar);
 
-	//transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
+	transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
 
-	Matrix4f * trans = &(persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans);
+	/*Matrix4f * trans = &(persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans);*/
 
 	// perhaps send a new pointer so it doesn't change the member
-	//return &transformation;
-	return trans;
+	return &transformation;
+	//return trans;
 }
 
 void CameraTransformer::printDebug() {
