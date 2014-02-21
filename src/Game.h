@@ -60,7 +60,6 @@ class Game {
 		bool isFull();
 		RGBColor getRandomColor();
 
-		//int x, y;
 		Point2 currentNode;
 		bool platformsArray[5][25];
 		void buildPlatforms();

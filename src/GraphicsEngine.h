@@ -32,10 +32,6 @@
 #define __ENGINE_WINDOW_W 800
 #define __ENGINE_WINDOW_H 600
 
-
-
-
-
 struct Perspective {
 	float fov;	// field of view
 	float width;
@@ -47,73 +43,40 @@ struct Perspective {
 class Camera : public Movable {
 	friend class CameraTransformer;
 	friend class GraphicsEngine;
-private:
-	//void init();
-	//void update();
+	private:
 
-	//static std::shared_ptr<Camera> instance;
+		//static std::shared_ptr<Camera> instance;
 
-	Point3f center;
-	static Camera * instance;
-	Perspective cameraPerspective;
+		Point3f center;
+		static Camera * instance;
+		Perspective cameraPerspective;
 
-	std::shared_ptr<Movable> assigned;
+		std::shared_ptr<Movable> assigned;
 
-	Camera();
-public:
-	void updateView();
-	//static std::shared_ptr<Camera> getInstance();
-	static Camera * getInstance();
-	void move(const Vector3f & v);
-	Point3f getCenter();
-	void setPerspective(float, float, float, float, float);
-
-	//Camera();	// make singleton
-	//Camera(const Vector3f& Pos, const Vector3f& Target, const Vector3f& Up);
+		Camera();
+	public:
+		void updateView();
+		//static std::shared_ptr<Camera> getInstance();
+		static Camera * getInstance();
+		void move(const Vector3f & v);
+		Point3f getCenter();
 
 
-
-	void follow(std::shared_ptr<Movable> objectToFollow);
-
-	//void printDebug();
+		void follow(std::shared_ptr<Movable> objectToFollow);
 };
 
 class CameraTransformer {
-private:
-	Matrix4f transformation;
-public:
-	CameraTransformer(Point3f _center);
-	Vector3f scale;
-	Vector3f center;
-	Vector3f rotate;
-	const Matrix4f* transform();
+	private:
+		Matrix4f transformation;
+	public:
+		CameraTransformer(Point3f center);
+		Vector3f scale;
+		Vector3f center;
+		Vector3f rotate;
+		const Matrix4f* transform();
 
-	void printDebug();
-
-	struct {
-		float fov;	// field of view
-		float width;
-		float height;
-		float zNear;
-		float zFar;
-	} perspective;
+		void printDebug();
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class GraphicsEngine {
 	private:

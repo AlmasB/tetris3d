@@ -28,7 +28,7 @@ std::string GraphicsEngine::init() {
 	if (glContext == NULL)
 		return _SDL_ERROR_INIT_OPENGL + std::string(SDL_GetError());
 
-	glEnable(GL_DEPTH_TEST);	// when do we do that? before/after
+	glEnable(GL_DEPTH_TEST);	// TODO: when do we do that? before/after
 	glDepthFunc(GL_LESS);
 
 	if (glewInit() != GLEW_OK)
@@ -141,12 +141,9 @@ Uint32 GraphicsEngine::getAverageFPS() {
 	return fpsAverage;
 }
 
-
 /* CAMERA CLASS DEFINITION BEGIN */
 
 Camera * Camera::instance = nullptr;
-
-// camera to be in inheritance game object
 
 Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
 	assigned = nullptr;
@@ -183,25 +180,11 @@ Point3f Camera::getCenter() {
 	return center;
 }
 
-
-
-
-
-
-
-
-
-
-
 /* CAMERA TRANSFORMER CLASS DEFINITION BEGIN */
 
 CameraTransformer::CameraTransformer(Point3f _center)
 : scale(Vector3f(1.0f, 1.0f, 1.0f)), center(Vector3f(_center.x, _center.y, _center.z)), rotate(Vector3f(0, 0, 0)) {
-	perspective.fov = 60.0f;
-	perspective.width = 800;
-	perspective.height = 600;
-	perspective.zNear = 1.0f;
-	perspective.zFar = 100.0f;
+
 }
 
 const Matrix4f * CameraTransformer::transform() {
@@ -217,7 +200,7 @@ const Matrix4f * CameraTransformer::transform() {
 	// camera transformations
 	cameraTranslationTrans.initTranslationTransform(-camera->getCenter().x, -camera->getCenter().y, -camera->getCenter().z);
 	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getUpVector());	// careful passing references
-	persProjTrans.initPersProjTransform(perspective.fov, perspective.width, perspective.height, perspective.zNear, perspective.zFar);
+	persProjTrans.initPersProjTransform(camera->cameraPerspective.fov, camera->cameraPerspective.width, camera->cameraPerspective.height, camera->cameraPerspective.zNear, camera->cameraPerspective.zFar);
 
 	transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
 

@@ -27,7 +27,6 @@ class EventEngine {
 
 		/**
 		* Equivalent to calling SDL_PollEvent()
-		* Updates only key states in the meantime
 		*/
 		void pollEvents();
 		

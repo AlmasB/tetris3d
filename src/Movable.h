@@ -22,7 +22,7 @@ class Movable {
 		Movable();
 		virtual void move(const Vector3f & v) = 0;
 
-		// if you were looking thru the object's eyes
+		// as if you were looking thru the object's eyes
 		void moveForward();
 		void moveBackward();
 		void moveRight(float speed);
