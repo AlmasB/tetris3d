@@ -10,12 +10,17 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "GraphicsEngine.h"
+#include "Timer.h"
 
 #define __APP_FPS 60
 
 using namespace std;	// for debugging
 
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
+
+enum CutScene {
+	NONE, BEGINNING, PLAYER_DEATH, END
+};
 
 class Game {
 	private:
@@ -36,10 +41,27 @@ class Game {
 		list<shared_ptr<Cube>> mainBlocks;
 		list<shared_ptr<Cube>> extraBlocks;
 
+		list<shared_ptr<Plane>> platforms;
+
 		/////////////////////////////////////
+		//test
+
+		list<Point2> openPlatforms;
+		list<Point2> openPlatforms2;
+
+		bool isFull();
+		RGBColor getRandomColor();
+
+		//int x, y;
+		Point2 currentNode;
+		bool platformsArray[5][25];
+		void buildPlatforms();
+		void getNeighborPlatforms();
+
+
+		//////////////////////////////////////
 
 		bool running;
-		bool gTest;
 
 		uint step;
 
@@ -51,6 +73,17 @@ class Game {
 		void onSecondaryAction();
 
 		uint numberOfBlocksRequired();
+
+
+		/* CUT-SCENES RELATED STUFF */
+		CutScene currentCutScene;
+		uint cutSceneFrame;
+		Timer cutSceneTimer;
+
+		void playCutScene();
+		void playCutSceneBeginning();
+		void playCutScenePlayerDeath();
+		void playCutSceneEnd();
 
 
 		/**

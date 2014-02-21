@@ -60,6 +60,7 @@ static const RGBColor COLOR_YELLOW = { 255, 255, 0 };
 static const RGBColor COLOR_GOLD = { 255, 215, 0 };
 static const RGBColor COLOR_BLACK = { 0, 0, 0 };
 static const RGBColor COLOR_AQUA = { 127, 255, 212 };
+static const RGBColor COLOR_PURPLE = { 167, 74, 199 };
 
 class GameObject : public BoundingBox, public Movable {
 	private:

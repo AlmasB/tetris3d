@@ -17,7 +17,7 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), gTest(true), step(0) {
+Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
@@ -30,7 +30,21 @@ Game::Game() : running(true), gTest(true), step(0) {
 	cout << "LINUX" << endl;
 #endif
 
+	cutSceneFrame = 0;
 	srand(0);
+
+	Point2 p = { 2, 0 };
+	currentNode = p;
+
+	openPlatforms.push_back(currentNode);
+
+	for (uint i = 0; i < 5; ++i) {
+		for (uint j = 0; j < 25; ++j) {
+			platformsArray[i][j] = false;
+		}
+	}
+
+	platformsArray[2][0] = true;
 
 	/*ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
 	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
@@ -65,11 +79,11 @@ bool Game::init() {
 void Game::runMainLoop() {
 	// move to init or smth
 	float length = 50.0f;
-	ground = make_shared<Plane>(Point3f(0, -1.1f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
+	ground = make_shared<Plane>(Point3f(0, -1.9f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), 2.0f, COLOR_AQUA);
 
-	player = make_shared<Player>(Point3f(0, 0, 0));
+	player = make_shared<Player>(Point3f(0, 0, -15.0f));
 	camera->follow(player);
 
 	newBlocks();
@@ -79,8 +93,13 @@ void Game::runMainLoop() {
 	while (running) {
 		gfx->setFrameStart();
 
-		eventSystem->pollEvents();
-		handleAllEvents();
+		if (currentCutScene == CutScene::NONE) {
+			eventSystem->pollEvents();
+			handleAllEvents();
+		}
+		else {
+			playCutScene();
+		}
 
 		update();
 		render();
@@ -186,8 +205,8 @@ void Game::update() {
 	float value = 0.0025f;
 
 	//ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
-	ground->move(Vector3f(0, 0, value/2.0f));
-	prize->move(Vector3f(0, 0, value / 2.0f));
+	//ground->move(Vector3f(0, 0, value/2.0f));
+	//prize->move(Vector3f(0, 0, value / 2.0f));
 
 	//cout << ground->halfDistZ.getZ() << endl;
 
@@ -253,6 +272,9 @@ void Game::render() {
 		cube->draw();
 
 	ground->draw();
+	for (auto plane : platforms)
+		plane->draw();
+
 	prize->draw();
 
 	gfx->showScreen();
@@ -271,7 +293,7 @@ uint Game::numberOfBlocksRequired() {
 	return count;
 }
 
-// use the length of the platform to determine where to spawn red blocks
+// TODO: use the length of the platform to determine where to spawn red blocks
 void Game::newBlocks() {
 	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
@@ -287,4 +309,128 @@ void Game::newBlocks() {
 		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
 		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
 	}
+}
+
+void Game::playCutScene() {
+	switch (currentCutScene) {
+		case BEGINNING:
+			playCutSceneBeginning();
+			break;
+		case END:
+			playCutSceneEnd();
+			break;
+		case PLAYER_DEATH:
+			playCutScenePlayerDeath();
+			break;
+	}
+}
+
+void Game::playCutSceneBeginning() {
+	if (cutSceneTimer.getTime() == 0 || cutSceneTimer.getElapsed() >= __SECOND * 0.1) {
+		buildPlatforms();
+		cutSceneTimer.measure();
+	}
+
+	if (platforms.size() >= 125) {
+		cutSceneFrame = 0;
+		cutSceneTimer.reset();
+		currentCutScene = CutScene::NONE;
+
+		cout << "DEBUG: CutScene::NONE" << endl;
+		cout << isFull() << endl;
+	}
+}
+
+void Game::playCutScenePlayerDeath() {
+
+}
+
+void Game::playCutSceneEnd() {
+
+}
+
+RGBColor Game::getRandomColor() {
+	int r = getRandom(0, 4);
+	switch (r) {
+		case 0: return COLOR_GOLD;
+		case 1: return COLOR_RED;
+		case 2: return COLOR_GREEN;
+		case 3: return COLOR_AQUA;
+		case 4: return COLOR_PURPLE;
+		default: return COLOR_BLACK;
+	}
+}
+
+void Game::buildPlatforms() {
+	for (auto point : openPlatforms) {
+		currentNode = point;
+		getNeighborPlatforms();
+
+		float x = getValue(point.x);
+		float y = -1.5f;
+		float z = 2.0f * point.y - 12;
+
+		platforms.push_back(make_shared<Plane>(Point3f(x, y, z), 2.0f, 0.2f, 2.0f, getRandomColor()));
+	}
+
+	openPlatforms = openPlatforms2;
+	openPlatforms2.clear();
+
+	/*cout << "OPEN LIST:" << endl;
+
+	for (auto point : openPlatforms) {
+		cout << point.x << " " << point.y << endl;
+	}*/
+}
+
+void Game::getNeighborPlatforms() {
+	int x1 = currentNode.x - 1;
+	int x2 = currentNode.x + 1;
+	int y1 = currentNode.y - 1;
+	int y2 = currentNode.y + 1;
+
+	//cout << currentNode.x << " " << currentNode.y << endl;
+
+	if (x1 >= 0) {
+		if (!platformsArray[x1][currentNode.y]) {
+			Point2 p = { x1, currentNode.y };
+			openPlatforms2.push_back(p);
+			platformsArray[x1][currentNode.y] = true;
+		}
+	}
+
+	if (x2 < 5) {
+		if (!platformsArray[x2][currentNode.y]) {
+			Point2 p = { x2, currentNode.y };
+			openPlatforms2.push_back(p);
+			platformsArray[x2][currentNode.y] = true;
+		}
+	}
+
+	if (y1 >= 0) {
+		if (!platformsArray[currentNode.x][y1]) {
+			Point2 p = { currentNode.x, y1 };
+			openPlatforms2.push_back(p);
+			platformsArray[currentNode.x][y1] = true;
+		}
+	}
+
+	if (y2 < 25) {
+		if (!platformsArray[currentNode.x][y2]) {
+			Point2 p = { currentNode.x, y2 };
+			openPlatforms2.push_back(p);
+			platformsArray[currentNode.x][y2] = true;
+		}
+	}
+}
+
+bool Game::isFull() {
+	for (uint i = 0; i < 5; ++i) {
+		for (uint j = 0; j < 25; ++j) {
+			if (!platformsArray[i][j])
+				return false;
+		}
+	}
+
+	return true;
 }
