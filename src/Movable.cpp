@@ -65,18 +65,19 @@ void Movable::moveBackward() {
 	move(tmp * (-1.0f));
 }
 
-void Movable::moveRight() {
+// make sure to have "up" set correctly, if moving horizontally (0,1,0)
+void Movable::moveRight(float _speed) {
 	Vector3f right = up.cross(direction);
 	right.normalize();
-	right *= speed;
+	right *= _speed;
 	//center += right;
 	move(right);
 }
 
-void Movable::moveLeft() {
+void Movable::moveLeft(float _speed) {
 	Vector3f left = direction.cross(up);
 	left.normalize();
-	left *= speed;
+	left *= _speed;
 	//center += left;
 	move(left);
 }
@@ -90,3 +91,26 @@ void Movable::lookRight(float units) {
 	horAngle += units;
 	adjustDirection();
 }
+
+void Movable::lookAt(const Point3f &point) {
+	direction = point - getCenter();
+}
+
+#if defined(__DEBUG_ENABLED)
+void Movable::printDebug(uint infoFlag) {
+	if (__CENTER & infoFlag) {
+		Point3f p = getCenter();
+		std::cout << "DEBUG: CENTER(" << p.x << "," << p.y << "," << p.z << ")" << std::endl;
+	}
+
+	if (__DIRECTION & infoFlag) {
+		Vector3f p = getDirection();
+		std::cout << "DEBUG: DIRECTION(" << p.x << "," << p.y << "," << p.z << ")" << std::endl;
+	}
+
+	if (__UP & infoFlag) {
+		Vector3f p = getUpVector();
+		std::cout << "DEBUG: UP(" << p.x << "," << p.y << "," << p.z << ")" << std::endl;
+	}
+}
+#endif

@@ -28,6 +28,15 @@ class Game {
 		unique_ptr<EventEngine> eventSystem;
 		Camera * camera;
 
+		/**
+		* This can be used when creating cut scenes
+		* or when the camera needs to show something
+		* but there's no need to move player there
+		*
+		* This object isn't meant to be drawn
+		*/
+		shared_ptr<Movable> dummyCameraObject;
+
 		// game objects
 		shared_ptr<Player> player;
 		shared_ptr<Plane> ground;
@@ -44,7 +53,6 @@ class Game {
 		list<shared_ptr<Plane>> platforms;
 
 		/////////////////////////////////////
-		//test
 
 		list<Point2> openPlatforms;
 		list<Point2> openPlatforms2;
@@ -59,7 +67,6 @@ class Game {
 		void getNeighborPlatforms();
 
 		bool test;
-		shared_ptr<Movable> dummy;
 		int test2;
 
 
@@ -92,6 +99,7 @@ class Game {
 		void playCutSceneBeginning();
 		void playCutScenePlayerDeath();
 		void playCutSceneEnd();
+		void resetCutScene();
 
 
 		/**

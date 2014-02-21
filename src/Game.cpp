@@ -52,12 +52,8 @@ Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 
 	test = false;
 
-	/*ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
-	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
-
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
-	*/
 	
 	cout << "Game::Game() finished" << endl;
 }
@@ -65,7 +61,6 @@ Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 Game::~Game() {
 
 	// TODO: clean after everything is written
-	// atm only smart pointers, they clean up after themselves dont they?
 }
 
 bool Game::init() {
@@ -79,21 +74,22 @@ bool Game::init() {
 	// do the rest of game init here, at this point GL SDL GLEW are OK
 	gfx->setWindowTitle("Tetris3D ~ ");
 
-	return true;
-}
 
-void Game::runMainLoop() {
-	// move to init or smth
 	float length = 50.0f;
 	ground = make_shared<Plane>(Point3f(0, -1.9f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f -1.0f), 2.0f, COLOR_AQUA);
+	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f - 1.0f), 2.0f, COLOR_AQUA);
 
 	player = make_shared<Player>(Point3f(0, 0, -15.0f));
 	camera->follow(player);
 
-	dummy = make_shared<GameObject>(Point3f(0, 65.0f, 10.0f));
+	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 
+
+	return true;
+}
+
+void Game::runMainLoop() {
 	newBlocks();
 
 	cout << "Entered Main Loop" << endl;
@@ -122,30 +118,11 @@ void Game::handleAllEvents() {
 }
 
 void Game::handleKeyEvents() {
-	/*if (selected == nullptr) {
-		if (eventSystem->isPressed(Key::W)) camera->moveForward();	// move player and assign camera to player eyes
-		if (eventSystem->isPressed(Key::S)) camera->moveBackward();
-		if (eventSystem->isPressed(Key::A)) camera->moveLeft();
-		if (eventSystem->isPressed(Key::D)) camera->moveRight();
-	}
-	else {
-		if (eventSystem->isPressed(Key::W)) selected->move(camera->getDirection());
-		if (eventSystem->isPressed(Key::S)) selected->move(camera->getDirection()*(-1.0f));
-		if (eventSystem->isPressed(Key::A)) selected->move(Vector3f(-camera->getDirection().z, 0, camera->getDirection().x));
-		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(camera->getDirection().z, 0, -camera->getDirection().x));
-	}
-
-	// values need tweaking for greater experience
-	if (eventSystem->isPressed(Key::UP)) camera->lookUp(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::DOWN)) camera->lookUp(20 * 0.05f);
-	if (eventSystem->isPressed(Key::LEFT)) camera->lookRight(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::RIGHT)) camera->lookRight(20 * 0.05f);*/
-
 	if (selected == nullptr) {
-		if (eventSystem->isPressed(Key::W)) player->moveForward();	// move player and assign camera to player eyes
+		if (eventSystem->isPressed(Key::W)) player->moveForward();
 		if (eventSystem->isPressed(Key::S)) player->moveBackward();
-		if (eventSystem->isPressed(Key::A)) player->moveLeft();
-		if (eventSystem->isPressed(Key::D)) player->moveRight();
+		if (eventSystem->isPressed(Key::A)) player->moveLeft(0.15f);
+		if (eventSystem->isPressed(Key::D)) player->moveRight(0.15f);
 	}
 	else {
 		if (eventSystem->isPressed(Key::W)) selected->move(player->getDirection());
@@ -154,7 +131,7 @@ void Game::handleKeyEvents() {
 		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(player->getDirection().z, 0, -player->getDirection().x));
 	}
 
-	// values need tweaking for greater experience
+	// TODO: values need tweaking for greater experience
 	if (eventSystem->isPressed(Key::UP)) player->lookUp(-20 * 0.05f);
 	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(20 * 0.05f);
 	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20 * 0.05f);
@@ -167,12 +144,9 @@ void Game::handleKeyEvents() {
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
-	//camera->lookRight(pos.x * 0.05f);
-	//camera->lookUp(pos.y * 0.05f);
+	// TODO: values need tweaking for greater experience
 	player->lookRight(pos.x * 0.05f);
 	player->lookUp(pos.y * 0.05f);
-
-	//cout << "lookRight(" << pos.x*0.05f << ")" << endl;
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -338,66 +312,35 @@ void Game::playCutScene() {
 
 void Game::playCutSceneBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
-		//shared_ptr<Movable> dummy = make_shared<GameObject>(Point3f(0, 65.0f, 10.0f));
-		//dummy->move(Vector3f(0, 15.0f, 0));
-		dummy->lookUp(90.0f);
-		
-		camera->follow(dummy);
-
-		test2 = 0;
+		dummyCameraObject->move(Vector3f(1.0f, 45.0f, 10.0f));
+		//dummyCameraObject->lookUp(90.0f);	// TODO: invert, so it's natural to use		
+		camera->follow(dummyCameraObject);
 	}
 
-
-	if (cutSceneTimer.getElapsed() >= __SECOND * 0.075) {
+	if (cutSceneTimer.getElapsed() >= 0.075 * __SECOND) {
 		buildPlatforms();
 
-		if (dummy->getCenter().y > 10.0f) {
-			dummy->move(Vector3f(0, -1.0f, 0.1f));
-			//cout << dummy->getCenter().y << endl;
+		if (dummyCameraObject->getCenter().y > 1.0f) {
+			dummyCameraObject->move(Vector3f(0, -1.0f, 0.0f));
 		}
 		else {
-			if (test2 == 0) {
-				dummy->lookUp(-90.0f);
-				dummy->move(Vector3f(0, -10.0f, 0.0f));
-			}
-
-
-			test2++;
-			dummy->moveRight();
-			//dummy->lookRight(-1.7f);
-
-			/*float x0 = dummy->getCenter().x;
-			float z0 = dummy->getCenter().z;
-
-			float x1 = prize->getCenter().x;
-			float z1 = prize->getCenter().z;
-
-			float dx = x1 - x0;
-			float dz = z1 - z0;
-
-			float theta = toDegree(asin(dx / sqrtf(dx*dx + dz*dz)));
-
-			dummy->lookRight(theta);*/
-
-			dummy->direction = prize->getCenter() - dummy->getCenter();
-
-			if (test2 > 70)
-				test = true;
-			//test = true;
+			if (!(dummyCameraObject->getCenter().x >= -5 && dummyCameraObject->getCenter().x <= -2))
+				dummyCameraObject->moveRight(0.75f);
+			else
+				dummyCameraObject->move(Vector3f(0, 0, -1));
 		}
 
+		dummyCameraObject->lookAt(prize->getCenter());
+		dummyCameraObject->printDebug(__CENTER);
+
+		cutSceneFrame++;
 		cutSceneTimer.measure();
 	}
 
-	if (platforms.size() >= 125 && test) {
-		cutSceneFrame = 0;
-		cutSceneTimer.reset();
-		currentCutScene = CutScene::NONE;
-
+	if (platforms.size() >= 125 && dummyCameraObject->getCenter().z <= 0) {
 		camera->follow(player);
-
+		resetCutScene();
 		cout << "DEBUG: CutScene::NONE" << endl;
-		//cout << isFull() << endl;
 	}
 }
 
@@ -407,6 +350,12 @@ void Game::playCutScenePlayerDeath() {
 
 void Game::playCutSceneEnd() {
 
+}
+
+void Game::resetCutScene() {
+	cutSceneFrame = 0;
+	cutSceneTimer.reset();
+	currentCutScene = CutScene::NONE;
 }
 
 RGBColor Game::getRandomColor() {

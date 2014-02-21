@@ -5,12 +5,16 @@
 #include <iostream>
 #include "GameMath.h"
 #include "Movable.h"
+#include "Debug.h"
 
+// TODO: implement these
 #define __FOV 60.0f
 #define __WIDTH 800
 #define __HEIGHT 600
 #define __Z_NEAR 1.0f
 #define __Z_FAR 100.0f;
+
+
 
 class Camera : public Movable {
 	private:
@@ -77,24 +81,24 @@ class Camera : public Movable {
 };
 
 class CameraTransformer {
-private:
-	Matrix4f transformation;
-public:
-	CameraTransformer(Point3f _center);
-	Vector3f scale;
-	Vector3f center;
-	Vector3f rotate;
-	const Matrix4f* transform();
+	private:
+		Matrix4f transformation;
+	public:
+		CameraTransformer(Point3f _center);
+		Vector3f scale;
+		Vector3f center;
+		Vector3f rotate;
+		const Matrix4f* transform();
 
-	void printDebug();
+		void printDebug();
 
-	struct {
-		float fov;	// field of view
-		float width;
-		float height;
-		float zNear;
-		float zFar;
-	} perspective;
+		struct {
+			float fov;	// field of view
+			float width;
+			float height;
+			float zNear;
+			float zFar;
+		} perspective;
 };
 
 #endif
