@@ -80,6 +80,10 @@ class Game {
 		uint cutSceneFrame;
 		Timer cutSceneTimer;
 
+		/**
+		* Each cut scene ideally should have onStart() and onFinish() 
+		* sort of thing within them
+		*/
 		void playCutScene();
 		void playCutSceneBeginning();
 		void playCutScenePlayerDeath();

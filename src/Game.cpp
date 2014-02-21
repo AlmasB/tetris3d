@@ -326,7 +326,16 @@ void Game::playCutScene() {
 }
 
 void Game::playCutSceneBeginning() {
-	if (cutSceneTimer.getTime() == 0 || cutSceneTimer.getElapsed() >= __SECOND * 0.1) {
+	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
+		shared_ptr<Movable> dummy = make_shared<GameObject>(Point3f(0, 55.0f, 0));
+		//dummy->move(Vector3f(0, 15.0f, 0));
+		dummy->lookUp(90.0f);
+		
+		camera->follow(dummy);
+	}
+
+
+	if (cutSceneTimer.getElapsed() >= __SECOND * 0.1) {
 		buildPlatforms();
 		cutSceneTimer.measure();
 	}
@@ -336,8 +345,10 @@ void Game::playCutSceneBeginning() {
 		cutSceneTimer.reset();
 		currentCutScene = CutScene::NONE;
 
+		camera->follow(player);
+
 		cout << "DEBUG: CutScene::NONE" << endl;
-		cout << isFull() << endl;
+		//cout << isFull() << endl;
 	}
 }
 
@@ -367,7 +378,7 @@ void Game::buildPlatforms() {
 		getNeighborPlatforms();
 
 		float x = getValue(point.x);
-		float y = -1.5f;
+		float y = -1.2f;
 		float z = 2.0f * point.y - 12;
 
 		platforms.push_back(make_shared<Plane>(Point3f(x, y, z), 2.0f, 0.2f, 2.0f, getRandomColor()));
