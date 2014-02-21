@@ -16,7 +16,7 @@
 
 #include "BoundingBox.h"
 #include "Movable.h"
-#include "Camera.h"
+#include "GraphicsEngine.h"
 
 using namespace std;
 

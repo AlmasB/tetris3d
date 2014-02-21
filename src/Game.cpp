@@ -160,7 +160,7 @@ void Game::handleMouseEvents() {
 void Game::onPrimaryAction() {
 	bullet->setCenter(player->getCenter());
 
-	cout << camera->getDirection().x << " " << camera->getDirection().y << " " << camera->getDirection().z << endl;
+	//cout << camera->getDirection().x << " " << camera->getDirection().y << " " << camera->getDirection().z << endl;
 
 	//mainBlocks.front()->transformer.printDebug();
 	//camera->printDebug();
@@ -250,11 +250,11 @@ bool Game::isGameWon() {
 void Game::render() {
 	gfx->clearScreen();
 	
-	/*for (auto cube : mainBlocks)
+	for (auto cube : mainBlocks)
 		cube->draw();
 
 	for (auto cube : extraBlocks)
-		cube->draw();*/
+		cube->draw();
 
 	//ground->draw();
 	for (auto plane : platforms)
@@ -331,12 +331,13 @@ void Game::playCutSceneBeginning() {
 		}
 
 		dummyCameraObject->lookAt(prize->getCenter());
-		dummyCameraObject->printDebug(__CENTER);
+		//dummyCameraObject->printDebug(__CENTER);
 
 		cutSceneFrame++;
 		cutSceneTimer.measure();
 	}
 
+	// TODO: move dummy towards player's center
 	if (platforms.size() >= 125 && dummyCameraObject->getCenter().z <= 0) {
 		camera->follow(player);
 		resetCutScene();
