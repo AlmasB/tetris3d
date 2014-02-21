@@ -58,6 +58,10 @@ class Game {
 		void buildPlatforms();
 		void getNeighborPlatforms();
 
+		bool test;
+		shared_ptr<Movable> dummy;
+		int test2;
+
 
 		//////////////////////////////////////
 

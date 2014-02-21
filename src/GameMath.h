@@ -351,6 +351,10 @@ inline Point3f operator + (Point3f p, Vector3f v) {
 	return Point3f(p.x + v.x, p.y + v.y, p.z + v.z);
 }
 
+inline Vector3f operator - (Point3f p, Point3f p1) {
+	return Vector3f(p.x - p1.x, p.y - p1.y, p.z - p1.z);
+}
+
 inline float distanceBetween(const Point3f & p1, const Point3f & p2) {
 	float dx = p2.x - p1.x;
 	float dy = p2.y - p1.y;

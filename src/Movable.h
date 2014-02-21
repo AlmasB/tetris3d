@@ -6,7 +6,7 @@
 class Movable {
 
 protected:
-	Vector3f direction;
+	//Vector3f direction;
 	Vector3f up;
 
 	float horAngle, verAngle;
@@ -29,6 +29,8 @@ public:
 	Vector3f getDirection();
 	Vector3f getUpVector();
 	virtual Point3f getCenter() = 0;
+
+	Vector3f direction;
 };
 
 #endif

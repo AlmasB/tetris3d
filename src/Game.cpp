@@ -33,10 +33,13 @@ Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 	cutSceneFrame = 0;
 	srand(0);
 
-	Point2 p = { 2, 0 };
+	Point2 p = { 0, 0 };
 	currentNode = p;
 
+	Point2 p1 = { 4, 0 };
+
 	openPlatforms.push_back(currentNode);
+	openPlatforms.push_back(p1);
 
 	for (uint i = 0; i < 5; ++i) {
 		for (uint j = 0; j < 25; ++j) {
@@ -44,7 +47,10 @@ Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 		}
 	}
 
-	platformsArray[2][0] = true;
+	platformsArray[0][0] = true;
+	platformsArray[4][0] = true;
+
+	test = false;
 
 	/*ground = make_shared<HPlane>(Point3(0, -1, 0), 10.0f, 0.0f, 100.0f, COLOR_GRAY);	// reconsider ground Y
 	prize = make_shared<Cube>(Point3(0, 0.5f, -48.5), 3.0f, COLOR_AQUA);
@@ -85,6 +91,8 @@ void Game::runMainLoop() {
 
 	player = make_shared<Player>(Point3f(0, 0, -15.0f));
 	camera->follow(player);
+
+	dummy = make_shared<GameObject>(Point3f(0, 65.0f, 10.0f));
 
 	newBlocks();
 
@@ -164,6 +172,7 @@ void Game::handleMouseEvents() {
 	player->lookRight(pos.x * 0.05f);
 	player->lookUp(pos.y * 0.05f);
 
+	//cout << "lookRight(" << pos.x*0.05f << ")" << endl;
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -176,6 +185,8 @@ void Game::handleMouseEvents() {
 
 void Game::onPrimaryAction() {
 	bullet->setCenter(player->getCenter());
+
+	cout << camera->getDirection().x << " " << camera->getDirection().y << " " << camera->getDirection().z << endl;
 
 	//mainBlocks.front()->transformer.printDebug();
 	//camera->printDebug();
@@ -265,13 +276,13 @@ bool Game::isGameWon() {
 void Game::render() {
 	gfx->clearScreen();
 	
-	for (auto cube : mainBlocks)
+	/*for (auto cube : mainBlocks)
 		cube->draw();
 
 	for (auto cube : extraBlocks)
-		cube->draw();
+		cube->draw();*/
 
-	ground->draw();
+	//ground->draw();
 	for (auto plane : platforms)
 		plane->draw();
 
@@ -327,20 +338,58 @@ void Game::playCutScene() {
 
 void Game::playCutSceneBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
-		shared_ptr<Movable> dummy = make_shared<GameObject>(Point3f(0, 55.0f, 0));
+		//shared_ptr<Movable> dummy = make_shared<GameObject>(Point3f(0, 65.0f, 10.0f));
 		//dummy->move(Vector3f(0, 15.0f, 0));
 		dummy->lookUp(90.0f);
 		
 		camera->follow(dummy);
+
+		test2 = 0;
 	}
 
 
-	if (cutSceneTimer.getElapsed() >= __SECOND * 0.1) {
+	if (cutSceneTimer.getElapsed() >= __SECOND * 0.075) {
 		buildPlatforms();
+
+		if (dummy->getCenter().y > 10.0f) {
+			dummy->move(Vector3f(0, -1.0f, 0.1f));
+			//cout << dummy->getCenter().y << endl;
+		}
+		else {
+			if (test2 == 0) {
+				dummy->lookUp(-90.0f);
+				dummy->move(Vector3f(0, -10.0f, 0.0f));
+			}
+
+
+			test2++;
+			dummy->moveRight();
+			//dummy->lookRight(-1.7f);
+
+			/*float x0 = dummy->getCenter().x;
+			float z0 = dummy->getCenter().z;
+
+			float x1 = prize->getCenter().x;
+			float z1 = prize->getCenter().z;
+
+			float dx = x1 - x0;
+			float dz = z1 - z0;
+
+			float theta = toDegree(asin(dx / sqrtf(dx*dx + dz*dz)));
+
+			dummy->lookRight(theta);*/
+
+			dummy->direction = prize->getCenter() - dummy->getCenter();
+
+			if (test2 > 70)
+				test = true;
+			//test = true;
+		}
+
 		cutSceneTimer.measure();
 	}
 
-	if (platforms.size() >= 125) {
+	if (platforms.size() >= 125 && test) {
 		cutSceneFrame = 0;
 		cutSceneTimer.reset();
 		currentCutScene = CutScene::NONE;
