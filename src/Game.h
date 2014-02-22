@@ -11,10 +11,10 @@
 #include "Player.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
+#include "Level.h"
 
 #define __APP_FPS 60
 #define __BULLET_DISTANCE 20
-#define __MAX_LEVELS 5
 
 using namespace std;	// for debugging
 
@@ -99,6 +99,7 @@ class Game {
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
 		void nextLevel();
+		//Level currentLevel;
 		
 		/**
 		* Level consists of several steps

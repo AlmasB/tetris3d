@@ -17,7 +17,7 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNING) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
@@ -27,22 +27,32 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE) {
 	cutSceneFrame = 0;
 	srand(0);
 
-	Point2 p = { 0, 0 };
+	initLevels();	// TODO: do smth cleaner
+
+
+	Point2 p = { 2, 0 };
 	currentNode = p;
-
-	Point2 p1 = { 4, 0 };
-
 	openPlatforms.push_back(currentNode);
-	openPlatforms.push_back(p1);
+
+	//list<string> levelData = Level::LEVELS[1].data;	// TODO: clean when done
+
+	/*for (uint i = 0; i < levelData.size(); ++i) {
+
+	}*/
+
+	std::cout << Level::LEVELS.size() << endl;
+
+	shared_ptr<Level> currentLevel = Level::LEVELS.front();
+
 
 	for (uint i = 0; i < 5; ++i) {
 		for (uint j = 0; j < 25; ++j) {
-			platformsArray[i][j] = false;
+			//platformsArray[i][j] = false;
+			platformsArray[i][j] = currentLevel->data[i][j];
 		}
 	}
 
-	platformsArray[0][0] = true;
-	platformsArray[4][0] = true;
+	platformsArray[2][0] = true;
 	
 #ifdef __DEBUG
 	debug("Game::Game() finished");
@@ -75,6 +85,8 @@ bool Game::init() {
 #endif
 
 	gfx->setWindowTitle("Tetris3D ~ ");
+
+	
 
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
@@ -343,7 +355,7 @@ void Game::playCutSceneBeginning() {
 		cutSceneTimer.measure();
 	}
 
-	// TODO: move dummy towards player's center
+	// TODO: move dummy towards player's center, also platform size is not undetermined, seek boolean coverage
 	if (platforms.size() >= 125 && dummyCameraObject->getCenter().z <= 0) {
 		camera->follow(player);
 		resetCutScene();
