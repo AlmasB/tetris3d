@@ -4,7 +4,7 @@
 #include "GameMath.h"
 #include "Debug.h"
 
-#if defined(__DEBUG_ENABLED)
+#ifdef __DEBUG
 	#define __DIRECTION 1
 	#define __CENTER 2
 	#define __UP 4
@@ -18,26 +18,35 @@ class Movable {
 		float horAngle, verAngle;
 		float speed;
 
+		void adjustDirection();
+
 	public:
 		Movable();
 		virtual void move(const Vector3f & v) = 0;
+		void move(float, float, float);
 
-		// as if you were looking thru the object's eyes
+		/**
+		* Allows you to move as if you were looking thru the object's eyes
+		* Standard FPS mode
+		*/
 		void moveForward();
 		void moveBackward();
 		void moveRight(float speed);
 		void moveLeft(float speed);
 
-		void lookUp(float);
-		void lookRight(float);
+		/**
+		* Allows you to rotate object's view like in FPS
+		* For cut scenes use lookAt instead
+		*/
+		void lookUp(float degrees);
+		void lookRight(float degrees);
 		void lookAt(const Point3f &point);
-		void adjustDirection();
 
 		Vector3f getDirection();
 		Vector3f getUpVector();
 		virtual Point3f getCenter() = 0;
 
-#if defined(__DEBUG_ENABLED)
+#ifdef __DEBUG
 		void printDebug(uint infoFlag);
 #endif
 };

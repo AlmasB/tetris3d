@@ -30,15 +30,15 @@ Vector3f Movable::getUpVector() {
 }
 
 void Movable::adjustDirection() {
-	const Vector3f vaxis(0.0f, 1.0f, 0.0f);
+	const Vector3f vAxis(0.0f, 1.0f, 0.0f);
 
 	// Rotate the view vector by the horizontal angle around the vertical axis
 	Vector3f view(1.0f, 0.0f, 0.0f);
-	view.rotate(horAngle, vaxis);
+	view.rotate(horAngle, vAxis);
 	view.normalize();
 
 	// Rotate the view vector by the vertical angle around the horizontal axis
-	Vector3f hAxis = vaxis.cross(view);
+	Vector3f hAxis = vAxis.cross(view);
 	hAxis.normalize();
 	view.rotate(verAngle, hAxis);
 
@@ -47,6 +47,10 @@ void Movable::adjustDirection() {
 
 	up = direction.cross(hAxis);
 	up.normalize();
+}
+
+void Movable::move(float x, float y, float z) {
+	move(Vector3f(x, y, z));
 }
 
 void Movable::moveForward() {
@@ -82,13 +86,14 @@ void Movable::moveLeft(float _speed) {
 	move(left);
 }
 
-void Movable::lookUp(float units) {
-	verAngle += units;
+void Movable::lookUp(float degrees) {
+	degrees = -degrees;	// to make more natural to use
+	verAngle += degrees;
 	adjustDirection();
 }
 
-void Movable::lookRight(float units) {
-	horAngle += units;
+void Movable::lookRight(float degrees) {
+	horAngle += degrees;
 	adjustDirection();
 }
 
@@ -96,7 +101,7 @@ void Movable::lookAt(const Point3f &point) {
 	direction = point - getCenter();
 }
 
-#if defined(__DEBUG_ENABLED)
+#ifdef __DEBUG
 void Movable::printDebug(uint infoFlag) {
 	if (__CENTER & infoFlag) {
 		Point3f p = getCenter();

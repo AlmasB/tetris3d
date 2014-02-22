@@ -76,15 +76,10 @@ class GameObject : public BoundingBox, public Movable {
 		GLuint EBO;
 		GLuint gWVPLocation;
 		GLuint mycolor;
-
 		
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 		GLuint createShader(const char * shaderCode, GLenum shaderType);
 		void compileShaders();
-
-		//////////////////////////////////////////////////////
-
-
 
 	public:
 		GameObject(const Point3f &, float, float, float, RGBColor);
@@ -100,8 +95,6 @@ class GameObject : public BoundingBox, public Movable {
 		Point3f getCenter();
 
 		void draw();
-
-
 };
 
 class Cube : public GameObject {

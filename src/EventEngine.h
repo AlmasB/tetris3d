@@ -1,9 +1,9 @@
 #ifndef __EVENT_ENGINE_H__
 #define __EVENT_ENGINE_H__
 
-#include "GameMath.h"
-
 #include <SDL.h>
+
+#include "GameMath.h"
 
 //just the useful ones for now
 enum Key {

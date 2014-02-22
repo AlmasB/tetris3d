@@ -17,18 +17,12 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
 
-#if defined(_WIN64)
-	cout << "WIN64" << endl;
-#elif defined(_WIN32)
-	cout << "WIN32" << endl;
-#elif defined(__linux__)
-	cout << "LINUX" << endl;
-#endif
+
 
 	cutSceneFrame = 0;
 	srand(0);
@@ -49,21 +43,25 @@ Game::Game() : running(true), step(0), currentCutScene(CutScene::BEGINNING) {
 
 	platformsArray[0][0] = true;
 	platformsArray[4][0] = true;
-
-	test = false;
-
-	// where do we want to "actually" draw the ground line 0,0,0 ?
-	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 	
-	cout << "Game::Game() finished" << endl;
+#ifdef __DEBUG
+	debug("Game::Game() finished");
+#endif
 }
 
 Game::~Game() {
-
 	// TODO: clean after everything is written
 }
 
 bool Game::init() {
+#ifdef __DEBUG
+	#if defined(_WIN32)
+		debug("WIN32");	// just a test, no need to use OS specific code yet
+	#elif defined(__linux__)
+		debug("LINUX");
+	#endif
+#endif
+
 	std::string error;
 	if ((error = gfx->init()) != _ENGINE_ERROR_NONE) {
 		std::cout << error << std::endl;
@@ -71,10 +69,16 @@ bool Game::init() {
 		return false;
 	}
 
-	// do the rest of game init here, at this point GL SDL GLEW are OK
+	// at this point SDL/GL/GLEW are initialised and OK to use
+#ifdef __DEBUG
+	debug("GraphicsEngine::init() successfull");
+#endif
+
 	gfx->setWindowTitle("Tetris3D ~ ");
 
 
+	// where do we want to "actually" draw the ground line 0,0,0 ?
+	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 	float length = 50.0f;
 	ground = make_shared<Plane>(Point3f(0, -1.9f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
@@ -85,14 +89,15 @@ bool Game::init() {
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 
+	spawnAllBlocks();	// set level, TODO: create level initer
 
 	return true;
 }
 
 void Game::runMainLoop() {
-	newBlocks();
-
-	cout << "Entered Main Loop" << endl;
+#ifdef __DEBUG
+	debug("Entered Main Loop");
+#endif
 
 	while (running) {
 		gfx->setFrameStart();
@@ -110,6 +115,10 @@ void Game::runMainLoop() {
 
 		gfx->adjustFPSDelay(GAME_FPS_DELAY);
 	}
+
+#ifdef __DEBUG
+	debug("Exited Main Loop");
+#endif
 }
 
 void Game::handleAllEvents() {
@@ -132,8 +141,8 @@ void Game::handleKeyEvents() {
 	}
 
 	// TODO: values need tweaking for greater experience
-	if (eventSystem->isPressed(Key::UP)) player->lookUp(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(20 * 0.05f);
+	if (eventSystem->isPressed(Key::UP)) player->lookUp(20 * 0.05f);
+	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(-20 * 0.05f);
 	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20 * 0.05f);
 	if (eventSystem->isPressed(Key::RIGHT)) player->lookRight(20 * 0.05f);
 
@@ -146,7 +155,7 @@ void Game::handleMouseEvents() {
 
 	// TODO: values need tweaking for greater experience
 	player->lookRight(pos.x * 0.05f);
-	player->lookUp(pos.y * 0.05f);
+	player->lookUp(-pos.y * 0.05f);	// invert, because UP is negative in SDL
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
@@ -161,11 +170,11 @@ void Game::onPrimaryAction() {
 	bullet->setCenter(player->getCenter());
 
 	//cout << camera->getDirection().x << " " << camera->getDirection().y << " " << camera->getDirection().z << endl;
-
+	//player->printDebug(__UP);
 	//mainBlocks.front()->transformer.printDebug();
 	//camera->printDebug();
 
-	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < 20.0f) {
+	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
 			if (bullet->collidesWith(*cube)) {
@@ -202,11 +211,8 @@ void Game::update() {
 
 	buildBlock();
 	
-	if (isGameWon()) {
-		step++;
-		mainBlocks.clear();
-		extraBlocks.clear();
-		newBlocks();
+	if (isStepCompleted()) {
+		nextStep();
 	}
 
 	// after updating positions of objects, update camera too
@@ -219,7 +225,7 @@ void Game::buildBlock() {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * step);
+					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * currentStep);
 					if (distanceBetween(c, selected->getCenter()) < 3.0f) {
 						selected->setCenter(c.x, c.y, c.z);
 						selected->setLocked(false);
@@ -235,7 +241,7 @@ void Game::buildBlock() {
 	}
 }
 
-bool Game::isGameWon() {
+bool Game::isStepCompleted() {
 	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
@@ -256,7 +262,7 @@ void Game::render() {
 	for (auto cube : extraBlocks)
 		cube->draw();
 
-	//ground->draw();
+	ground->draw();
 	for (auto plane : platforms)
 		plane->draw();
 
@@ -279,19 +285,19 @@ uint Game::numberOfBlocksRequired() {
 }
 
 // TODO: use the length of the platform to determine where to spawn red blocks
-void Game::newBlocks() {
+void Game::spawnAllBlocks() {
 	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3f p(getValue(j), i*2.0f, 5.0f + 4*step);
+				Point3f p(getValue(j), i*2.0f, 5.0f + 4*currentStep);
 				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*step);
+		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*currentStep);
 		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
 	}
 }
@@ -443,4 +449,17 @@ bool Game::isFull() {
 	}
 
 	return true;
+}
+
+// TODO: implement
+void Game::nextLevel() {
+
+	currentStep = 0; 
+}
+
+void Game::nextStep() {
+	currentStep++;
+	mainBlocks.clear();
+	extraBlocks.clear();
+	spawnAllBlocks();
 }

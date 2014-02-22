@@ -13,6 +13,8 @@
 #include "Timer.h"
 
 #define __APP_FPS 60
+#define __BULLET_DISTANCE 20
+#define __MAX_LEVELS 5
 
 using namespace std;	// for debugging
 
@@ -24,9 +26,46 @@ enum CutScene {
 
 class Game {
 	private:
+		/* ENGINE SUB-SYSTEMS */
 		unique_ptr<GraphicsEngine> gfx;
 		unique_ptr<EventEngine> eventSystem;
 		Camera * camera;
+
+		/* GAME OBJECTS */
+		shared_ptr<Player> player;
+
+		/**
+		* Invisible entity used to "shoot"
+		* game objects to identify which object player
+		* wants to grab
+		*
+		* This object isn't meant to be drawn
+		*/
+		shared_ptr<Cube> bullet;
+
+		/**
+		* Currently selected ("grabbed by player") object
+		*/
+		shared_ptr<Cube> selected;
+
+		/**
+		* The treasure, the level is won
+		* when player gets it ("collides with it") 
+		*/
+		shared_ptr<Cube> prize;
+
+		shared_ptr<Plane> ground;	// ground as a whole will consist of platforms and will be removed
+		list<shared_ptr<Plane>> platforms;
+
+		/**
+		* Obstacles
+		*/
+		list<shared_ptr<Cube>> mainBlocks;
+
+		/**
+		* Additional block pieces
+		*/
+		list<shared_ptr<Cube>> extraBlocks;
 
 		/**
 		* This can be used when creating cut scenes
@@ -37,22 +76,10 @@ class Game {
 		*/
 		shared_ptr<Movable> dummyCameraObject;
 
-		// game objects
-		shared_ptr<Player> player;
-		shared_ptr<Plane> ground;
 
-		shared_ptr<Cube> prize;
-		shared_ptr<Cube> bullet;
-		shared_ptr<Cube> selected;
+		///////////////////////////////////// CLEAN //////////////////////////////////////
 
 		bool blocks[5][3];
-
-		list<shared_ptr<Cube>> mainBlocks;
-		list<shared_ptr<Cube>> extraBlocks;
-
-		list<shared_ptr<Plane>> platforms;
-
-		/////////////////////////////////////
 
 		list<Point2> openPlatforms;
 		list<Point2> openPlatforms2;
@@ -65,24 +92,37 @@ class Game {
 		void buildPlatforms();
 		void getNeighborPlatforms();
 
-		bool test;
-		int test2;
-
-
-		//////////////////////////////////////
-
-		bool running;
-
-		uint step;
-
 		void buildBlock();
-		bool isGameWon();
-		void newBlocks();
 
+		//////////////////////////////////////////////////////////////////////////////////
+
+		/* GAMEPLAY STUFF */
+		bool running;	// main loop control
+		void nextLevel();
+		
+		/**
+		* Level consists of several steps
+		* Pushes (new) obstacles towards the treasure
+		*/
+		void nextStep();
+		uint currentStep;
+		bool isStepCompleted();
+
+		uint numberOfBlocksRequired();	// to complete current step's structure
+
+		/**
+		* Recreates obstacles and extra blocks
+		*/
+		void spawnAllBlocks();
+
+		/**
+		* Correspond to actions player can do
+		*
+		* Instead of hardcoding actions these can be called
+		* when using any device (e.g. mouse/keyboard/joystick etc)
+		*/
 		void onPrimaryAction();
 		void onSecondaryAction();
-
-		uint numberOfBlocksRequired();
 
 
 		/* CUT-SCENES RELATED STUFF */
@@ -100,7 +140,7 @@ class Game {
 		void playCutSceneEnd();
 		void resetCutScene();
 
-
+		/* EVENTS & UPDATES */
 		/**
 		* Handle all generated and currently active events
 		* Includes keyboard/mouse events

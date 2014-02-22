@@ -5,9 +5,13 @@
 
 class Player : public Cube {
 	private:
-		uint score;
+		uint score, lives;
 	public:
 		Player(const Point3f & center);
+		void addScore(uint);
+		void addLives(int);
+		//uint getScore();
+		//uint getLives();
 };
 
 
