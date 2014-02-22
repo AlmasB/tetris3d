@@ -12,9 +12,13 @@
 #define _NL "\n"
 
 #define __MAX_LEVELS 5
+#define __DEFAULT_HEIGHT 3
 
 #define __LEVEL1_WIDTH 5
 #define __LEVEL1_LENGTH 25
+
+#define __LEVEL2_WIDTH 9
+#define __LEVEL2_LENGTH 40
 
 static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
 	"00000",
@@ -42,34 +46,23 @@ static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
 	"00000",
 
 	"00000",
-	"00000",
-	"00000",
-	"00000",
-	"00000"
-};
-
-struct LevelNode {
-	int x, y;
-	bool used;
+	"10001",
+	"11011",
+	"11011",
+	"11011"
 };
 
 class Level {
 	private:
+		static std::list<std::shared_ptr<Level>> levels;
+		Level(int, int, int, int, const std::string[]);
+		static void createLevels();
 	public:
-		Level(int, int, int, const std::string[]);
 		~Level();
-		int width, height, length;
-		//std::string data[];
-		//std::list<std::string> data;
-
-		std::list<std::pair<Point2, bool>> nodes;
-
+		int number, width, height, length;
 		bool ** data;
 
-		static std::list<std::shared_ptr<Level>> LEVELS;
-		static void createLevels();
+		static std::shared_ptr<Level> getNext();
 };
-
-void initLevels();
 
 #endif

@@ -1,8 +1,8 @@
 #include "Level.h"
 
-std::list<std::shared_ptr<Level>> Level::LEVELS;
+std::list<std::shared_ptr<Level>> Level::levels;
 
-Level::Level(int w, int h, int l, const std::string levelData[]) : width(w), height(h), length(l) {
+Level::Level(int value, int w, int h, int l, const std::string levelData[]) : number(value), width(w), height(h), length(l) {
 	data = new bool* [width];
 
 	for (uint i = 0; i < width; ++i)
@@ -10,7 +10,7 @@ Level::Level(int w, int h, int l, const std::string levelData[]) : width(w), hei
 
 	for (uint i = 0; i < width; ++i) {
 		for (uint j = 0; j < length; ++j) {
-			data[i][j] = levelData[j][i] == '1';
+			data[i][j] = levelData[length-j-1][i] == '1';
 			//std::cout << data[i][j];
 		}
 
@@ -30,22 +30,16 @@ Level::~Level() {
 	delete[] data;
 }
 
-void initLevels() {
-	//Level level1(5, 3, 25, LEVEL1_DATA);
-	//Level::LEVELS[1] = level1;
-	Level::LEVELS.push_back(std::make_shared<Level>(5, 3, 25, LEVEL1_DATA));
+void Level::createLevels() {
+	levels.push_back(std::shared_ptr<Level>(new Level(1, __LEVEL1_WIDTH, __DEFAULT_HEIGHT, __LEVEL1_LENGTH, LEVEL1_DATA)));
 
+}
 
+std::shared_ptr<Level> Level::getNext() {
+	if (levels.size() == 0)	// running for first time or someone forgot to check max level...
+		createLevels();	// in either cases we promise not to crash but feed u same levels
 
-
-
-
-	/*Level level1;
-	level1.width = 5;
-	level1.height = 3;
-	level1.length = 25;
-	for (unsigned int i = 0; i < __LEVEL1_LENGTH; ++i)
-		level1.data.push_back(LEVEL1_DATA[i]);
-
-	Level::LEVELS[1] = level1;*/
+	std::shared_ptr<Level> level = levels.front();
+	levels.erase(levels.begin());
+	return level;
 }

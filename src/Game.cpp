@@ -27,22 +27,14 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNIN
 	cutSceneFrame = 0;
 	srand(0);
 
-	initLevels();	// TODO: do smth cleaner
 
 
 	Point2 p = { 2, 0 };
 	currentNode = p;
 	openPlatforms.push_back(currentNode);
 
-	//list<string> levelData = Level::LEVELS[1].data;	// TODO: clean when done
 
-	/*for (uint i = 0; i < levelData.size(); ++i) {
-
-	}*/
-
-	std::cout << Level::LEVELS.size() << endl;
-
-	shared_ptr<Level> currentLevel = Level::LEVELS.front();
+	shared_ptr<Level> currentLevel = Level::getNext();
 
 
 	for (uint i = 0; i < 5; ++i) {
@@ -262,6 +254,8 @@ bool Game::isStepCompleted() {
 		}
 	}
 
+	// faster implementation can be checking extraBlocks for 0 size
+
 	return true;
 }
 
@@ -274,7 +268,7 @@ void Game::render() {
 	for (auto cube : extraBlocks)
 		cube->draw();
 
-	ground->draw();
+	//ground->draw();
 	for (auto plane : platforms)
 		plane->draw();
 
@@ -330,8 +324,7 @@ void Game::playCutScene() {
 
 void Game::playCutSceneBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
-		dummyCameraObject->move(Vector3f(1.0f, 45.0f, 10.0f));
-		//dummyCameraObject->lookUp(90.0f);	// TODO: invert, so it's natural to use		
+		dummyCameraObject->move(Vector3f(1.0f, 45.0f, 10.0f));	
 		camera->follow(dummyCameraObject);
 	}
 
@@ -356,7 +349,7 @@ void Game::playCutSceneBeginning() {
 	}
 
 	// TODO: move dummy towards player's center, also platform size is not undetermined, seek boolean coverage
-	if (platforms.size() >= 125 && dummyCameraObject->getCenter().z <= 0) {
+	if (isLevelBuilt() && dummyCameraObject->getCenter().z <= 0) {
 		camera->follow(player);
 		resetCutScene();
 		cout << "DEBUG: CutScene::NONE" << endl;
@@ -452,7 +445,7 @@ void Game::getNeighborPlatforms() {
 	}
 }
 
-bool Game::isFull() {
+bool Game::isLevelBuilt() {
 	for (uint i = 0; i < 5; ++i) {
 		for (uint j = 0; j < 25; ++j) {
 			if (!platformsArray[i][j])

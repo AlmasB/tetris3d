@@ -99,6 +99,7 @@ class Game {
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
 		void nextLevel();
+		bool isLevelBuilt();
 		//Level currentLevel;
 		
 		/**
