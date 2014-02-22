@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <GL/glew.h>
 #include <GL/glu.h>
 
@@ -93,6 +94,13 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 		void resize();
+
+
+
+		GLuint loadTexture();
+
+
+
 		void drawUI();
 		void clearScreen();
 		void showScreen();

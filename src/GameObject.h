@@ -25,24 +25,26 @@ static const char* vertexShaderCode = "                                         
 #version 120                                                                        \n\
 								                                                    \n\
 attribute vec3 Position;                                                            \n\
-                                                                                    \n\
+attribute vec2 UV;                                                                                   \n\
 uniform mat4 gWVP;                                                                  \n\
-                                                                                    \n\
+varying vec2 outUV;                                                                                    \n\
 void main()                                                                         \n\
 {                                                                                   \n\
     gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
+	outUV = UV;  \n\
 }";
 
 
 
 static const char* fragmentShaderCode = "                                                          \n\
 #version 120                                                                        \n\
-						                                                            \n\
+varying vec2 outUV;						                                                            \n\
 uniform vec4 color;                                                                 \n\
-                                                                                    \n\
+uniform sampler2D sampler;                 \n\
+                                                                                  \n\
 void main()                                                                         \n\
 {                                                                                   \n\
-	gl_FragColor = color;  					                                        \n\
+	gl_FragColor = texture2D(sampler, outUV);  					                                        \n\
 }";
 
 
@@ -62,6 +64,31 @@ static const RGBColor COLOR_BLACK = { 0, 0, 0 };
 static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 static const RGBColor COLOR_PURPLE = { 167, 74, 199 };
 
+struct Vertex
+{
+	Vector3f m_pos;
+	Vector2f m_tex;
+
+	Vertex() {}
+
+	Vertex(Vector3f pos, Vector2f tex)
+	{
+		m_pos = pos;
+		m_tex = tex;
+	}
+};
+
+static const GLfloat g_uv_buffer_data[] = {
+	0.000103f, 1.0f - 0.336048f,
+	0.667979f, 1.0f - 0.335851f,
+	0.667969f, 1.0f - 0.671889f,
+	1.000004f, 1.0f - 0.671847f,
+	0.000059f, 1.0f - 0.000004f,
+	0.335973f, 1.0f - 0.335903f,
+	1.000023f, 1.0f - 0.000013f,
+	0.336024f, 1.0f - 0.671877f
+};
+
 class GameObject : public BoundingBox, public Movable {
 	private:
 	protected:
@@ -73,7 +100,11 @@ class GameObject : public BoundingBox, public Movable {
 		CameraTransformer transformer;
 
 		GLuint VBO;
+		GLuint VBOtest;
+		GLuint IBO;
 		GLuint EBO;
+		GLuint UVB;
+
 		GLuint gWVPLocation;
 		GLuint mycolor;
 		
@@ -95,6 +126,12 @@ class GameObject : public BoundingBox, public Movable {
 		Point3f getCenter();
 
 		void draw();
+
+
+		GLuint texture;
+		GLuint textureID;
+
+		void test();
 };
 
 class Cube : public GameObject {

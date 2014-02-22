@@ -17,7 +17,7 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNING) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
@@ -87,6 +87,11 @@ bool Game::init() {
 	ground = make_shared<Plane>(Point3f(0, -1.9f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f - 1.0f), 2.0f, COLOR_AQUA);
+	
+	
+	//prize->test();
+
+	prize->texture = gfx->loadTexture();
 
 	player = make_shared<Player>(Point3f(0, 0, -15.0f));
 	camera->follow(player);

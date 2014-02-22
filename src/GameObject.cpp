@@ -5,7 +5,8 @@ GameObject::GameObject(const Point3f & _center, float x, float y, float z, RGBCo
 	locked = false;
 	color = _color;
 
-
+	texture = 300;
+	test();
 }
 
 GameObject::GameObject(const Point3f &_center) : BoundingBox(_center, 0, 0, 0), transformer(CameraTransformer(_center)) {
@@ -81,9 +82,51 @@ void GameObject::compileShaders() {
 
 	gWVPLocation = glGetUniformLocation(program, "gWVP");
 	mycolor = glGetUniformLocation(program, "color");
+	textureID = glGetUniformLocation(program, "sampler");
+}
+
+void GameObject::test() {
+	/*Vertex Vertices[4] = { Vertex(Vector3f(-1.0f, -1.0f, 0.5773f), Vector2f(0.0f, 0.0f)),
+		Vertex(Vector3f(0.0f, -1.0f, -1.15475f), Vector2f(0.5f, 0.0f)),
+		Vertex(Vector3f(1.0f, -1.0f, 0.5773f), Vector2f(1.0f, 0.0f)),
+		Vertex(Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.5f, 1.0f)) };
+
+	glGenBuffers(1, &VBOtest);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtest);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+
+
+	unsigned int Indices[] = { 0, 3, 1,
+		1, 3, 2,
+		2, 3, 0,
+		0, 1, 2 };
+
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);*/
+
+	glGenBuffers(1, &UVB);
+	glBindBuffer(GL_ARRAY_BUFFER, UVB);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 }
 
 void GameObject::draw() {
+
+	/////////////////////////////////////
+
+
+	
+	
+
+
+
+
+
+
+
+
+	////////////////////////////////////////
+
 	// calculate 3D position and place it
 	glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
 
@@ -93,13 +136,43 @@ void GameObject::draw() {
 	else
 		glUniform4f(mycolor, COLOR_YELLOW.r / 255.0f, COLOR_YELLOW.g / 255.0f, COLOR_YELLOW.b / 255.0f, 1.0f);
 
+
 	glEnableVertexAttribArray(0);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);	// Position, vec3
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) (3*numOfTriangles));
+
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, UVB);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+
+	/*glBindBuffer(GL_ARRAY_BUFFER, VBOtest);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);*/
+
+
+	///////////////////////////////////////////////
+	if (texture != 300) {
+		//debug("Activating texture");
+		//std::cout << texture << std::endl;
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glUniform1i(textureID, 0);
+	}
+	/////////////////////////////////////////////
+
 	glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+	
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void GameObject::scale(float x, float y, float z) {

@@ -363,6 +363,19 @@ inline float distanceBetween(const Point3f & p1, const Point3f & p2) {
 	return sqrt(dx*dx + dy*dy + dz*dz);
 }
 
+struct Vector2f {
+	float x;
+	float y;
+
+	Vector2f()
+	{}
+
+	Vector2f(float _x, float _y) {
+		x = _x;
+		y = _y;
+	}
+};
+
 struct Point2 {
 	int x, y;
 };
