@@ -145,6 +145,10 @@ GLuint GraphicsEngine::loadTexture() {
 	//Unload SDL's copy of the data; we don't need it anymore because OpenGL now stores it in the texture.
 	SDL_FreeSurface(surface);
 
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+
 	return texture;
 }
 

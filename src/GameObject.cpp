@@ -216,11 +216,14 @@ Cube::Cube(const Point3f & _center, const float & size, RGBColor _color)
 	numOfTriangles = 12;
 
 	Vector3f vertices[8];
+
+	// back face
 	vertices[0] = Vector3f(-size / 2, -size / 2, size / 2);
 	vertices[1] = Vector3f(size / 2, -size / 2, size / 2);
 	vertices[2] = Vector3f(size / 2, size / 2, size / 2);
 	vertices[3] = Vector3f(-size / 2, size / 2, size / 2);
 
+	// front face
 	vertices[4] = Vector3f(-size / 2, -size / 2, -size / 2);
 	vertices[5] = Vector3f(size / 2, -size / 2, -size / 2);
 	vertices[6] = Vector3f(size / 2, size / 2, -size / 2);

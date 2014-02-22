@@ -79,14 +79,15 @@ struct Vertex
 };
 
 static const GLfloat g_uv_buffer_data[] = {
-	0.000103f, 1.0f - 0.336048f,
-	0.667979f, 1.0f - 0.335851f,
-	0.667969f, 1.0f - 0.671889f,
-	1.000004f, 1.0f - 0.671847f,
-	0.000059f, 1.0f - 0.000004f,
-	0.335973f, 1.0f - 0.335903f,
-	1.000023f, 1.0f - 0.000013f,
-	0.336024f, 1.0f - 0.671877f
+	0, 0,
+	1, 0,
+	1, 1,
+	0, 1,
+
+	0, 0,
+	1, 0,
+	1, 1,
+	0, 1
 };
 
 class GameObject : public BoundingBox, public Movable {
