@@ -333,9 +333,11 @@ bool Plane::collidesWith(const BoundingBox & box) {
 
 	// further check the whole plane around center point
 
-	return center.y > box.getCenter().y - box.getHalfDistY() - 0.05
+	/*return center.y > box.getCenter().y - box.getHalfDistY() - 0.05
 		&& center.y < box.getCenter().y - box.getHalfDistY() + 0.05
-		&& plane.contains(p);
+		&& plane.contains(p);*/
+	// TODO: do something else ?
+	return box.getCenter().y - box.getHalfDistY() >= 0 && box.getCenter().y - box.getHalfDistY() <= 0.01 && plane.contains(p);
 }
 
 Cuboid::Cuboid(const Point3f & _center, float x, float y, float z, RGBColor col)

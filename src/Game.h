@@ -54,7 +54,7 @@ class Game {
 		*/
 		shared_ptr<Cube> prize;
 
-		shared_ptr<Plane> ground;	// ground as a whole will consist of platforms and will be removed
+		//shared_ptr<Plane> ground;	// ground as a whole will consist of platforms and will be removed
 		list<shared_ptr<Plane>> platforms;
 
 		/**
@@ -102,7 +102,7 @@ class Game {
 		bool running;	// main loop control
 		void nextLevel();
 		bool isLevelBuilt();
-		//Level currentLevel;
+		shared_ptr<Level> currentLevel;
 		
 		/**
 		* Level consists of several steps

@@ -34,7 +34,7 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNIN
 	openPlatforms.push_back(currentNode);
 
 
-	shared_ptr<Level> currentLevel = Level::getNext();
+	currentLevel = Level::getNext();
 
 
 	for (uint i = 0; i < 5; ++i) {
@@ -83,23 +83,18 @@ bool Game::init() {
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
-	float length = 50.0f;
-	ground = make_shared<Plane>(Point3f(0, -1.9f, 0.0f), 10.0f, 0.1f, length, COLOR_GRAY);
+
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3f(0, 0.0f, length / 2.0f - 1.0f), 2.0f, COLOR_AQUA);
+	prize = make_shared<Cube>(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f), 2.0f, COLOR_AQUA);
 	
-	
-	//prize->test();
 
 	textureBrick = gfx->loadTexture();
-	prize->texture = textureBrick;
+	//prize->texture = textureBrick;
 
-	player = make_shared<Player>(Point3f(0, 0.0f, -15.0f));
+	player = make_shared<Player>(Point3f(0, 2.0f, -currentLevel->length + 3*2.0f ));	// give player some back space
 	camera->follow(player);
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
-
-	spawnAllBlocks();	// set level, TODO: create level initer
 
 	return true;
 }
@@ -179,11 +174,6 @@ void Game::handleMouseEvents() {
 void Game::onPrimaryAction() {
 	bullet->setCenter(player->getCenter());
 
-	//cout << camera->getDirection().x << " " << camera->getDirection().y << " " << camera->getDirection().z << endl;
-	//player->printDebug(__UP);
-	//mainBlocks.front()->transformer.printDebug();
-	//camera->printDebug();
-
 	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
 		for (auto cube : extraBlocks) {
@@ -206,17 +196,18 @@ void Game::onSecondaryAction() {
 void Game::update() {
 	Vector3f gravity(0, -0.01f, 0);
 
-	float value = 0.0025f;
+	for (auto block : extraBlocks)
+		if (selected != block)
+			block->move(gravity);
 
-	//ground->setDistZ(ground->halfDistZ.z * 2 - value);	// we could change VBO here
-	//ground->move(Vector3f(0, 0, value/2.0f));
-	//prize->move(Vector3f(0, 0, value / 2.0f));
-
-	//cout << ground->halfDistZ.getZ() << endl;
-
-	for (auto cube : extraBlocks)
-		if (!ground->collidesWith(*cube) && selected != cube)
-			cube->move(gravity);
+	for (auto block : extraBlocks) {
+		for (auto platform : platforms) {
+			if (platform->collidesWith(*block)) {	// TODO: implement box - > plane collision
+				block->move(gravity * (-1.0f));
+				break;
+			}
+		}
+	}
 
 
 	buildBlock();
@@ -235,7 +226,12 @@ void Game::buildBlock() {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					Point3f c(getValue(j), i*2.0f, 5.0f + 4 * currentStep);
+					float x = getValue(j);
+					float y = i*2.0f + 1.0f;
+					// where player starts count as level beginning
+					float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
+
+					Point3f c(x, y, z);
 					if (distanceBetween(c, selected->getCenter()) < 3.0f) {
 						selected->setCenter(c.x, c.y, c.z);
 						selected->setLocked(false);
@@ -302,14 +298,19 @@ void Game::spawnAllBlocks() {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				Point3f p(getValue(j), i*2.0f, 5.0f + 4*currentStep);
+				float x = getValue(j);
+				float y = i*2.0f + 1.0f;
+				// where player starts count as level beginning
+				float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
+
+				Point3f p(x, y, z);
 				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3f p(getRandom(-4, 4)*1.0f, getRandom(5, 10)*1.0f, -getRandom(25, 35)*1.0f + 5.0f*currentStep);
+		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
 		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
 	}
 }
@@ -355,9 +356,11 @@ void Game::playCutSceneBeginning() {
 	}
 
 	// TODO: move dummy towards player's center, also platform size is not undetermined, seek boolean coverage
-	if (isLevelBuilt() && dummyCameraObject->getCenter().z <= 0) {
+	if (isLevelBuilt() && dummyCameraObject->getCenter().z <= player->getCenter().z) {
 		camera->follow(player);
 		resetCutScene();
+		spawnAllBlocks();
+		// TODO: allow platform creation here
 		cout << "DEBUG: CutScene::NONE" << endl;
 	}
 }
@@ -394,10 +397,13 @@ void Game::buildPlatforms() {
 		getNeighborPlatforms();
 
 		float x = getValue(point.x);
-		float y = -1.2f;
-		float z = 2.0f * point.y - 12;
+		//float y = -1.2f;
+		float y = 0.0f;
+		float z = 2.0f * point.y - currentLevel->length;	// place it the way that level center is always at 0.0.0 origin
 
-		shared_ptr<Plane> plat = make_shared<Plane>(Point3f(x, y, z), 2.0f, 0.2f, 2.0f, getRandomColor());
+
+		// y - 0.1f so that the top of the platforms represent the 0th line in Y - the ground
+		shared_ptr<Plane> plat = make_shared<Plane>(Point3f(x, y - 0.1f, z), 2.0f, 0.2f, 2.0f, getRandomColor());
 		plat->texture = textureBrick;
 
 		platforms.push_back(plat);
