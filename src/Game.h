@@ -17,6 +17,8 @@
 #define __APP_FPS 60
 #define __BULLET_DISTANCE 20
 
+#define __DEFAULT_SCORE 200
+
 using namespace std;	// for debugging
 
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;

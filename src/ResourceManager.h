@@ -12,7 +12,7 @@ class ResourceManager {
 
 		static GLuint loadTexture(const char * fileName);
 	public:
-		static void loadResources();
+		static std::string loadResources();
 
 		/* GLuint is typedef unsigned int, 
 		so no reason to pull GL/glew just for that*/

@@ -2,12 +2,14 @@
 
 std::map<const char *, GLuint> ResourceManager::textures;
 
-void ResourceManager::loadResources() {
+std::string ResourceManager::loadResources() {
 	// implement
 	// load resource file names as a list/vector
 	// TODO: automate
 	textures["brick.png"] = loadTexture("brick.png");
 	textures["prize.png"] = loadTexture("prize.png");
+
+	return "";
 }
 
 GLuint ResourceManager::getTextureID(const char * fileName) {
@@ -19,7 +21,7 @@ GLuint ResourceManager::loadTexture(const char * fileName) {
 
 	SDL_Surface* surface = IMG_Load(fileName);
 	if (surface == nullptr) {
-		// if debug show error message here SDL_GetError()
+		// if debug show error message here SDL_GetError() maybe?
 		return 0;
 	}
 
