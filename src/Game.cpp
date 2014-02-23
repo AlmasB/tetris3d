@@ -88,8 +88,10 @@ bool Game::init() {
 	prize = make_shared<Cube>(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f), 2.0f, COLOR_AQUA);
 	
 
-	textureBrick = ResourceManager::getTextureID("brick.png");
-	prize->texture = ResourceManager::getTextureID("prize.png");
+	textureBrick = ResourceManager::getTextureID("res/brick.png");
+	prize->texture = ResourceManager::getTextureID("res/prize.png");
+
+	//cout << "texture brick " << textureBrick << endl;
 
 	player = make_shared<Player>(Point3f(0, 2.0f, -currentLevel->length + 3*2.0f ));	// give player some back space
 	camera->follow(player);

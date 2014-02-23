@@ -198,6 +198,7 @@ void GameObject::draw() {
 		glBindTexture(GL_TEXTURE_2D, texture);
 		//glUniform1i(textureID, texture);	// need that ?
 		glUniform1i(useTexture, 1);		// use texture (1) or use color (0)
+		//cout << texture << endl;
 	}
 
 	// bind the VAO (the triangle)

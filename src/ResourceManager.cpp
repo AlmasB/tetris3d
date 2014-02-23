@@ -1,18 +1,18 @@
 #include "ResourceManager.h"
 
-std::map<const char *, GLuint> ResourceManager::textures;
+std::map<std::string, GLuint> ResourceManager::textures;
 
 std::string ResourceManager::loadResources() {
 	// implement
 	// load resource file names as a list/vector
 	// TODO: automate
-	textures["brick.png"] = loadTexture("brick.png");
-	textures["prize.png"] = loadTexture("prize.png");
+	textures["res/brick.png"] = loadTexture("res/brick.png");
+	textures["res/prize.png"] = loadTexture("res/prize.png");
 
 	return "";
 }
 
-GLuint ResourceManager::getTextureID(const char * fileName) {
+GLuint ResourceManager::getTextureID(std::string fileName) {
 	return textures[fileName];
 }
 

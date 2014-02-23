@@ -6,9 +6,11 @@
 #include <SDL_image.h>
 #include <GL/glew.h>
 
+#include "Debug.h"
+
 class ResourceManager {
 	private:
-		static std::map<const char *, GLuint> textures;
+		static std::map<std::string, GLuint> textures;
 
 		static GLuint loadTexture(const char * fileName);
 	public:
@@ -16,7 +18,7 @@ class ResourceManager {
 
 		/* GLuint is typedef unsigned int, 
 		so no reason to pull GL/glew just for that*/
-		static GLuint getTextureID(const char * fileName);
+		static GLuint getTextureID(std::string fileName);
 };
 
 #endif
