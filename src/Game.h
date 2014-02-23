@@ -9,6 +9,7 @@
 #include "EventEngine.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "ResourceManager.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
 #include "Level.h"

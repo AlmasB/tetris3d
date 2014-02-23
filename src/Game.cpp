@@ -79,7 +79,7 @@ bool Game::init() {
 	gfx->setWindowTitle("Tetris3D ~ ");
 
 	
-
+	ResourceManager::loadResources();	// TODO: something safer maybe
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
@@ -88,8 +88,8 @@ bool Game::init() {
 	prize = make_shared<Cube>(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f), 2.0f, COLOR_AQUA);
 	
 
-	textureBrick = gfx->loadTexture();
-	//prize->texture = textureBrick;
+	textureBrick = ResourceManager::getTextureID("brick.png");
+	prize->texture = ResourceManager::getTextureID("prize.png");
 
 	player = make_shared<Player>(Point3f(0, 2.0f, -currentLevel->length + 3*2.0f ));	// give player some back space
 	camera->follow(player);
@@ -355,13 +355,10 @@ void Game::playCutSceneBeginning() {
 		cutSceneTimer.measure();
 	}
 
-	// TODO: move dummy towards player's center, also platform size is not undetermined, seek boolean coverage
 	if (isLevelBuilt() && dummyCameraObject->getCenter().z <= player->getCenter().z) {
 		camera->follow(player);
 		resetCutScene();
 		spawnAllBlocks();
-		// TODO: allow platform creation here
-		cout << "DEBUG: CutScene::NONE" << endl;
 	}
 }
 

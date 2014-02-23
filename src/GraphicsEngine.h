@@ -93,13 +93,6 @@ class GraphicsEngine {
 		~GraphicsEngine();
 		std::string init();
 		void initGL();
-		void resize();
-
-
-
-		GLuint loadTexture();
-
-
 
 		void drawUI();
 		void clearScreen();

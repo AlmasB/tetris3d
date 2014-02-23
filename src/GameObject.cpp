@@ -195,8 +195,8 @@ void GameObject::draw() {
 
 	if (texture != 300) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, 1);
-		//glUniform1i(textureID, 0);	// need that ?
+		glBindTexture(GL_TEXTURE_2D, texture);
+		//glUniform1i(textureID, texture);	// need that ?
 		glUniform1i(useTexture, 1);		// use texture (1) or use color (0)
 	}
 
