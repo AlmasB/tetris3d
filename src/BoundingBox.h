@@ -42,9 +42,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <utility>
 
-//#include <SDL_opengl.h>
-
-//#include "Common.h"
 #include "GameMath.h"
 
 static const Vector3f UNIT_X_AXIS(1.0, 0.0, 0.0);
@@ -53,7 +50,7 @@ static const Vector3f UNIT_Z_AXIS(0.0, 0.0, 1.0);
 
 enum AXIS { X, Y, Z };
 
-// only considering symmetric for now
+// only considering symmetric for now (relative to center)
 class BoundingBox {
 	private:
 		std::pair<float, float> projectOntoAxis(const BoundingBox &, enum AXIS);

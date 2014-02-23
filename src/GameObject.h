@@ -21,30 +21,30 @@
 using namespace std;
 
 
-static const char* vertexShaderCode = "                                                          \n\
+static const char* vertexShaderCode = "                                             \n\
 #version 120                                                                        \n\
 								                                                    \n\
 attribute vec3 Position;                                                            \n\
-attribute vec2 UV;                                                                                   \n\
+attribute vec2 UV;                                                                  \n\
 uniform mat4 gWVP;                                                                  \n\
-varying vec2 outUV;                                                                                    \n\
-void main()                                                                         \n\
-{                                                                                   \n\
+varying vec2 outUV;                                                                 \n\
+																					\n\
+void main() {                                                                       \n\
     gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
-	outUV = UV;  \n\
+	outUV = UV;																		\n\
 }";
 
 
 
-static const char* fragmentShaderCode = "                                                          \n\
+static const char* fragmentShaderCode = "                                           \n\
 #version 120                                                                        \n\
-varying vec2 outUV;						                                                            \n\
+varying vec2 outUV;						                                            \n\
 uniform vec4 color;                                                                 \n\
-uniform sampler2D sampler;                 \n\
-                                                                                  \n\
-void main()                                                                         \n\
-{                                                                                   \n\
-	gl_FragColor = texture2D(sampler, outUV);  					                                        \n\
+uniform sampler2D sampler;														    \n\
+uniform int useTexture;                                                             \n\
+																					\n\
+void main() {                                                                       \n\
+	gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
 }";
 
 
@@ -64,50 +64,6 @@ static const RGBColor COLOR_BLACK = { 0, 0, 0 };
 static const RGBColor COLOR_AQUA = { 127, 255, 212 };
 static const RGBColor COLOR_PURPLE = { 167, 74, 199 };
 
-struct Vertex
-{
-	Vector3f m_pos;
-	Vector2f m_tex;
-
-	Vertex() {}
-
-	Vertex(Vector3f pos, Vector2f tex)
-	{
-		m_pos = pos;
-		m_tex = tex;
-	}
-};
-
-/*
-static const GLfloat g_uv_buffer_data[] = {
-1, 1,
-0, 1,
-0, 0,
-1, 0,
-
-0, 1,
-1, 1,
-1, 0,
-0, 0
-
-
-};
-*/
-
-static const GLfloat g_uv_buffer_data[] = {
-	//back
-	0, 0,
-	0, 1,
-	1, 1,
-	1, 0,
-
-	//front
-	0, 1,
-	1, 1,
-	1, 0,
-	0, 0
-};
-
 class GameObject : public BoundingBox, public Movable {
 	private:
 	protected:
@@ -119,17 +75,17 @@ class GameObject : public BoundingBox, public Movable {
 		CameraTransformer transformer;
 
 		GLuint VBO;
-		GLuint VBOtest;
-		GLuint IBO;
 		GLuint EBO;
-		GLuint UVB;
+
 
 		GLuint gVAO;
 		GLuint gVBO;
 
 		GLuint gWVPLocation;
 		GLuint mycolor;
-		
+		GLuint useTexture;
+
+
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 		GLuint createShader(const char * shaderCode, GLenum shaderType);
 		void compileShaders();
@@ -154,6 +110,11 @@ class GameObject : public BoundingBox, public Movable {
 		GLuint textureID;
 
 		void test();
+};
+
+class Cuboid : public GameObject {
+	public:
+		Cuboid(const Point3f &center, float x, float y, float z, RGBColor);
 };
 
 class Cube : public GameObject {

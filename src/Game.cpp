@@ -17,7 +17,7 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNING) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
@@ -91,9 +91,10 @@ bool Game::init() {
 	
 	//prize->test();
 
-	prize->texture = gfx->loadTexture();
+	textureBrick = gfx->loadTexture();
+	prize->texture = textureBrick;
 
-	player = make_shared<Player>(Point3f(0, 0, -15.0f));
+	player = make_shared<Player>(Point3f(0, 0.0f, -15.0f));
 	camera->follow(player);
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
@@ -396,7 +397,10 @@ void Game::buildPlatforms() {
 		float y = -1.2f;
 		float z = 2.0f * point.y - 12;
 
-		platforms.push_back(make_shared<Plane>(Point3f(x, y, z), 2.0f, 0.2f, 2.0f, getRandomColor()));
+		shared_ptr<Plane> plat = make_shared<Plane>(Point3f(x, y, z), 2.0f, 0.2f, 2.0f, getRandomColor());
+		plat->texture = textureBrick;
+
+		platforms.push_back(plat);
 	}
 
 	openPlatforms = openPlatforms2;
