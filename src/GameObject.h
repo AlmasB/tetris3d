@@ -105,6 +105,7 @@ class GameObject : public BoundingBox, public Movable {
 		void setCenter(const Point3f & center);
 		void rotate(float, float, float);
 		Point3f getCenter();
+		Vector3f getScale();
 
 		void draw();
 

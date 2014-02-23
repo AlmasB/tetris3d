@@ -17,7 +17,7 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::BEGINNING) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::LEVEL_BEGINNING) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
@@ -98,6 +98,10 @@ bool Game::init() {
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 
+#ifdef __DEBUG
+	debug("Game::init() successful");
+#endif
+
 	return true;
 }
 
@@ -106,11 +110,11 @@ void Game::runMainLoop() {
 	debug("Entered Main Loop");
 #endif
 
-	while (running) {
+	while (running) {	// TODO: CPU load is ~20%, do something to optimize
 		gfx->setFrameStart();
+		eventSystem->pollEvents();
 
 		if (currentCutScene == CutScene::NONE) {
-			eventSystem->pollEvents();
 			handleAllEvents();
 		}
 		else {
@@ -126,6 +130,57 @@ void Game::runMainLoop() {
 #ifdef __DEBUG
 	debug("Exited Main Loop");
 #endif
+}
+
+void Game::update() {
+	Vector3f gravity(0, -0.01f, 0);
+
+	for (auto block : extraBlocks)
+		if (selected != block)
+			block->move(gravity);
+
+	for (auto block : extraBlocks) {
+		for (auto platform : platforms) {
+			if (platform->collidesWith(*block)) {	// TODO: implement box - > plane collision
+				block->move(gravity * (-1.0f));
+				break;
+			}
+		}
+	}
+
+
+	buildBlock();
+
+	if (isStepCompleted()) {
+		player->addScore(__SCORE_PER_STEP);
+		nextStep();
+	}
+
+	if (currentCutScene != CutScene::LEVEL_END && player->collidesWith(*prize)) {	// player reached prize aka end of level
+		player->addScore(__SCORE_PER_LEVEL);
+		currentCutScene = CutScene::LEVEL_END;
+	}
+
+	// after updating positions of objects, update camera too
+	camera->updateView();
+}
+
+void Game::render() {
+	gfx->clearScreen();
+
+	for (auto cube : mainBlocks)
+		cube->draw();
+
+	for (auto cube : extraBlocks)
+		cube->draw();
+
+	//ground->draw();
+	for (auto plane : platforms)
+		plane->draw();
+
+	prize->draw();
+
+	gfx->showScreen();
 }
 
 void Game::handleAllEvents() {
@@ -195,33 +250,6 @@ void Game::onSecondaryAction() {
 	}
 }
 
-void Game::update() {
-	Vector3f gravity(0, -0.01f, 0);
-
-	for (auto block : extraBlocks)
-		if (selected != block)
-			block->move(gravity);
-
-	for (auto block : extraBlocks) {
-		for (auto platform : platforms) {
-			if (platform->collidesWith(*block)) {	// TODO: implement box - > plane collision
-				block->move(gravity * (-1.0f));
-				break;
-			}
-		}
-	}
-
-
-	buildBlock();
-	
-	if (isStepCompleted()) {
-		nextStep();
-	}
-
-	// after updating positions of objects, update camera too
-	camera->updateView();
-}
-
 // TODO: clean this
 void Game::buildBlock() {
 	if (selected != nullptr) {
@@ -230,7 +258,7 @@ void Game::buildBlock() {
 				if (!blocks[j][i]) {
 					float x = getValue(j);
 					float y = i*2.0f + 1.0f;
-					// where player starts count as level beginning
+					// count the point where player starts as level LEVEL_BEGINNING
 					float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
 
 					Point3f c(x, y, z);
@@ -241,6 +269,8 @@ void Game::buildBlock() {
 						extraBlocks.remove(selected);
 						blocks[j][i] = true;
 						selected = nullptr;
+
+						player->addScore(__SCORE_PER_BLOCK);
 						return;
 					}
 				}
@@ -258,27 +288,9 @@ bool Game::isStepCompleted() {
 		}
 	}
 
-	// faster implementation can be checking extraBlocks for 0 size
+	// TODO: faster implementation can be checking extraBlocks for 0 size
 
 	return true;
-}
-
-void Game::render() {
-	gfx->clearScreen();
-	
-	for (auto cube : mainBlocks)
-		cube->draw();
-
-	for (auto cube : extraBlocks)
-		cube->draw();
-
-	//ground->draw();
-	for (auto plane : platforms)
-		plane->draw();
-
-	prize->draw();
-
-	gfx->showScreen();
 }
 
 uint Game::numberOfBlocksRequired() {
@@ -302,7 +314,7 @@ void Game::spawnAllBlocks() {
 			if (blocks[j][i]) {
 				float x = getValue(j);
 				float y = i*2.0f + 1.0f;
-				// where player starts count as level beginning
+				// where player starts count as level LEVEL_BEGINNING
 				float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
 
 				Point3f p(x, y, z);
@@ -319,11 +331,11 @@ void Game::spawnAllBlocks() {
 
 void Game::playCutScene() {
 	switch (currentCutScene) {
-		case BEGINNING:
-			playCutSceneBeginning();
+		case LEVEL_BEGINNING:
+			playCutSceneLevelBeginning();
 			break;
-		case END:
-			playCutSceneEnd();
+		case LEVEL_END:
+			playCutSceneLevelEnd();
 			break;
 		case PLAYER_DEATH:
 			playCutScenePlayerDeath();
@@ -331,7 +343,7 @@ void Game::playCutScene() {
 	}
 }
 
-void Game::playCutSceneBeginning() {
+void Game::playCutSceneLevelBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
 		dummyCameraObject->move(Vector3f(1.0f, 45.0f, 10.0f));	
 		camera->follow(dummyCameraObject);
@@ -353,14 +365,50 @@ void Game::playCutSceneBeginning() {
 		dummyCameraObject->lookAt(prize->getCenter());
 		//dummyCameraObject->printDebug(__CENTER);
 
-		cutSceneFrame++;
+		cutSceneFrame++;	// TODO: do we really need frame control with timer here ?
 		cutSceneTimer.measure();
 	}
-
-	if (isLevelBuilt() && dummyCameraObject->getCenter().z <= player->getCenter().z) {
+	
+	// TODO: maybe compare camera object's center and player's center, if distance less say small amount
+	if (eventSystem->isPressed(Key::SPACE) || (isLevelBuilt() && dummyCameraObject->getCenter().z <= player->getCenter().z)) {
 		camera->follow(player);
 		resetCutScene();
 		spawnAllBlocks();
+#ifdef __DEBUG
+		debug("Level Created, Blocks spawned, CutScene::LEVEL_BEGINNING completed");
+#endif
+	}
+}
+
+void Game::playCutSceneLevelEnd() {
+	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
+		dummyCameraObject->moveTo(player->getCenter());
+		dummyCameraObject->move(Vector3f(0, 0, -5.0f));	// move slightly back
+		dummyCameraObject->lookAt(prize->getCenter());
+		camera->follow(dummyCameraObject);
+	}
+
+	if (cutSceneTimer.getElapsed() >= 0.025 * __SECOND) {
+		if (prize->getCenter().y < 3.0f) {
+			prize->move(Vector3f(0, 0.1f, 0));
+			dummyCameraObject->lookAt(prize->getCenter());
+		}
+		else {
+			prize->rotate(0, 2.0f, 0);
+			cutSceneFrame++;
+		}
+
+		if (cutSceneFrame >= 125) {
+			prize->scale(-0.025f, -0.025f, -0.025f);
+		}
+
+		cutSceneTimer.measure();
+	}
+
+	if (eventSystem->isPressed(Key::SPACE) || prize->getScale().x <= 0) {
+		camera->follow(player);
+		resetCutScene();
+		nextLevel();
 	}
 }
 
@@ -368,7 +416,11 @@ void Game::playCutScenePlayerDeath() {
 
 }
 
-void Game::playCutSceneEnd() {
+void Game::playCutSceneGameWin() {
+
+}
+
+void Game::playCutSceneGameLose() {
 
 }
 
@@ -470,10 +522,18 @@ bool Game::isLevelBuilt() {
 	return true;
 }
 
-// TODO: implement
+// TODO: reset all objects
 void Game::nextLevel() {
+	if (currentLevel->number == __MAX_LEVELS) {
+		currentCutScene = CutScene::GAME_WIN;
+		return;
+	}
 
+
+	currentLevel->Level::getNext();
+	player->setCenter(Point3f(0, 2.0f, -currentLevel->length + 3 * 2.0f));
 	currentStep = 0; 
+	currentCutScene = CutScene::LEVEL_BEGINNING;
 }
 
 void Game::nextStep() {

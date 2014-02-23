@@ -17,14 +17,16 @@
 #define __APP_FPS 60
 #define __BULLET_DISTANCE 20
 
-#define __DEFAULT_SCORE 200
+#define __SCORE_PER_BLOCK 200
+#define __SCORE_PER_STEP 1000
+#define __SCORE_PER_LEVEL 5000
 
 using namespace std;	// for debugging
 
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
 
 enum CutScene {
-	NONE, BEGINNING, PLAYER_DEATH, END
+	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN, GAME_LOSE
 };
 
 class Game {
@@ -134,17 +136,25 @@ class Game {
 
 		/* CUT-SCENES RELATED STUFF */
 		CutScene currentCutScene;
-		uint cutSceneFrame;
-		Timer cutSceneTimer;
+
+		/**
+		* These can control flow of the cutscene,
+		* its onStart() and its onFinish()
+		* Both can be used simultaneously
+		*/
+		uint cutSceneFrame;		// records how much frames passed since FIRST call to this cutscene
+		Timer cutSceneTimer;	// records how much time passed since LAST call to this cutscene
 
 		/**
 		* Each cut scene ideally should have onStart() and onFinish() 
 		* sort of thing within them
 		*/
 		void playCutScene();
-		void playCutSceneBeginning();
+		void playCutSceneLevelBeginning();
+		void playCutSceneLevelEnd();
 		void playCutScenePlayerDeath();
-		void playCutSceneEnd();
+		void playCutSceneGameWin();
+		void playCutSceneGameLose();
 		void resetCutScene();
 
 		/* EVENTS & UPDATES */

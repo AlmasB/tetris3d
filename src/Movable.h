@@ -24,6 +24,7 @@ class Movable {
 		Movable();
 		virtual void move(const Vector3f & v) = 0;
 		void move(float, float, float);
+		void moveTo(const Point3f & point);
 
 		/**
 		* Allows you to move as if you were looking thru the object's eyes

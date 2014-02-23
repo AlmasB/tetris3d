@@ -225,17 +225,24 @@ void GameObject::draw() {
 	glDisableVertexAttribArray(1);
 }
 
+// TODO: since object size is now different we need to adapt bbox to it
 void GameObject::scale(float x, float y, float z) {
-	transformer.scale = Vector3f(x, y, z);
+	transformer.scale += Vector3f(x, y, z);
+}
+
+Vector3f GameObject::getScale() {
+	return transformer.scale;
 }
 
 void GameObject::rotate(float x, float y, float z) {
-	transformer.rotate = Vector3f(x, y, z);
+	transformer.rotate += Vector3f(x, y, z);
+	// not changing bbox here
 }
 
 void GameObject::setCenter(float x, float y, float z) {
 	center = Point3f(x, y, z);
 	transformer.center = Vector3f(x, y, z);
+	// only changed center point no need to change bbox
 }
 // or the other way around
 void GameObject::setCenter(const Point3f & _center) {

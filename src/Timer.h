@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #define __SECOND 1000
+#define __MINUTE (60*__SECOND)
 
 class Timer {
 	private:

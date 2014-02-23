@@ -53,6 +53,10 @@ void Movable::move(float x, float y, float z) {
 	move(Vector3f(x, y, z));
 }
 
+void Movable::moveTo(const Point3f & point) {
+	move(point - getCenter());
+}
+
 void Movable::moveForward() {
 	//center += (direction * speed);	// for moving in Y as well
 	Vector3f tmp = direction * speed;

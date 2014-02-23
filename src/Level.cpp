@@ -11,17 +11,8 @@ Level::Level(int value, int w, int h, int l, const std::string levelData[]) : nu
 	for (uint i = 0; i < width; ++i) {
 		for (uint j = 0; j < length; ++j) {
 			data[i][j] = levelData[length-j-1][i] == '1';
-			//std::cout << data[i][j];
 		}
-
-		//std::cout << std::endl;
 	}
-
-	//getchar();
-
-	/*int** ary = new int*[sizeX];
-	for (int i = 0; i < sizeX; ++i)
-		ary[i] = new int[sizeY];*/
 }
 
 Level::~Level() {
