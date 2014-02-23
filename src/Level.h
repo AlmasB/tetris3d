@@ -57,12 +57,14 @@ class Level {
 		static std::list<std::shared_ptr<Level>> levels;
 		Level(int, int, int, int, const std::string[]);
 		static void createLevels();
+		static uint numberOfLevels;
 	public:
 		~Level();
 		int number, width, height, length;
 		bool ** data;
 
 		static std::shared_ptr<Level> getNext();
+		static uint getNumberOfLevels();
 };
 
 #endif

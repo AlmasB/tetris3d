@@ -17,34 +17,12 @@ float getValue(uint n) {
 	return -20;	// will fix
 }
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::LEVEL_BEGINNING) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
 	eventSystem = unique_ptr<EventEngine>(new EventEngine());
 
-
-
-	cutSceneFrame = 0;
 	srand(0);
-
-
-
-	Point2 p = { 2, 0 };
-	currentNode = p;
-	openPlatforms.push_back(currentNode);
-
-
-	currentLevel = Level::getNext();
-
-
-	for (uint i = 0; i < 5; ++i) {
-		for (uint j = 0; j < 25; ++j) {
-			//platformsArray[i][j] = false;
-			platformsArray[i][j] = currentLevel->data[i][j];
-		}
-	}
-
-	platformsArray[2][0] = true;
 	
 #ifdef __DEBUG
 	debug("Game::Game() finished");
@@ -84,19 +62,21 @@ bool Game::init() {
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 
-	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
-	prize = make_shared<Cube>(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f), 2.0f, COLOR_AQUA);
 	
+	
+
+	// atm we don't care where we place them, nextLevel() takes care of everything
+	prize = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_AQUA);
+	player = make_shared<Player>(Point3f(0, 0, 0));
+	camera->follow(player);
+
+	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
+	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 
 	textureBrick = ResourceManager::getTextureID("res/brick.png");
 	prize->texture = ResourceManager::getTextureID("res/prize.png");
 
-	//cout << "texture brick " << textureBrick << endl;
-
-	player = make_shared<Player>(Point3f(0, 2.0f, -currentLevel->length + 3*2.0f ));	// give player some back space
-	camera->follow(player);
-
-	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
+	nextLevel();
 
 #ifdef __DEBUG
 	debug("Game::init() successful");
@@ -345,7 +325,8 @@ void Game::playCutScene() {
 
 void Game::playCutSceneLevelBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
-		dummyCameraObject->move(Vector3f(1.0f, 45.0f, 10.0f));	
+		dummyCameraObject->moveTo(Point3f(1.0f, 45.0f, 10.0f));		// TODO: calculate depending on prize center
+		dummyCameraObject->lookAt(prize->getCenter());
 		camera->follow(dummyCameraObject);
 	}
 
@@ -523,15 +504,34 @@ bool Game::isLevelBuilt() {
 }
 
 // TODO: reset all objects
+// TODO: clear all lists
 void Game::nextLevel() {
-	if (currentLevel->number == __MAX_LEVELS) {
+	if (Level::getNumberOfLevels() == __MAX_LEVELS) {
 		currentCutScene = CutScene::GAME_WIN;
 		return;
 	}
 
+	// TODO: clean that
+	Point2 p = { 2, 0 };
+	currentNode = p;
+	openPlatforms.push_back(currentNode);
 
-	currentLevel->Level::getNext();
+	currentLevel = Level::getNext();
+	for (uint i = 0; i < 5; ++i) {
+		for (uint j = 0; j < 25; ++j) {
+			platformsArray[i][j] = currentLevel->data[i][j];
+		}
+	}
+
+	platformsArray[2][0] = true;
+
+
+
+
 	player->setCenter(Point3f(0, 2.0f, -currentLevel->length + 3 * 2.0f));
+	prize->setCenter(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f));
+	prize->setRotate(0, 0, 0);
+	prize->setScale(1, 1, 1);
 	currentStep = 0; 
 	currentCutScene = CutScene::LEVEL_BEGINNING;
 }

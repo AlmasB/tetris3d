@@ -1,6 +1,7 @@
 #include "Level.h"
 
 std::list<std::shared_ptr<Level>> Level::levels;
+uint Level::numberOfLevels;
 
 Level::Level(int value, int w, int h, int l, const std::string levelData[]) : number(value), width(w), height(h), length(l) {
 	data = new bool* [width];
@@ -24,6 +25,7 @@ Level::~Level() {
 void Level::createLevels() {
 	levels.push_back(std::shared_ptr<Level>(new Level(1, __LEVEL1_WIDTH, __DEFAULT_HEIGHT, __LEVEL1_LENGTH, LEVEL1_DATA)));
 
+	numberOfLevels = levels.size();
 }
 
 std::shared_ptr<Level> Level::getNext() {
@@ -34,3 +36,8 @@ std::shared_ptr<Level> Level::getNext() {
 	levels.erase(levels.begin());
 	return level;
 }
+
+uint Level::getNumberOfLevels() {
+	return numberOfLevels;
+}
+

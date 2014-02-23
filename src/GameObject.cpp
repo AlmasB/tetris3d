@@ -230,6 +230,10 @@ void GameObject::scale(float x, float y, float z) {
 	transformer.scale += Vector3f(x, y, z);
 }
 
+void GameObject::setScale(float x, float y, float z) {
+	transformer.scale = Vector3f(x, y, z);
+}
+
 Vector3f GameObject::getScale() {
 	return transformer.scale;
 }
@@ -237,6 +241,10 @@ Vector3f GameObject::getScale() {
 void GameObject::rotate(float x, float y, float z) {
 	transformer.rotate += Vector3f(x, y, z);
 	// not changing bbox here
+}
+
+void GameObject::setRotate(float x, float y, float z) {
+	transformer.rotate = Vector3f(x, y, z);
 }
 
 void GameObject::setCenter(float x, float y, float z) {
