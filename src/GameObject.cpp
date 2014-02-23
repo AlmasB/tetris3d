@@ -92,8 +92,8 @@ void GameObject::compileShaders() {
 
 void GameObject::test() {
 	// make and bind the VAO
-	glGenVertexArrays(1, &gVAO);
-	glBindVertexArray(gVAO);
+	//glGenVertexArrays(1, &gVAO);
+	//glBindVertexArray(gVAO);
 
 	// make and bind the VBO
 	glGenBuffers(1, &gVBO);
@@ -156,15 +156,15 @@ void GameObject::test() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	// connect the xyz to the "vert" attribute of the vertex shader
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 
 	// connect the uv coords to the "vertTexCoord" attribute of the vertex shader
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
 
 	// unbind the VAO
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 }
 
 void GameObject::draw() {
@@ -201,13 +201,21 @@ void GameObject::draw() {
 	}
 
 	// bind the VAO (the triangle)
-	glBindVertexArray(gVAO);
+	//glBindVertexArray(gVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0); 
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
 
 	// draw the VAO
 	glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
 
 	// unbind the VAO, the program and the texture
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
