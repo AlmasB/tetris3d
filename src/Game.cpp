@@ -73,7 +73,7 @@ bool Game::init() {
 
 	// at this point SDL/GL/GLEW are initialised and OK to use
 #ifdef __DEBUG
-	debug("GraphicsEngine::init() successfull");
+	debug("GraphicsEngine::init() successful");
 #endif
 
 	gfx->setWindowTitle("Tetris3D ~ ");

@@ -105,9 +105,83 @@ void GameObject::test() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);*/
 
-	glGenBuffers(1, &UVB);
+	/*glGenBuffers(1, &UVB);
 	glBindBuffer(GL_ARRAY_BUFFER, UVB);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);*/
+
+
+
+	// make and bind the VAO
+	glGenVertexArrays(1, &gVAO);
+	glBindVertexArray(gVAO);
+
+	// make and bind the VBO
+	glGenBuffers(1, &gVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+
+	// Make a cube out of triangles (two triangles per side)
+	GLfloat vertexData[] = {
+		//  X     Y     Z       U     V
+		// bottom
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+
+		// top
+		-1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+
+		// front
+		-1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+
+		// back
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, -1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+
+		// left
+		-1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+		-1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		-1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+
+		// right
+		1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 1.0f, 0.0f, 1.0f
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+	// connect the xyz to the "vert" attribute of the vertex shader
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), NULL);
+
+	// connect the uv coords to the "vertTexCoord" attribute of the vertex shader
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+
+	// unbind the VAO
+	glBindVertexArray(0);
 }
 
 void GameObject::draw() {
@@ -137,19 +211,19 @@ void GameObject::draw() {
 		glUniform4f(mycolor, COLOR_YELLOW.r / 255.0f, COLOR_YELLOW.g / 255.0f, COLOR_YELLOW.b / 255.0f, 1.0f);
 
 
-	glEnableVertexAttribArray(0);
+	/*glEnableVertexAttribArray(0);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);	// Position, vec3
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);*/	// Position, vec3
 	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) (3*numOfTriangles));
 
 
-	glEnableVertexAttribArray(1);
+	/*glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, UVB);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);*/
 
 
 	/*glBindBuffer(GL_ARRAY_BUFFER, VBOtest);
@@ -159,16 +233,28 @@ void GameObject::draw() {
 
 
 	///////////////////////////////////////////////
-	if (texture != 300) {
+	//if (texture != 300) {
 		//debug("Activating texture");
 		//std::cout << texture << std::endl;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, 1);
 		glUniform1i(textureID, 0);
-	}
+	//}
+
+
+	// bind the VAO (the triangle)
+	glBindVertexArray(gVAO);
+
+	// draw the VAO
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
+
+	// unbind the VAO, the program and the texture
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	/////////////////////////////////////////////
 
-	glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, 3 * numOfTriangles, GL_UNSIGNED_INT, 0);
 	//glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 	
 	glDisableVertexAttribArray(0);

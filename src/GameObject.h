@@ -78,16 +78,34 @@ struct Vertex
 	}
 };
 
+/*
 static const GLfloat g_uv_buffer_data[] = {
-	0, 0,
-	1, 0,
-	1, 1,
-	0, 1,
+1, 1,
+0, 1,
+0, 0,
+1, 0,
 
+0, 1,
+1, 1,
+1, 0,
+0, 0
+
+
+};
+*/
+
+static const GLfloat g_uv_buffer_data[] = {
+	//back
 	0, 0,
-	1, 0,
+	0, 1,
 	1, 1,
-	0, 1
+	1, 0,
+
+	//front
+	0, 1,
+	1, 1,
+	1, 0,
+	0, 0
 };
 
 class GameObject : public BoundingBox, public Movable {
@@ -105,6 +123,9 @@ class GameObject : public BoundingBox, public Movable {
 		GLuint IBO;
 		GLuint EBO;
 		GLuint UVB;
+
+		GLuint gVAO;
+		GLuint gVBO;
 
 		GLuint gWVPLocation;
 		GLuint mycolor;
