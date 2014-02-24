@@ -20,6 +20,19 @@
 #define __LEVEL2_WIDTH 9
 #define __LEVEL2_LENGTH 40
 
+#define __LEVEL3_WIDTH 13
+#define __LEVEL3_LENGTH 50
+
+#define __LEVEL4_WIDTH 15
+
+static const int LEVEL_WIDTHS[] = {
+	0, 5, 9, 13
+};
+
+static const int LEVEL_LENGTHS[] = {
+	0, 25, 40, 50
+};
+
 static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
 	"00000",
 	"00000",
