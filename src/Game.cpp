@@ -428,8 +428,7 @@ void Game::buildPlatforms() {
 		currentNode = point;
 		getNeighborPlatforms();
 
-		float x = getValue(point.x);
-		//float y = -1.2f;
+		float x = 2.0f * point.x - currentLevel->width;
 		float y = 0.0f;
 		float z = 2.0f * point.y - currentLevel->length;	// place it the way that level center is always at 0.0.0 origin
 
@@ -443,12 +442,6 @@ void Game::buildPlatforms() {
 
 	openPlatforms = openPlatforms2;
 	openPlatforms2.clear();
-
-	/*cout << "OPEN LIST:" << endl;
-
-	for (auto point : openPlatforms) {
-		cout << point.x << " " << point.y << endl;
-	}*/
 }
 
 void Game::getNeighborPlatforms() {
@@ -457,45 +450,43 @@ void Game::getNeighborPlatforms() {
 	int y1 = currentNode.y - 1;
 	int y2 = currentNode.y + 1;
 
-	//cout << currentNode.x << " " << currentNode.y << endl;
-
 	if (x1 >= 0) {
-		if (!platformsArray[x1][currentNode.y]) {
+		if (!currentLevel->data[x1][currentNode.y]) {
 			Point2 p = { x1, currentNode.y };
 			openPlatforms2.push_back(p);
-			platformsArray[x1][currentNode.y] = true;
+			currentLevel->data[x1][currentNode.y] = true;
 		}
 	}
 
-	if (x2 < 5) {
-		if (!platformsArray[x2][currentNode.y]) {
+	if (x2 < currentLevel->width) {
+		if (!currentLevel->data[x2][currentNode.y]) {
 			Point2 p = { x2, currentNode.y };
 			openPlatforms2.push_back(p);
-			platformsArray[x2][currentNode.y] = true;
+			currentLevel->data[x2][currentNode.y] = true;
 		}
 	}
 
 	if (y1 >= 0) {
-		if (!platformsArray[currentNode.x][y1]) {
+		if (!currentLevel->data[currentNode.x][y1]) {
 			Point2 p = { currentNode.x, y1 };
 			openPlatforms2.push_back(p);
-			platformsArray[currentNode.x][y1] = true;
+			currentLevel->data[currentNode.x][y1] = true;
 		}
 	}
 
-	if (y2 < 25) {
-		if (!platformsArray[currentNode.x][y2]) {
+	if (y2 < currentLevel->length) {
+		if (!currentLevel->data[currentNode.x][y2]) {
 			Point2 p = { currentNode.x, y2 };
 			openPlatforms2.push_back(p);
-			platformsArray[currentNode.x][y2] = true;
+			currentLevel->data[currentNode.x][y2] = true;
 		}
 	}
 }
 
 bool Game::isLevelBuilt() {
-	for (uint i = 0; i < 5; ++i) {
-		for (uint j = 0; j < 25; ++j) {
-			if (!platformsArray[i][j])
+	for (uint i = 0; i < currentLevel->width; ++i) {
+		for (uint j = 0; j < currentLevel->length; ++j) {
+			if (!currentLevel->data[i][j])
 				return false;
 		}
 	}
@@ -511,20 +502,21 @@ void Game::nextLevel() {
 		return;
 	}
 
+
+	mainBlocks.clear();
+	extraBlocks.clear();
+	platforms.clear();
+	openPlatforms.clear();
+	openPlatforms2.clear();
+
 	// TODO: clean that
 	Point2 p = { 2, 0 };
 	currentNode = p;
 	openPlatforms.push_back(currentNode);
 
 	currentLevel = Level::getNext();
-	for (uint i = 0; i < 5; ++i) {
-		for (uint j = 0; j < 25; ++j) {
-			platformsArray[i][j] = currentLevel->data[i][j];
-		}
-	}
 
-	platformsArray[2][0] = true;
-
+	currentLevel->data[2][0] = true;
 
 
 
@@ -533,6 +525,8 @@ void Game::nextLevel() {
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
 	currentStep = 0; 
+	
+	
 	currentCutScene = CutScene::LEVEL_BEGINNING;
 }
 

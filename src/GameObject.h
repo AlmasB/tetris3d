@@ -23,12 +23,12 @@ using namespace std;
 
 static const char* vertexShaderCode = "                                             \n\
 #version 120                                                                        \n\
-								                                                    \n\
+							                            \n\
 attribute vec3 Position;                                                            \n\
 attribute vec2 UV;                                                                  \n\
 uniform mat4 gWVP;                                                                  \n\
 varying vec2 outUV;                                                                 \n\
-																					\n\
+										    \n\
 void main() {                                                                       \n\
     gl_Position = gWVP * vec4(Position, 1.0);                                       \n\
 	outUV = UV;																		\n\

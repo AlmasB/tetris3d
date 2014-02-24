@@ -24,6 +24,7 @@ Level::~Level() {
 
 void Level::createLevels() {
 	levels.push_back(std::shared_ptr<Level>(new Level(1, __LEVEL1_WIDTH, __DEFAULT_HEIGHT, __LEVEL1_LENGTH, LEVEL1_DATA)));
+	levels.push_back(std::shared_ptr<Level>(new Level(2, __LEVEL2_WIDTH, __DEFAULT_HEIGHT, __LEVEL2_LENGTH, LEVEL2_DATA)));
 
 	numberOfLevels = levels.size();
 }

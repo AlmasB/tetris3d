@@ -93,7 +93,6 @@ class Game {
 		RGBColor getRandomColor();
 
 		Point2 currentNode;
-		bool platformsArray[5][25];
 		void buildPlatforms();
 		void getNeighborPlatforms();
 
