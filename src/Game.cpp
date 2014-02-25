@@ -73,8 +73,8 @@ bool Game::init() {
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 
-	textureBrick = ResourceManager::getTextureID("res/brick.png");
-	prize->texture = ResourceManager::getTextureID("res/prize.png");
+	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
+	prize->texture = ResourceManager::getTextureID(_RES_TEX_PRIZE);
 
 	nextLevel();
 

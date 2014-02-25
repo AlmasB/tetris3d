@@ -95,6 +95,7 @@ class GraphicsEngine {
 		void initGL();
 
 		SDL_Surface * surfaceUI;
+		GLuint createGLTextureFromSurface(SDL_Surface * surf);
 
 		void drawUI(uint score, uint lives);
 		void clearScreen();

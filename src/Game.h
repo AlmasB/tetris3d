@@ -14,6 +14,9 @@
 #include "Timer.h"
 #include "Level.h"
 
+#define _RES_TEX_BRICK "res/brick.png"
+#define _RES_TEX_PRIZE "res/prize.png"
+
 #define __APP_FPS 60
 #define __BULLET_DISTANCE 20
 

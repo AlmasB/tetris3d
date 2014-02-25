@@ -81,6 +81,26 @@ void GraphicsEngine::drawUI(uint score, uint lives) {
 	SDL_FreeSurface(icon);
 }*/
 
+GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
+	GLuint texture;
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	SDL_FreeSurface(surface);
+
+	//glBindTexture(GL_TEXTURE_2D, 0);	// unbind
+
+	return texture;
+}
+
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {
 	SDL_SetWindowSize(window, w, h);
 	Camera::instance->cameraPerspective.width = w * 1.0f;
