@@ -62,31 +62,26 @@ bool Game::init() {
 	ResourceManager::loadResources();	// TODO: something safer maybe
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
-	// then change values there cube 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
+	// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 
 	
-	
-
+	// TODO: do a macro for getTexture()
 	// atm we don't care where we place them, nextLevel() takes care of everything
-	prize = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_AQUA);
+	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
 	camera->follow(player);
 
-	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
-	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
+	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
+	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
 
-	scoreboard = make_shared<Plane>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, COLOR_AQUA);
+	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 
 	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
-	prize->texture = ResourceManager::getTextureID(_RES_TEX_PRIZE);
 
-	wall1 = make_shared<Plane>(Point3f(5.0f, 0, 0), 1.0f, 20.0f, 20.0f, COLOR_AQUA);
-	wall2 = make_shared<Plane>(Point3f(-5.0f, 0, 0), 1.0f, 20.0f, 20.0f, COLOR_AQUA);
+	wall1 = make_shared<GameObject>(Point3f(7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID("res/wall.png"));
+	wall2 = make_shared<GameObject>(Point3f(-7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID("res/wall.png"));
 
-	wall1->texture = ResourceManager::getTextureID("res/wall.png");
-	wall2->texture = ResourceManager::getTextureID("res/wall.png");
-
-	scoreboard->texture = gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED);
+	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 
 	nextLevel();
 
@@ -133,7 +128,7 @@ void Game::update() {
 
 	for (auto block : extraBlocks) {
 		for (auto platform : platforms) {
-			if (platform->collidesWith(*block)) {	// TODO: implement box - > plane collision
+			if (platform->collidesWith(*block)) {	// TODO: implement box - > GameObject collision
 				block->move(gravity * (-1.0f));
 				break;
 			}
@@ -160,14 +155,14 @@ void Game::update() {
 void Game::render() {
 	gfx->clearScreen();
 
-	for (auto cube : mainBlocks)
-		cube->draw();
+	for (auto GameObject : mainBlocks)
+		GameObject->draw();
 
-	for (auto cube : extraBlocks)
-		cube->draw();
+	for (auto GameObject : extraBlocks)
+		GameObject->draw();
 
-	for (auto plane : platforms)
-		plane->draw();
+	for (auto GameObject : platforms)
+		GameObject->draw();
 
 	scoreboard->draw();
 	prize->draw();
@@ -228,10 +223,10 @@ void Game::onPrimaryAction() {
 
 	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
-		for (auto cube : extraBlocks) {
-			if (bullet->collidesWith(*cube)) {
-				cube->setLocked(true);
-				selected = cube;
+		for (auto GameObject : extraBlocks) {
+			if (bullet->collidesWith(*GameObject)) {
+				GameObject->setLocked(true);
+				selected = GameObject;
 				break;
 			}
 		}
@@ -266,7 +261,7 @@ void Game::buildBlock() {
 						selected = nullptr;
 
 						player->addScore(__SCORE_PER_BLOCK);
-						scoreboard->texture = gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED);
+						scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 						return;
 					}
 				}
@@ -314,14 +309,14 @@ void Game::spawnAllBlocks() {
 				float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
 
 				Point3f p(x, y, z);
-				mainBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_BLUE));
+				mainBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE));
 			}
 		}
 	}
 
 	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
 		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
-		extraBlocks.push_back(make_shared<Cube>(p, 2.0f, COLOR_RED));
+		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
 	}
 }
 
@@ -427,18 +422,6 @@ void Game::resetCutScene() {
 	currentCutScene = CutScene::NONE;
 }
 
-RGBColor Game::getRandomColor() {
-	int r = getRandom(0, 4);
-	switch (r) {
-		case 0: return COLOR_GOLD;
-		case 1: return COLOR_RED;
-		case 2: return COLOR_GREEN;
-		case 3: return COLOR_AQUA;
-		case 4: return COLOR_PURPLE;
-		default: return COLOR_BLACK;
-	}
-}
-
 void Game::buildPlatforms() {
 	for (auto point : openPlatforms) {
 		currentNode = point;
@@ -450,9 +433,7 @@ void Game::buildPlatforms() {
 
 
 		// y - 0.1f so that the top of the platforms represent the 0th line in Y - the ground
-		shared_ptr<Plane> plat = make_shared<Plane>(Point3f(x, y - 0.1f, z), 2.0f, 0.2f, 2.0f, getRandomColor());
-		plat->texture = textureBrick;
-
+		shared_ptr<GameObject> plat = make_shared<GameObject>(Point3f(x, y - 0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));
 		platforms.push_back(plat);
 	}
 

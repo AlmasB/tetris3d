@@ -36,6 +36,12 @@
 #define __ENGINE_WINDOW_W 800
 #define __ENGINE_WINDOW_H 600
 
+static const SDL_Color SDL_COLOR_GRAY = { 0x80, 0x80, 0x80 };
+static const SDL_Color SDL_COLOR_YELLOW = {0xFF, 0xFF, 0};
+
+static const SDL_Color SDL_COLOR_GREEN = { 0, 0xFF, 0 };
+static const SDL_Color SDL_COLOR_BLUE = { 0, 0, 0xFF };
+
 struct Perspective {
 	float fov;	// field of view
 	float width;

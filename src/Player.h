@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-class Player : public Cube {
+class Player : public GameObject {
 	private:
 		uint score, lives;
 	public:

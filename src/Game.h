@@ -6,12 +6,11 @@
 #include <list>
 #include <memory>
 
-#include "EventEngine.h"
-#include "GameObject.h"
+#include "engine/EventEngine.h"
 #include "Player.h"
-#include "ResourceManager.h"
-#include "GraphicsEngine.h"
-#include "Timer.h"
+#include "engine/ResourceManager.h"
+#include "engine/GraphicsEngine.h"
+#include "engine/Timer.h"
 #include "Level.h"
 
 #define _RES_TEX_BRICK "res/brick.png"
@@ -55,38 +54,38 @@ class Game {
 		*
 		* This object isn't meant to be drawn
 		*/
-		shared_ptr<Cube> bullet;
+		shared_ptr<GameObject> bullet;
 
 		/**
 		* Currently selected ("grabbed by player") object
 		*/
-		shared_ptr<Cube> selected;
+		shared_ptr<GameObject> selected;
 
 		/**
 		* The treasure, the level is won
 		* when player gets it ("collides with it") 
 		*/
-		shared_ptr<Cube> prize;
+		shared_ptr<GameObject> prize;
 
-		shared_ptr<Plane> scoreboard;
+		shared_ptr<GameObject> scoreboard;
 
-		shared_ptr<Plane> wall1;
-		shared_ptr<Plane> wall2;
+		shared_ptr<GameObject> wall1;
+		shared_ptr<GameObject> wall2;
 
 		/**
 		* ground platforms
 		*/
-		list<shared_ptr<Plane>> platforms;
+		list<shared_ptr<GameObject>> platforms;
 
 		/**
 		* Obstacles
 		*/
-		list<shared_ptr<Cube>> mainBlocks;
+		list<shared_ptr<GameObject>> mainBlocks;
 
 		/**
 		* Additional block pieces
 		*/
-		list<shared_ptr<Cube>> extraBlocks;
+		list<shared_ptr<GameObject>> extraBlocks;
 
 		/**
 		* This can be used when creating cut scenes
@@ -106,7 +105,7 @@ class Game {
 		list<Point2> openPlatforms2;
 
 		bool isFull();
-		RGBColor getRandomColor();
+		//SDL_Color getRandomColor();
 
 		Point2 currentNode;
 		void buildPlatforms();

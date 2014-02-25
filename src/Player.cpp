@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(const Point3f & _center) : Cube(_center, 2.0f, COLOR_GOLD), score(0), lives(3) {
+Player::Player(const Point3f & _center) : GameObject(_center, 2.0f, 2.0f, 2.0f, SDL_COLOR_GRAY), score(0), lives(3) {
 
 }
 

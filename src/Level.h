@@ -6,8 +6,8 @@
 #include <utility>
 #include <memory>
 
-#include "GameMath.h"
-#include "Debug.h"
+#include "engine/GameMath.h"
+#include "engine/Debug.h"
 
 #define _NL "\n"
 
