@@ -10,8 +10,8 @@ class Player : public Cube {
 		Player(const Point3f & center);
 		void addScore(uint);
 		void addLives(int);
-		//uint getScore();
-		//uint getLives();
+		uint getScore();
+		uint getLives();
 };
 
 

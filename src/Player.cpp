@@ -16,3 +16,11 @@ void Player::addLives(int value) {
 		std::cout << "* ";
 	std::cout << std::endl;
 }
+
+uint Player::getLives() {
+	return lives;
+}
+
+uint Player::getScore() {
+	return score;
+}

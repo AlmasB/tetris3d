@@ -56,7 +56,9 @@ bool Game::init() {
 
 	gfx->setWindowTitle("Tetris3D ~ ");
 
-	
+	TTF_Font * font = TTF_OpenFont(_RES_FONT, 36);
+	gfx->useFont(font);
+
 	ResourceManager::loadResources();	// TODO: something safer maybe
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
@@ -73,8 +75,14 @@ bool Game::init() {
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 
+	scoreboard = make_shared<Plane>(Point3f(10.0f, 0, 0), 1.0f, 10.0f, 20.0f, COLOR_AQUA);
+
 	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
 	prize->texture = ResourceManager::getTextureID(_RES_TEX_PRIZE);
+
+
+
+	scoreboard->texture = gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED);
 
 	nextLevel();
 
@@ -154,10 +162,10 @@ void Game::render() {
 	for (auto cube : extraBlocks)
 		cube->draw();
 
-	//ground->draw();
 	for (auto plane : platforms)
 		plane->draw();
 
+	scoreboard->draw();
 	prize->draw();
 
 	gfx->showScreen();
@@ -251,6 +259,7 @@ void Game::buildBlock() {
 						selected = nullptr;
 
 						player->addScore(__SCORE_PER_BLOCK);
+						scoreboard->texture = gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED);
 						return;
 					}
 				}
