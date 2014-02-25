@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <GL/glew.h>
 #include <GL/glu.h>
 
@@ -16,6 +17,8 @@
 /* STRING LITERALS - ERRORS */
 
 #define _SDL_ERROR_INIT                 "Failed to init SDL"
+#define _SDL_ERROR_INIT_IMAGE           "Failed to init SDL_image"
+#define _SDL_ERROR_INIT_TTF             "Failed to init SDL_ttf"
 #define _SDL_ERROR_INIT_WINDOW          "Failed to create window"
 #define _SDL_ERROR_INIT_OPENGL		    "Failed to create OpenGL context"
 
@@ -85,6 +88,8 @@ class GraphicsEngine {
 		SDL_GLContext glContext;
 		SDL_Renderer * renderer;
 
+		TTF_Font * font;
+
 		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
 	public:
@@ -94,11 +99,17 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 
-		void drawUI();
+		SDL_Surface * surfaceUI;
+		GLuint createGLTextureFromSurface(SDL_Surface * surf);
+
+		void useFont(TTF_Font * font);
+		GLuint createGLTextureFromText(std::string text, SDL_Color textColor);
+
+		void drawUI(uint score, uint lives);
 		void clearScreen();
 		void showScreen();
 
-		//void setWindowIcon(const char *);
+		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);
 		void setWindowTitle(const char *title);
 

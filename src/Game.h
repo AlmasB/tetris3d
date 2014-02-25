@@ -14,6 +14,13 @@
 #include "Timer.h"
 #include "Level.h"
 
+#define _RES_TEX_BRICK "res/brick.png"
+#define _RES_TEX_PRIZE "res/prize.png"
+#define _RES_FONT "res/tetris.ttf"
+
+
+#define __FONT_SIZE 18
+
 #define __APP_FPS 60
 #define __BULLET_DISTANCE 20
 
@@ -24,6 +31,8 @@
 using namespace std;	// for debugging
 
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
+
+static const SDL_Color SDL_COLOR_RED = { 255, 0, 0 };
 
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN, GAME_LOSE
@@ -59,7 +68,11 @@ class Game {
 		*/
 		shared_ptr<Cube> prize;
 
-		//shared_ptr<Plane> ground;	// ground as a whole will consist of platforms and will be removed
+		shared_ptr<Plane> scoreboard;
+
+		/**
+		* ground platforms
+		*/
 		list<shared_ptr<Plane>> platforms;
 
 		/**

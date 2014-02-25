@@ -67,6 +67,8 @@ static const RGBColor COLOR_PURPLE = { 167, 74, 199 };
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
 
+// TODO: each object should either take color or texture2D
+
 class GameObject : public BoundingBox, public Movable {
 	private:
 	protected:
