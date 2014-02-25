@@ -25,6 +25,9 @@ Level::~Level() {
 void Level::createLevels() {
 	levels.push_back(std::shared_ptr<Level>(new Level(1, __LEVEL1_WIDTH, __DEFAULT_HEIGHT, __LEVEL1_LENGTH, LEVEL1_DATA)));
 	levels.push_back(std::shared_ptr<Level>(new Level(2, __LEVEL2_WIDTH, __DEFAULT_HEIGHT, __LEVEL2_LENGTH, LEVEL2_DATA)));
+	levels.push_back(std::shared_ptr<Level>(new Level(3, __LEVEL3_WIDTH, __DEFAULT_HEIGHT, __LEVEL3_LENGTH, LEVEL3_DATA)));
+	levels.push_back(std::shared_ptr<Level>(new Level(4, __LEVEL4_WIDTH, __DEFAULT_HEIGHT, __LEVEL4_LENGTH, LEVEL4_DATA)));
+	//levels.push_back(std::shared_ptr<Level>(new Level(5, __LEVEL5_WIDTH, __DEFAULT_HEIGHT, __LEVEL5_LENGTH, LEVEL5_DATA)));
 
 	numberOfLevels = levels.size();
 }
@@ -38,6 +41,7 @@ std::shared_ptr<Level> Level::getNext() {
 	return level;
 }
 
+//TODO: maybe count levels, certainly don't return that
 uint Level::getNumberOfLevels() {
 	return numberOfLevels;
 }
