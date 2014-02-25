@@ -94,7 +94,9 @@ class GraphicsEngine {
 		std::string init();
 		void initGL();
 
-		void drawUI();
+		SDL_Surface * surfaceUI;
+
+		void drawUI(uint score, uint lives);
 		void clearScreen();
 		void showScreen();
 
