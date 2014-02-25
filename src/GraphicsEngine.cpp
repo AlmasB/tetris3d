@@ -158,7 +158,7 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 
 	SDL_FreeSurface(surface);	// we shouldn't free it ourselves
 
-	//glBindTexture(GL_TEXTURE_2D, 0);	// unbind
+	glBindTexture(GL_TEXTURE_2D, 0);	// unbind
 
 	
 	std::cout << texture << std::endl;

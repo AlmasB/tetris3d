@@ -123,6 +123,7 @@ class GameObject : public BoundingBox, public Movable {
 class Cuboid : public GameObject {
 	public:
 		Cuboid(const Point3f &center, float x, float y, float z, RGBColor);
+		Cuboid(const Point3f &center, float x, float y, float z, GLuint textureID);
 };
 
 class Cube : public GameObject {

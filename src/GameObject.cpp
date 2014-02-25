@@ -369,3 +369,9 @@ Cuboid::Cuboid(const Point3f & _center, float x, float y, float z, RGBColor col)
 	numOfTriangles = 12;
 	compileShaders();
 }
+
+Cuboid::Cuboid(const Point3f & _center, float x, float y, float z, GLuint textureID)
+: GameObject(_center) {
+	numOfTriangles = 12;
+	compileShaders();
+}

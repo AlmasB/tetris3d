@@ -75,12 +75,16 @@ bool Game::init() {
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f));
 	bullet = make_shared<Cube>(Point3f(0, 0, 0), 2.0f, COLOR_YELLOW);
 
-	scoreboard = make_shared<Plane>(Point3f(10.0f, 0, 0), 1.0f, 10.0f, 20.0f, COLOR_AQUA);
+	scoreboard = make_shared<Plane>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, COLOR_AQUA);
 
 	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
 	prize->texture = ResourceManager::getTextureID(_RES_TEX_PRIZE);
 
+	wall1 = make_shared<Plane>(Point3f(5.0f, 0, 0), 1.0f, 20.0f, 20.0f, COLOR_AQUA);
+	wall2 = make_shared<Plane>(Point3f(-5.0f, 0, 0), 1.0f, 20.0f, 20.0f, COLOR_AQUA);
 
+	wall1->texture = ResourceManager::getTextureID("res/wall.png");
+	wall2->texture = ResourceManager::getTextureID("res/wall.png");
 
 	scoreboard->texture = gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED);
 
@@ -167,6 +171,9 @@ void Game::render() {
 
 	scoreboard->draw();
 	prize->draw();
+
+	wall1->draw();
+	wall2->draw();
 
 	gfx->showScreen();
 }

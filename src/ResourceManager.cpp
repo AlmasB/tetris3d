@@ -8,6 +8,9 @@ std::string ResourceManager::loadResources() {
 	// TODO: automate
 	textures["res/brick.png"] = loadTexture("res/brick.png");
 	textures["res/prize.png"] = loadTexture("res/prize.png");
+	textures["res/wall.png"] = loadTexture("res/wall.png");
+	textures["res/doorup.png"] = loadTexture("res/doorup.png");
+	textures["res/doordown.png"] = loadTexture("res/doordown.png");
 
 	return "";
 }

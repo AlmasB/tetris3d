@@ -70,6 +70,9 @@ class Game {
 
 		shared_ptr<Plane> scoreboard;
 
+		shared_ptr<Plane> wall1;
+		shared_ptr<Plane> wall2;
+
 		/**
 		* ground platforms
 		*/
