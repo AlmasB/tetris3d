@@ -106,12 +106,20 @@ class GraphicsEngine {
 		void initGL();
 
 		SDL_Surface * surfaceUI;
-		GLuint createGLTextureFromSurface(SDL_Surface * surf);
+
+		/**
+		* Creates a GL 2D texture from SDL_Surface* and returns its id
+		* This function does NOT free the surface passed in
+		*
+		* @pre-condition: surface must be valid, i.e. != nullptr
+		*
+		* @return created texture id, if errors occurred or surf is invalid - 0
+		*/
+		static GLuint createGLTextureFromSurface(SDL_Surface * surf);
 
 		void useFont(TTF_Font * font);
 		GLuint createGLTextureFromText(std::string text, SDL_Color textColor);
 
-		void drawUI(uint score, uint lives);
 		void clearScreen();
 		void showScreen();
 
@@ -124,5 +132,6 @@ class GraphicsEngine {
 		Uint32 getAverageFPS();
 };
 
+typedef GraphicsEngine GFX;
 
 #endif

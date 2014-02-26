@@ -15,6 +15,9 @@
 
 #define _RES_TEX_BRICK "res/brick.png"
 #define _RES_TEX_PRIZE "res/prize.png"
+#define _RES_TEX_WALL "res/wall.png"
+#define _RES_TEX_DOORUP "res/doorup.png"
+#define _RES_TEX_DOORDOWN "res/doordown.png"
 #define _RES_FONT "res/tetris.ttf"
 
 

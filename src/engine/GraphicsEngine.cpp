@@ -55,7 +55,7 @@ std::string GraphicsEngine::init() {
 
 	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetSwapInterval(0);	// on NVIDIA drivers setting to 1 causes high cpu load
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
 
@@ -66,7 +66,7 @@ void GraphicsEngine::initGL() {
 }
 
 void GraphicsEngine::setWindowTitle(const char * title) {
-	std::string t = std::string(title) + std::string(_ENGINE_TITLE);	// check for memory
+	std::string t = std::string(title) + std::string(_ENGINE_TITLE);
 	SDL_SetWindowTitle(window, t.c_str());
 }
 
@@ -85,83 +85,40 @@ void GraphicsEngine::useFont(TTF_Font * _font) {
 	font = _font;
 }
 
-void GraphicsEngine::drawUI(uint score, uint lives) {
-	// convert uints to string/char*
-	// surfaceUI = TTF_RenderTextSolid
-	// create opengl texture 
-	// pass to ui object ?
-}
-
 void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 	SDL_Surface * icon = IMG_Load(iconFileName);
 	SDL_SetWindowIcon(window, icon);
 	SDL_FreeSurface(icon);
 }
 
-/*int round2(double x) {
-	return (int)(x + 0.5);
-}
-
-int nextpoweroftwo(int x) {
-	double logbase2 = log(x) / log(2);
-	return round2(pow(2, ceil(logbase2)));
-}*/
-
 GLuint GraphicsEngine::createGLTextureFromText(std::string text, SDL_Color color) {
-	/* SDL interprets each pixel as a 32-bit number, so our masks must depend
-	on the endianness (byte order) of the machine 
-	
-	Uint32 rmask, gmask, bmask, amask;
-	*/
-
-/*#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-	bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif*/
-
 	// blend is supposed to be much nicer when no need for fast swapping
 	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
-	SDL_Surface * background;
-	int w = 128, h = 128;
-
-	//w = nextpoweroftwo(initial->w);
-	//h = nextpoweroftwo(initial->h);
-
-
-	
-	//background = SDL_CreateRGBSurface(0, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	//background = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
-	background = IMG_Load("res/white128.png");
+	SDL_Surface * background = IMG_Load("res/white128.png");
 
 	SDL_BlitSurface(textSurface, 0, background, 0);
 
-	return createGLTextureFromSurface(background);
+	GLuint textureID = createGLTextureFromSurface(background);
+	SDL_FreeSurface(textSurface);
+	SDL_FreeSurface(background);
+
+	return textureID;
 }
 
 GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
+	if (nullptr == surface)	// just to be safe
+		return 0;
+
 	GLuint texture;
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	SDL_FreeSurface(surface);	// we shouldn't free it ourselves
-
 	glBindTexture(GL_TEXTURE_2D, 0);	// unbind
-
-	
-	std::cout << texture << std::endl;
 
 	return texture;
 }

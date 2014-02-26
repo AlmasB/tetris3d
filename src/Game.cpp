@@ -43,7 +43,7 @@ bool Game::init() {
 #endif
 
 	std::string error;
-	if ((error = gfx->init()) != _ENGINE_ERROR_NONE) {
+	if (_ENGINE_ERROR_NONE != (error = gfx->init())) {
 		std::cout << error << std::endl;
 		getchar();
 		return false;
@@ -59,7 +59,18 @@ bool Game::init() {
 	TTF_Font * font = TTF_OpenFont(_RES_FONT, 36);
 	gfx->useFont(font);
 
-	ResourceManager::loadResources();	// TODO: something safer maybe
+	vector<string> resources;
+	resources.push_back(_RES_TEX_BRICK);
+	resources.push_back(_RES_TEX_PRIZE);
+	resources.push_back(_RES_TEX_WALL);
+	resources.push_back(_RES_TEX_DOORUP);
+	resources.push_back(_RES_TEX_DOORDOWN);
+
+	if (_ENGINE_ERROR_NONE != (error = ResourceManager::loadResources(resources))) {
+		std::cout << error << std::endl;
+		getchar();
+		return false;
+	}
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
@@ -78,8 +89,8 @@ bool Game::init() {
 
 	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
 
-	wall1 = make_shared<GameObject>(Point3f(7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID("res/wall.png"));
-	wall2 = make_shared<GameObject>(Point3f(-7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID("res/wall.png"));
+	wall1 = make_shared<GameObject>(Point3f(7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID(_RES_TEX_WALL));
+	wall2 = make_shared<GameObject>(Point3f(-7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID(_RES_TEX_WALL));
 
 	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 
@@ -97,7 +108,7 @@ void Game::runMainLoop() {
 	debug("Entered Main Loop");
 #endif
 
-	while (running) {	// TODO: CPU load is ~20%, do something to optimize
+	while (running) {	
 		gfx->setFrameStart();
 		eventSystem->pollEvents();
 
@@ -481,8 +492,8 @@ void Game::getNeighborPlatforms() {
 }
 
 bool Game::isLevelBuilt() {
-	for (uint i = 0; i < currentLevel->width; ++i) {
-		for (uint j = 0; j < currentLevel->length; ++j) {
+	for (int i = 0; i < currentLevel->width; ++i) {
+		for (int j = 0; j < currentLevel->length; ++j) {
 			if (!currentLevel->data[i][j])
 				return false;
 		}
@@ -491,8 +502,6 @@ bool Game::isLevelBuilt() {
 	return true;
 }
 
-// TODO: reset all objects
-// TODO: clear all lists
 void Game::nextLevel() {
 	if (Level::getNumberOfLevels() == __MAX_LEVELS) {
 		currentCutScene = CutScene::GAME_WIN;

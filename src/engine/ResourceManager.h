@@ -2,19 +2,15 @@
 #define __RESOURCE_MANAGER_H__
 
 #include <map>
+#include <vector>
 
-#include <SDL_image.h>
-#include <GL/glew.h>
-
-#include "Debug.h"
+#include "GraphicsEngine.h"
 
 class ResourceManager {
 	private:
 		static std::map<std::string, GLuint> textures;
-
-		static GLuint loadTexture(const char * fileName);
 	public:
-		static std::string loadResources();
+		static std::string loadResources(std::vector<std::string> fileNames);
 
 		/* GLuint is typedef unsigned int, 
 		so no reason to pull GL/glew just for that*/
