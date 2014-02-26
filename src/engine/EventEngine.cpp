@@ -9,6 +9,81 @@ EventEngine::EventEngine() {
 	buttons[Mouse::BTN_RIGHT] = false;
 }
 
+std::string EventEngine::init() {
+	port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
+	if (-1 == SDLNet_ResolveHost(&ip, NULL, port)) {
+		std::cout << "error resolving host, return that to main" << std::endl;
+	}
+
+	server = SDLNet_TCP_Open(&ip);
+	// check if server ok
+	if (nullptr == server) {
+		std::cout << "error" << std::endl;
+	}
+
+	std::cout << "starting thread" << std::endl;
+
+	connThread = new std::thread(runConnThread, this);
+
+	return "";
+}
+
+void runConnThread(EventEngine * engine) {
+	std::cout << "starting thread" << std::endl;
+	while (true) {
+		if (nullptr == engine->client) {
+			engine->client = SDLNet_TCP_Accept(engine->server);
+		}
+		if (nullptr == engine->client) {
+			//std::cout << "error" << std::endl;
+		}
+		else {
+			engine->remoteip = SDLNet_TCP_GetPeerAddress(engine->client);
+			engine->ipaddr = SDL_SwapBE32(engine->remoteip->host);
+			engine->len = SDLNet_TCP_Recv(engine->client, engine->message, 1024);
+
+			for (int i = 0; i < engine->len; ++i) {
+				char c = (int)engine->message[i];
+
+				if ('W' == c && !engine->keys[Key::W]) {
+					engine->keys[Key::W] = true;
+				}
+				else {
+					engine->keys[Key::W] = false;
+				}
+
+				if ('S' == c && !engine->keys[Key::S]) {
+					engine->keys[Key::S] = true;
+				}
+				else {
+					engine->keys[Key::S] = false;
+				}
+
+				if ('A' == c && !engine->keys[Key::A]) {
+					engine->keys[Key::A] = true;
+				}
+				else {
+					engine->keys[Key::A] = false;
+				}
+
+				if ('D' == c && !engine->keys[Key::D]) {
+					engine->keys[Key::D] = true;
+				}
+				else {
+					engine->keys[Key::D] = false;
+				}
+
+
+				/*std::cout << c;
+
+				if (i == engine->len - 1)
+					std::cout << std::endl;*/
+			}
+		}
+		SDL_Delay(100);
+	}
+}
+
 void EventEngine::pollEvents() {
 	while (SDL_PollEvent(&event)) {
 		if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.repeat == 0) {
@@ -18,6 +93,8 @@ void EventEngine::pollEvents() {
 		buttons[Mouse::BTN_LEFT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) == 0);
 		buttons[Mouse::BTN_RIGHT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) == 0);
 	}
+
+
 }
 
 void EventEngine::updateKeys(const SDL_Keycode &key, bool keyDown) {

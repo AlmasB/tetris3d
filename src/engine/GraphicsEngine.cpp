@@ -33,7 +33,8 @@ std::string GraphicsEngine::init() {
 	if (TTF_Init() == -1)
 		return _SDL_ERROR_INIT_TTF + std::string(TTF_GetError());
 
-
+	if (SDLNet_Init() == -1)
+		return "SDL_Net error: " + std::string(SDLNet_GetError());
 
 	glEnable(GL_DEPTH_TEST);	// TODO: when do we do that? before/after
 	glDepthFunc(GL_LESS);
