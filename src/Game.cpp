@@ -54,6 +54,8 @@ bool Game::init() {
 	debug("GraphicsEngine::init() successful");
 #endif
 
+	eventSystem->init();
+
 	gfx->setWindowTitle("Tetris3D ~ ");
 
 	TTF_Font * font = TTF_OpenFont(_RES_FONT, 36);
