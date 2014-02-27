@@ -87,7 +87,7 @@ bool Game::init() {
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 
-	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+	
 
 	nextLevel();
 
@@ -144,7 +144,7 @@ void Game::update() {
 
 	buildBlock();
 
-	if (isStepCompleted()) {
+	if (currentLevel->width * currentLevel->height == mainBlocks.size()) {
 		player->addScore(__SCORE_PER_STEP);
 		nextStep();
 	}
@@ -154,21 +154,28 @@ void Game::update() {
 		currentCutScene = CutScene::LEVEL_END;
 	}
 
-	// after updating positions of objects, update camera too
+	updateUI();
+
+	// after updating positions of objects, update camera last
 	camera->updateView();
+}
+
+// TODO: something more efficient
+void Game::updateUI() {
+	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 }
 
 void Game::render() {
 	gfx->clearScreen();
 
-	for (auto GameObject : mainBlocks)
-		GameObject->draw();
+	for (auto object : mainBlocks)
+		object->draw();
 
-	for (auto GameObject : extraBlocks)
-		GameObject->draw();
+	for (auto object : extraBlocks)
+		object->draw();
 
-	for (auto GameObject : platforms)
-		GameObject->draw();
+	for (auto object : platforms)
+		object->draw();
 
 	scoreboard->draw();
 	prize->draw();
@@ -243,9 +250,47 @@ void Game::onSecondaryAction() {
 	}
 }
 
-// TODO: clean this
 void Game::buildBlock() {
-	if (selected != nullptr) {
+	if (nullptr == selected)
+		return;
+
+	/*std::list<Point3f>::iterator it = freeBlockSlots.begin();
+	while (it != freeBlockSlots.end()) {
+		if (distanceBetween(*it, selected->getCenter()) < 3.0f) {
+			selected->setCenter((*it).x, (*it).y, (*it).z);
+			selected->setLocked(false);
+			mainBlocks.push_back(selected);
+			extraBlocks.remove(selected);
+			it = freeBlockSlots.erase(it);
+			selected = nullptr;
+
+			player->addScore(__SCORE_PER_BLOCK);
+			scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+			return;
+		}
+	}*/
+
+	/*for (auto p : freeBlockSlots) {
+		if (distanceBetween(p, selected->getCenter()) < 3.0f) {
+			selected->setCenter(p.x, p.y, p.z);
+			selected->setLocked(false);
+			mainBlocks.push_back(selected);
+			extraBlocks.remove(selected);
+			blocks[j][i] = true;
+			selected = nullptr;
+
+			player->addScore(__SCORE_PER_BLOCK);
+			scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+			return;
+		}
+	}*/
+
+
+
+
+
+
+	/*if (selected != nullptr) {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
@@ -270,10 +315,10 @@ void Game::buildBlock() {
 				}
 			}
 		}
-	}
+	}*/
 }
 
-bool Game::isStepCompleted() {
+/*bool Game::isStepCompleted() {
 	for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			if (!blocks[j][i]) {
@@ -298,11 +343,36 @@ uint Game::numberOfBlocksRequired() {
 	}
 
 	return count;
-}
+}*/
 
 // TODO: use the length of the platform to determine where to spawn red blocks
 void Game::spawnAllBlocks() {
-	for (uint i = 0; i < 3; ++i) {
+	// where player starts count as level start
+	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
+
+	for (int i = 0; i < currentLevel->height; ++i) {
+		for (int j = 0; j < currentLevel->width; ++j) {
+			float x = getValue(j) - 1.0f;
+			float y = i*2.0f + 1.0f;
+
+			if (1 == rand() % 2) {
+				mainBlocks.push_back(make_shared<GameObject>(Point3f(x, y, z), 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE));
+			}
+			else {
+				freeBlockSlots.push_back(Point3f(x, y, z));
+			}
+		}
+	}
+
+	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
+
+	for (uint i = 0; i < blocksNeeded; ++i) {
+		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
+		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
+	}
+
+
+	/*for (uint i = 0; i < 3; ++i) {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
@@ -321,6 +391,7 @@ void Game::spawnAllBlocks() {
 		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
 		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
 	}
+	*/
 }
 
 void Game::playCutScene() {
@@ -531,5 +602,6 @@ void Game::nextStep() {
 	currentStep++;
 	mainBlocks.clear();
 	extraBlocks.clear();
+	freeBlockSlots.clear();
 	spawnAllBlocks();
 }

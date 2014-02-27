@@ -70,6 +70,9 @@ class Game {
 		*/
 		shared_ptr<GameObject> prize;
 
+		/**
+		* UI
+		*/
 		shared_ptr<GameObject> scoreboard;
 
 		/**
@@ -96,6 +99,11 @@ class Game {
 		*/
 		shared_ptr<Movable> dummyCameraObject;
 
+		/**
+		* Contains x,y values of the obstacle's blocks
+		* which are missing
+		*/
+		list<Point3f> freeBlockSlots;
 
 		///////////////////////////////////// CLEAN //////////////////////////////////////
 
@@ -127,9 +135,9 @@ class Game {
 		*/
 		void nextStep();
 		uint currentStep;
-		bool isStepCompleted();
+		//bool isStepCompleted();
 
-		uint numberOfBlocksRequired();	// to complete current step's structure
+		//uint numberOfBlocksRequired();	// to complete current step's structure
 
 		/**
 		* Recreates obstacles and extra blocks
@@ -182,6 +190,7 @@ class Game {
 		* Updates the game world
 		*/
 		void update();
+		void updateUI();
 
 		/**
 		* Renders the game world
