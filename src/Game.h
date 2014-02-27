@@ -72,9 +72,6 @@ class Game {
 
 		shared_ptr<GameObject> scoreboard;
 
-		shared_ptr<GameObject> wall1;
-		shared_ptr<GameObject> wall2;
-
 		/**
 		* ground platforms
 		*/
@@ -115,8 +112,6 @@ class Game {
 		void getNeighborPlatforms();
 
 		void buildBlock();
-
-		GLuint textureBrick;
 
 		//////////////////////////////////////////////////////////////////////////////////
 

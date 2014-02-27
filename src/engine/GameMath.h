@@ -378,6 +378,14 @@ struct Vector2f {
 
 struct Point2 {
 	int x, y;
+
+	Point2() 
+	{}
+
+	Point2(int _x, int _y) {
+		x = _x;
+		y = _y;
+	}
 };
 
 struct Rectangle2 {

@@ -36,7 +36,7 @@ Game::~Game() {
 bool Game::init() {
 #ifdef __DEBUG
 	#if defined(_WIN32)
-		debug("WIN32");	// just a test, no need to use OS specific code yet
+		debug("WIN32");
 	#elif defined(__linux__)
 		debug("LINUX");
 	#endif
@@ -77,8 +77,6 @@ bool Game::init() {
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 
-	
-	// TODO: do a macro for getTexture()
 	// atm we don't care where we place them, nextLevel() takes care of everything
 	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
@@ -88,11 +86,6 @@ bool Game::init() {
 	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
-
-	textureBrick = ResourceManager::getTextureID(_RES_TEX_BRICK);
-
-	wall1 = make_shared<GameObject>(Point3f(7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID(_RES_TEX_WALL));
-	wall2 = make_shared<GameObject>(Point3f(-7.0f, 0, 0), 1.0f, 20.0f, 20.0f, ResourceManager::getTextureID(_RES_TEX_WALL));
 
 	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 
@@ -180,9 +173,6 @@ void Game::render() {
 	scoreboard->draw();
 	prize->draw();
 
-	wall1->draw();
-	wall2->draw();
-
 	gfx->showScreen();
 }
 
@@ -259,7 +249,7 @@ void Game::buildBlock() {
 		for (uint i = 0; i < 3; ++i) {
 			for (uint j = 0; j < 5; ++j) {
 				if (!blocks[j][i]) {
-					float x = getValue(j);
+					float x = getValue(j) -1.0f;
 					float y = i*2.0f + 1.0f;
 					// count the point where player starts as level LEVEL_BEGINNING
 					float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
@@ -316,7 +306,7 @@ void Game::spawnAllBlocks() {
 		for (uint j = 0; j < 5; ++j) {
 			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
 			if (blocks[j][i]) {
-				float x = getValue(j);
+				float x = getValue(j) - 1.0f;
 				float y = i*2.0f + 1.0f;
 				// where player starts count as level LEVEL_BEGINNING
 				float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
@@ -349,7 +339,7 @@ void Game::playCutScene() {
 
 void Game::playCutSceneLevelBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
-		dummyCameraObject->moveTo(Point3f(1.0f, 45.0f, 10.0f));		// TODO: calculate depending on prize center
+		dummyCameraObject->moveTo(Point3f(1.0f, 45.0f, -currentLevel->length*1.0f - 20.0f));
 		dummyCameraObject->lookAt(prize->getCenter());
 		camera->follow(dummyCameraObject);
 	}
@@ -357,25 +347,24 @@ void Game::playCutSceneLevelBeginning() {
 	if (cutSceneTimer.getElapsed() >= 0.075 * __SECOND) {
 		buildPlatforms();
 
-		if (dummyCameraObject->getCenter().y > 1.0f) {
-			dummyCameraObject->move(Vector3f(0, -1.0f, 0.0f));
+		if (dummyCameraObject->getCenter().y > 7.0f) {
+			dummyCameraObject->move(Vector3f(0, -1.0f, 0.25f));
 		}
 		else {
-			if (!(dummyCameraObject->getCenter().x >= -5 && dummyCameraObject->getCenter().x <= -2))
-				dummyCameraObject->moveRight(0.75f);
-			else
-				dummyCameraObject->move(Vector3f(0, 0, -1));
+			if (distanceBetween(dummyCameraObject->getCenter(), prize->getCenter()) > 7.5f) {
+				dummyCameraObject->move(Vector3f(0, 0, 1.5f));
+			}
+			else {
+				cutSceneFrame++;
+			}
 		}
 
 		dummyCameraObject->lookAt(prize->getCenter());
-		//dummyCameraObject->printDebug(__CENTER);
 
-		cutSceneFrame++;	// TODO: do we really need frame control with timer here ?
 		cutSceneTimer.measure();
 	}
 	
-	// TODO: maybe compare camera object's center and player's center, if distance less say small amount
-	if (eventSystem->isPressed(Key::SPACE) || (isLevelBuilt() && dummyCameraObject->getCenter().z <= player->getCenter().z)) {
+	if (eventSystem->isPressed(Key::SPACE) || (isLevelBuilt() && cutSceneFrame > 0)) {
 		camera->follow(player);
 		resetCutScene();
 		spawnAllBlocks();
@@ -528,8 +517,8 @@ void Game::nextLevel() {
 
 
 
-	player->setCenter(Point3f(0, 2.0f, -currentLevel->length + 3 * 2.0f));
-	prize->setCenter(Point3f(0, 0.0f + 1.0f, currentLevel->length - 2.0f));
+	player->setCenter(Point3f(0-1.0f, 2.0f, -currentLevel->length + 3 * 2.0f));
+	prize->setCenter(Point3f(0-1.0f, 0.0f + 1.0f, currentLevel->length - 2.0f));
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
 	currentStep = 0; 
