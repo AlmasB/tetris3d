@@ -30,16 +30,15 @@ EventEngine::~EventEngine() {
 std::string EventEngine::init() {
 	port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
 	if (-1 == SDLNet_ResolveHost(&ip, NULL, port))
-		return _ENGINE_ERROR_NET_RESOLVE_HOST + std::string(SDLNet_GetError());
+		return "Failed to resolve host at port: " + std::to_string(port) + std::string(SDLNet_GetError());
 
 	server = SDLNet_TCP_Open(&ip);
 	if (nullptr == server)
-		return _ENGINE_ERROR_NET_OPEN + std::string(SDLNet_GetError());
+		return "Failed to create local server " + std::string(SDLNet_GetError());
 
-	//connThread = new std::thread(runConnThread, this);
 	connThread = new std::thread(&EventEngine::runConnThread, this);
 
-	return "";
+	return "";	// same as _ENGINE_ERROR_NONE
 }
 
 void EventEngine::runConnThread() {

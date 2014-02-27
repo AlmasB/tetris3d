@@ -10,7 +10,7 @@ GraphicsEngine::~GraphicsEngine() {
 
 std::string GraphicsEngine::init() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return _SDL_ERROR_INIT + std::string(SDL_GetError());
+		return "Failed to init SDL: " + std::string(SDL_GetError());
 
 	window = SDL_CreateWindow(_ENGINE_TITLE,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -18,29 +18,29 @@ std::string GraphicsEngine::init() {
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
 	if (nullptr == window)
-		return _SDL_ERROR_INIT_WINDOW + std::string(SDL_GetError());
+		return "Failed to create SDL_Window: " + std::string(SDL_GetError());
 
 	glContext = SDL_GL_CreateContext(window);
 
 	if (nullptr == glContext)
-		return _SDL_ERROR_INIT_OPENGL + std::string(SDL_GetError());
+		return "Failed to init OpenGL context: " + std::string(SDL_GetError());
 
 	// although not necessary, SDL doc says to prevent hiccups load it before using
 	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
-		return _SDL_ERROR_INIT_IMAGE + std::string(IMG_GetError());
+		return "Failed to init SDL_image: " + std::string(IMG_GetError());
 	}
 
 	if (TTF_Init() == -1)
-		return _SDL_ERROR_INIT_TTF + std::string(TTF_GetError());
+		return "Failed to init SDL_ttf: " + std::string(TTF_GetError());
 
 	if (SDLNet_Init() == -1)
-		return "SDL_Net error: " + std::string(SDLNet_GetError());
+		return "Failed to init SDL_Net: " + std::string(SDLNet_GetError());
 
 	glEnable(GL_DEPTH_TEST);	// TODO: when do we do that? before/after
 	glDepthFunc(GL_LESS);
 
 	if (glewInit() != GLEW_OK)
-		return _GL_ERROR_GLEW;
+		return "Failed to init GLEW";
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 

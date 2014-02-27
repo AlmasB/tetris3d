@@ -14,22 +14,7 @@
 
 #include "Movable.h"
 
-
-/* STRING LITERALS - ERRORS */
-
-#define _SDL_ERROR_INIT                 "Failed to init SDL"
-#define _SDL_ERROR_INIT_IMAGE           "Failed to init SDL_image"
-#define _SDL_ERROR_INIT_TTF             "Failed to init SDL_ttf"
-#define _SDL_ERROR_INIT_WINDOW          "Failed to create window"
-#define _SDL_ERROR_INIT_OPENGL		    "Failed to create OpenGL context"
-
-#define _GL_ERROR_VSYNC					"Failed to set VSync"
-#define _GL_ERROR_GLEW					"Failed to init GLEW"
-
 #define _ENGINE_ERROR_NONE     ""
-#define _ENGINE_ERROR_INIT_GFX "Failed to init graphics"
-#define _ENGINE_ERROR_INIT_SFX "Failed to init audio"
-#define _ENGINE_ERROR_RESOURCE "Failed to load resource "
 
 /* ENGINE DEFAULT SETTING */
 

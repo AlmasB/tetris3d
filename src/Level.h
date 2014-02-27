@@ -15,7 +15,7 @@
 #define __DEFAULT_HEIGHT 3
 
 #define __LEVEL1_WIDTH 5
-#define __LEVEL1_LENGTH 25
+#define __LEVEL1_LENGTH 30
 
 #define __LEVEL2_WIDTH 9
 #define __LEVEL2_LENGTH 40
@@ -34,7 +34,7 @@ static const int LEVEL_WIDTHS[] = {
 };
 
 static const int LEVEL_LENGTHS[] = {
-	0, 25, 40, 50, 70, 100
+	0, 30, 40, 50, 70, 100
 };
 
 static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
@@ -42,7 +42,13 @@ static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
 	"00000",
 	"00000",
 	"00000",
+	"11000",
+
 	"00000",
+	"00110",
+	"00110",
+	"00011",
+	"00011",
 
 	"00000",
 	"00000",

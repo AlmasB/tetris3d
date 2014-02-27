@@ -260,11 +260,11 @@ void Game::buildBlock() {
 
 void Game::spawnAllBlocks() {
 	// where player starts count as level start
-	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep + 1.0f;
+	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 4.0f + 4 * currentStep + 1.0f;
 
 	for (int i = 0; i < currentLevel->height; ++i) {
 		for (int j = 0; j < currentLevel->width; ++j) {
-			float x = 2 * j - currentLevel->width;
+			float x = 2.0f * j - currentLevel->width;
 			float y = i*2.0f + 1.0f;
 
 			if (1 == rand() % 2) {
@@ -463,6 +463,7 @@ void Game::nextLevel() {
 
 	mainBlocks.clear();
 	extraBlocks.clear();
+	freeBlockSlots.clear();
 	platforms.clear();
 	openPlatforms.clear();
 	openPlatforms2.clear();
