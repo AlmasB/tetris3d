@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() {
+EventEngine::EventEngine() : running(true) {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
@@ -9,28 +9,48 @@ EventEngine::EventEngine() {
 	buttons[Mouse::BTN_RIGHT] = false;
 }
 
+EventEngine::~EventEngine() {
+#ifdef __DEBUG
+	debug("EventEngine::~EventEngine() started");
+#endif
+
+	running = false;
+	connThread->join();	// wait till it finishes
+
+	if (nullptr != client)
+		SDLNet_TCP_Close(client);
+	//SDLNet_TCP_Close(server);
+
+	delete connThread;
+#ifdef __DEBUG
+	debug("EventEngine::~EventEngine() finished");
+#endif
+}
+
 std::string EventEngine::init() {
 	port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
-	if (-1 == SDLNet_ResolveHost(&ip, NULL, port)) {
-		std::cout << "error resolving host, return that to main" << std::endl;
-	}
+	if (-1 == SDLNet_ResolveHost(&ip, NULL, port))
+		return _ENGINE_ERROR_NET_RESOLVE_HOST + std::string(SDLNet_GetError());
 
 	server = SDLNet_TCP_Open(&ip);
-	// check if server ok
-	if (nullptr == server) {
-		std::cout << "error" << std::endl;
-	}
-
-	std::cout << "starting thread" << std::endl;
+	if (nullptr == server)
+		return _ENGINE_ERROR_NET_OPEN + std::string(SDLNet_GetError());
 
 	connThread = new std::thread(runConnThread, this);
 
 	return "";
 }
 
+bool EventEngine::isRunning() {
+	return running;
+}
+
 void runConnThread(EventEngine * engine) {
-	std::cout << "starting thread" << std::endl;
-	while (true) {
+#ifdef __DEBUG
+	debug("EventEngine&&runConnThread() started");
+#endif
+
+	while (engine->isRunning()) {
 		if (nullptr == engine->client) {
 			engine->client = SDLNet_TCP_Accept(engine->server);
 		}
@@ -82,6 +102,9 @@ void runConnThread(EventEngine * engine) {
 		}
 		SDL_Delay(100);
 	}
+#ifdef __DEBUG
+	debug("EventEngine&&runConnThread() finished");
+#endif
 }
 
 void EventEngine::pollEvents() {

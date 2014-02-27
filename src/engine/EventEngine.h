@@ -10,6 +10,9 @@
 #include "GameMath.h"
 #include "Debug.h"
 
+#define _ENGINE_ERROR_NET_RESOLVE_HOST "Failed to resolve host"
+#define _ENGINE_ERROR_NET_OPEN "Failed to open socket"
+
 //just the useful ones for now
 enum Key {
 	W, S, A, D, ESC, SPACE, UP, DOWN, LEFT, RIGHT, LAST
@@ -21,6 +24,7 @@ enum Mouse {
 
 class EventEngine {
 	private:
+		bool running;
 		SDL_Event event;
 		//bool keys[Key::LAST];
 		bool buttons[Mouse::BTN_LAST];
@@ -35,8 +39,11 @@ class EventEngine {
 
 	public:
 		EventEngine();
+		~EventEngine();
 
 		std::string init();
+
+		bool isRunning();
 
 		/**
 		* Equivalent to calling SDL_PollEvent()
