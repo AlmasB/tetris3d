@@ -72,8 +72,8 @@ class EventEngine {
 		int len;
 		Uint32 ipaddr;
 		Uint16 port;
-};
 
-void runConnThread(EventEngine * system);
+		void runConnThread();
+};
 
 #endif

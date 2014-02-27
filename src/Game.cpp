@@ -1,22 +1,5 @@
 #include "Game.h"
 
-float getValue(uint n) {
-	switch (n) {
-		case 0:
-			return -4;
-		case 1:
-			return -2;
-		case 2:
-			return 0;
-		case 3:
-			return 2;
-		case 4:
-			return 4;
-	}
-
-	return -20;	// will fix
-}
-
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
 	camera = Camera::getInstance();
 	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
@@ -144,7 +127,7 @@ void Game::update() {
 
 	buildBlock();
 
-	if (currentLevel->width * currentLevel->height == mainBlocks.size()) {
+	if (currentLevel->width * currentLevel->height == mainBlocks.size()) {	// TODO: optimize
 		player->addScore(__SCORE_PER_STEP);
 		nextStep();
 	}
@@ -189,7 +172,7 @@ void Game::handleAllEvents() {
 }
 
 void Game::handleKeyEvents() {
-	if (selected == nullptr) {
+	if (nullptr == selected) {
 		if (eventSystem->isPressed(Key::W)) player->moveForward();
 		if (eventSystem->isPressed(Key::S)) player->moveBackward();
 		if (eventSystem->isPressed(Key::A)) player->moveLeft(0.15f);
@@ -229,14 +212,17 @@ void Game::handleMouseEvents() {
 }
 
 void Game::onPrimaryAction() {
+	if (nullptr != selected)
+		return;
+
 	bullet->setCenter(player->getCenter());
 
-	while (selected == nullptr && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
+	while (nullptr == selected && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
-		for (auto GameObject : extraBlocks) {
-			if (bullet->collidesWith(*GameObject)) {
-				GameObject->setLocked(true);
-				selected = GameObject;
+		for (auto block : extraBlocks) {
+			if (bullet->collidesWith(*block)) {
+				block->setLocked(true);
+				selected = block;
 				break;
 			}
 		}
@@ -244,7 +230,7 @@ void Game::onPrimaryAction() {
 }
 
 void Game::onSecondaryAction() {
-	if (selected != nullptr) {
+	if (nullptr != selected) {
 		selected->setLocked(false);
 		selected = nullptr;
 	}
@@ -254,7 +240,7 @@ void Game::buildBlock() {
 	if (nullptr == selected)
 		return;
 
-	/*std::list<Point3f>::iterator it = freeBlockSlots.begin();
+	std::list<Point3f>::iterator it = freeBlockSlots.begin();
 	while (it != freeBlockSlots.end()) {
 		if (distanceBetween(*it, selected->getCenter()) < 3.0f) {
 			selected->setCenter((*it).x, (*it).y, (*it).z);
@@ -268,91 +254,17 @@ void Game::buildBlock() {
 			scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 			return;
 		}
-	}*/
-
-	/*for (auto p : freeBlockSlots) {
-		if (distanceBetween(p, selected->getCenter()) < 3.0f) {
-			selected->setCenter(p.x, p.y, p.z);
-			selected->setLocked(false);
-			mainBlocks.push_back(selected);
-			extraBlocks.remove(selected);
-			blocks[j][i] = true;
-			selected = nullptr;
-
-			player->addScore(__SCORE_PER_BLOCK);
-			scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
-			return;
-		}
-	}*/
-
-
-
-
-
-
-	/*if (selected != nullptr) {
-		for (uint i = 0; i < 3; ++i) {
-			for (uint j = 0; j < 5; ++j) {
-				if (!blocks[j][i]) {
-					float x = getValue(j) -1.0f;
-					float y = i*2.0f + 1.0f;
-					// count the point where player starts as level LEVEL_BEGINNING
-					float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
-
-					Point3f c(x, y, z);
-					if (distanceBetween(c, selected->getCenter()) < 3.0f) {
-						selected->setCenter(c.x, c.y, c.z);
-						selected->setLocked(false);
-						mainBlocks.push_back(selected);
-						extraBlocks.remove(selected);
-						blocks[j][i] = true;
-						selected = nullptr;
-
-						player->addScore(__SCORE_PER_BLOCK);
-						scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
-						return;
-					}
-				}
-			}
-		}
-	}*/
+		++it;
+	}
 }
 
-/*bool Game::isStepCompleted() {
-	for (uint i = 0; i < 3; ++i) {
-		for (uint j = 0; j < 5; ++j) {
-			if (!blocks[j][i]) {
-				return false;
-			}
-		}
-	}
-
-	// TODO: faster implementation can be checking extraBlocks for 0 size
-
-	return true;
-}
-
-uint Game::numberOfBlocksRequired() {
-	uint count = 0;
-	for (uint i = 0; i < 3; ++i) {
-		for (uint j = 0; j < 5; ++j) {
-			if (!blocks[j][i]) {
-				count++;
-			}
-		}
-	}
-
-	return count;
-}*/
-
-// TODO: use the length of the platform to determine where to spawn red blocks
 void Game::spawnAllBlocks() {
 	// where player starts count as level start
-	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
+	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep + 1.0f;
 
 	for (int i = 0; i < currentLevel->height; ++i) {
 		for (int j = 0; j < currentLevel->width; ++j) {
-			float x = getValue(j) - 1.0f;
+			float x = 2 * j - currentLevel->width;
 			float y = i*2.0f + 1.0f;
 
 			if (1 == rand() % 2) {
@@ -366,32 +278,10 @@ void Game::spawnAllBlocks() {
 
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
-	for (uint i = 0; i < blocksNeeded; ++i) {
+	for (int i = 0; i < blocksNeeded; ++i) {
 		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
 		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
 	}
-
-
-	/*for (uint i = 0; i < 3; ++i) {
-		for (uint j = 0; j < 5; ++j) {
-			blocks[j][i] = rand() % 2 == 1;	// set blocks, will need for later
-			if (blocks[j][i]) {
-				float x = getValue(j) - 1.0f;
-				float y = i*2.0f + 1.0f;
-				// where player starts count as level LEVEL_BEGINNING
-				float z = -currentLevel->length / 2.0f + 3 * 2.0f + 5.0f + 4 * currentStep;
-
-				Point3f p(x, y, z);
-				mainBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE));
-			}
-		}
-	}
-
-	for (uint i = 0; i < numberOfBlocksRequired(); ++i) {
-		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
-		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
-	}
-	*/
 }
 
 void Game::playCutScene() {

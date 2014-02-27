@@ -107,13 +107,9 @@ class Game {
 
 		///////////////////////////////////// CLEAN //////////////////////////////////////
 
-		bool blocks[5][3];
 
 		list<Point2> openPlatforms;
 		list<Point2> openPlatforms2;
-
-		bool isFull();
-		//SDL_Color getRandomColor();
 
 		Point2 currentNode;
 		void buildPlatforms();
@@ -135,9 +131,6 @@ class Game {
 		*/
 		void nextStep();
 		uint currentStep;
-		//bool isStepCompleted();
-
-		//uint numberOfBlocksRequired();	// to complete current step's structure
 
 		/**
 		* Recreates obstacles and extra blocks

@@ -36,75 +36,70 @@ std::string EventEngine::init() {
 	if (nullptr == server)
 		return _ENGINE_ERROR_NET_OPEN + std::string(SDLNet_GetError());
 
-	connThread = new std::thread(runConnThread, this);
+	//connThread = new std::thread(runConnThread, this);
+	connThread = new std::thread(&EventEngine::runConnThread, this);
 
 	return "";
 }
 
-bool EventEngine::isRunning() {
-	return running;
-}
-
-void runConnThread(EventEngine * engine) {
+void EventEngine::runConnThread() {
 #ifdef __DEBUG
-	debug("EventEngine&&runConnThread() started");
+	debug("EventEngine::runConnThread() started on a separate thread");
 #endif
 
-	while (engine->isRunning()) {
-		if (nullptr == engine->client) {
-			engine->client = SDLNet_TCP_Accept(engine->server);
-		}
-		if (nullptr == engine->client) {
-			//std::cout << "error" << std::endl;
+	while (running) {
+		if (nullptr == client) {
+			client = SDLNet_TCP_Accept(server);
 		}
 		else {
-			engine->remoteip = SDLNet_TCP_GetPeerAddress(engine->client);
-			engine->ipaddr = SDL_SwapBE32(engine->remoteip->host);
-			engine->len = SDLNet_TCP_Recv(engine->client, engine->message, 1024);
+			remoteip = SDLNet_TCP_GetPeerAddress(client);	// TODO: do init once and redo on connection lost
+			ipaddr = SDL_SwapBE32(remoteip->host);
+			len = SDLNet_TCP_Recv(client, message, 1024);
 
-			for (int i = 0; i < engine->len; ++i) {
-				char c = (int)engine->message[i];
+			for (int i = 0; i < len; ++i) {
+				char c = (int)message[i];
 
-				if ('W' == c && !engine->keys[Key::W]) {
-					engine->keys[Key::W] = true;
+				if ('W' == c && !keys[Key::W]) {	// TODO: we don't really want that, do smth smoother
+					keys[Key::W] = true;
 				}
 				else {
-					engine->keys[Key::W] = false;
+					keys[Key::W] = false;
 				}
 
-				if ('S' == c && !engine->keys[Key::S]) {
-					engine->keys[Key::S] = true;
+				if ('S' == c && !keys[Key::S]) {
+					keys[Key::S] = true;
 				}
 				else {
-					engine->keys[Key::S] = false;
+					keys[Key::S] = false;
 				}
 
-				if ('A' == c && !engine->keys[Key::A]) {
-					engine->keys[Key::A] = true;
-				}
-				else {
-					engine->keys[Key::A] = false;
-				}
-
-				if ('D' == c && !engine->keys[Key::D]) {
-					engine->keys[Key::D] = true;
+				if ('A' == c && !keys[Key::A]) {
+					keys[Key::A] = true;
 				}
 				else {
-					engine->keys[Key::D] = false;
+					keys[Key::A] = false;
+				}
+
+				if ('D' == c && !keys[Key::D]) {
+					keys[Key::D] = true;
+				}
+				else {
+					keys[Key::D] = false;
 				}
 
 
-				/*std::cout << c;
-
-				if (i == engine->len - 1)
-					std::cout << std::endl;*/
 			}
 		}
 		SDL_Delay(100);
 	}
+
 #ifdef __DEBUG
-	debug("EventEngine&&runConnThread() finished");
+	debug("EventEngine::runConnThread() finished on a separate thread");
 #endif
+}
+
+bool EventEngine::isRunning() {
+	return running;
 }
 
 void EventEngine::pollEvents() {
