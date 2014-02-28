@@ -34,8 +34,14 @@ std::string ResourceManager::loadResources(std::vector<std::string> fileNames) {
 }
 
 void ResourceManager::freeResources() {
-	for (auto pair : fonts)
-		TTF_CloseFont(pair.second);
+	for (auto pair : fonts) {
+		if (pair.second) {
+			TTF_CloseFont(pair.second);
+#ifdef __DEBUG
+			debug("Font closed");
+#endif
+		}
+	}
 }
 
 GLuint ResourceManager::getTextureID(std::string fileName) {

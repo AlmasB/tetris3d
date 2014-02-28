@@ -3,12 +3,19 @@
 GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
 
 GraphicsEngine::~GraphicsEngine() {
-	
+#ifdef __DEBUG
+	debug("GraphicsEngine::~GraphicsEngine() started");
+#endif
+
 	IMG_Quit();
 	TTF_Quit();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
+#ifdef __DEBUG
+	debug("GraphicsEngine::~GraphicsEngine() finished");
+#endif
 }
 
 std::string GraphicsEngine::init() {
@@ -36,14 +43,10 @@ std::string GraphicsEngine::init() {
 	if (TTF_Init() < 0)
 		return "Failed to init SDL_ttf: " + std::string(TTF_GetError());
 
-	
-
 	if (glewInit() != GLEW_OK)
 		return "Failed to init GLEW";
 
-	
-
-	
+	initGL();
 
 	return _ENGINE_ERROR_NONE;
 }

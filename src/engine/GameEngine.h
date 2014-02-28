@@ -19,6 +19,8 @@ class GameEngine {
 		std::shared_ptr<EventEngine> eventInstance;
 	public:
 		static std::shared_ptr<GameEngine> getInstance();
+		~GameEngine();
+		static void quit();
 
 		/**
 		* After acquiring an instance of game engine

@@ -41,7 +41,7 @@ class Game {
 		/* ENGINE SUB-SYSTEMS */
 		shared_ptr<GraphicsEngine> gfx;
 		shared_ptr<EventEngine> eventSystem;
-		Camera * camera;
+		Camera * camera;	// TODO: shared_ptr
 
 		/* GAME OBJECTS */
 		shared_ptr<Player> player;

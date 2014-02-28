@@ -2,8 +2,7 @@
 
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
 	camera = Camera::getInstance();
-	//gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
-	//eventSystem = unique_ptr<EventEngine>(new EventEngine());
+
 
 	srand(0);
 	
@@ -17,8 +16,13 @@ Game::~Game() {
 	debug("Game::~Game() started");
 #endif
 
-	// TODO: clean after everything is written
-	ResourceManager::freeResources();	// move to game engine
+	// kill game instance pointers
+	// so that engine is isolated from the outside world
+	gfx.reset();
+	eventSystem.reset();
+
+	// kill engine
+	GameEngine::quit();
 
 #ifdef __DEBUG
 	debug("Game::~Game() finished");
@@ -26,21 +30,6 @@ Game::~Game() {
 }
 
 bool Game::init() {
-#ifdef __DEBUG
-	#if defined(_WIN32)
-		debug("WIN32");
-	#elif defined(__linux__)
-		debug("LINUX");
-	#endif
-#endif
-
-
-
-	// at this point SDL/GL/GLEW are initialised and OK to use
-#ifdef __DEBUG
-	debug("GraphicsEngine::init() successful");
-#endif
-
 	vector<string> resources;
 	resources.push_back(_RES_TEX_BRICK);
 	resources.push_back(_RES_TEX_PRIZE);
@@ -55,16 +44,7 @@ bool Game::init() {
 	gfx = engine->getGraphicsEngine();
 	eventSystem = engine->getEventEngine();
 
-
-
-#ifdef __DEBUG
-	debug("ResourceManager::loadResources() successful");
-#endif
-
-	//eventSystem->init();
-
 	gfx->setWindowTitle("Tetris3D ~ ");
-
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
