@@ -34,8 +34,6 @@ using namespace std;	// for debugging
 
 static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
 
-static const SDL_Color SDL_COLOR_RED = { 255, 0, 0 };
-
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN, GAME_LOSE
 };
@@ -109,11 +107,9 @@ class Game {
 
 
 		list<Point2> openPlatforms;
-		list<Point2> openPlatforms2;
 
-		Point2 currentNode;
 		void buildPlatforms();
-		void getNeighborPlatforms();
+		list<Point2> getNeighborPlatforms(Point2 current);
 
 		void buildBlock();
 

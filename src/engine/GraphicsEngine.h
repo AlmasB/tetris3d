@@ -16,7 +16,7 @@
 
 #define _ENGINE_ERROR_NONE     ""
 
-/* ENGINE DEFAULT SETTING */
+/* ENGINE DEFAULT SETTINGS */
 
 #define _ENGINE_TITLE     "Powered by T.W.O. Game Engine, by Almas"
 #define __ENGINE_WINDOW_W 800
@@ -24,7 +24,7 @@
 
 static const SDL_Color SDL_COLOR_GRAY = { 0x80, 0x80, 0x80 };
 static const SDL_Color SDL_COLOR_YELLOW = {0xFF, 0xFF, 0};
-
+static const SDL_Color SDL_COLOR_RED = { 0xFF, 0, 0 };
 static const SDL_Color SDL_COLOR_GREEN = { 0, 0xFF, 0 };
 static const SDL_Color SDL_COLOR_BLUE = { 0, 0, 0xFF };
 

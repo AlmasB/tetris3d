@@ -10,6 +10,8 @@
 #include "GameMath.h"
 #include "Debug.h"
 
+#define safeDelete(ptr) if (ptr) delete ptr
+
 //just the useful ones for now
 enum Key {
 	W, S, A, D, ESC, SPACE, UP, DOWN, LEFT, RIGHT, LAST
@@ -23,16 +25,22 @@ class EventEngine {
 	private:
 		bool running;
 		SDL_Event event;
-		//bool keys[Key::LAST];
+		bool keys[Key::LAST];
 		bool buttons[Mouse::BTN_LAST];
 		Point2 mouseDPos;
 
 		void updateKeys(const SDL_Keycode &, bool);
 
-		///////////////////////////////// TEST////////////////////
 
-		
+		bool androidCtrlEnabled;
+		std::thread * connThread;
 
+		IPaddress ip, *remoteip;
+		TCPsocket server, client;
+		char message[1024];	// we're only expecting commands, make buf smaller
+		int len;
+		Uint32 ipaddr;
+		Uint16 port;
 
 	public:
 		EventEngine();
@@ -57,18 +65,6 @@ class EventEngine {
 		*
 		*/
 		Point2 getMouseDPos();
-
-		//////////////////////////////////////////////////////
-		// hide data and use public function for thread run
-		bool keys[Key::LAST];
-		std::thread * connThread;
-
-		IPaddress ip, *remoteip;
-		TCPsocket server, client;
-		char message[1024];	// we're only expecting commands, make buf smaller
-		int len;
-		Uint32 ipaddr;
-		Uint16 port;
 
 		void runConnThread();
 };

@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true) {
+EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
@@ -15,28 +15,35 @@ EventEngine::~EventEngine() {
 #endif
 
 	running = false;
-	connThread->join();	// wait till it finishes
+
+	if (connThread)
+		connThread->join();	// wait till it finishes
 
 	if (nullptr != client)
 		SDLNet_TCP_Close(client);
 	//SDLNet_TCP_Close(server);
 
-	delete connThread;
+	
+	//delete connThread;
+	safeDelete(connThread);
 #ifdef __DEBUG
 	debug("EventEngine::~EventEngine() finished");
 #endif
 }
 
 std::string EventEngine::init() {
-	port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
-	if (-1 == SDLNet_ResolveHost(&ip, NULL, port))
-		return "Failed to resolve host at port: " + std::to_string(port) + std::string(SDLNet_GetError());
+	if (androidCtrlEnabled) {
 
-	server = SDLNet_TCP_Open(&ip);
-	if (nullptr == server)
-		return "Failed to create local server " + std::string(SDLNet_GetError());
+		port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
+		if (-1 == SDLNet_ResolveHost(&ip, NULL, port))
+			return "Failed to resolve host at port: " + std::to_string(port) + std::string(SDLNet_GetError());
 
-	connThread = new std::thread(&EventEngine::runConnThread, this);
+		server = SDLNet_TCP_Open(&ip);
+		if (nullptr == server)
+			return "Failed to create local server " + std::string(SDLNet_GetError());
+
+		connThread = new std::thread(&EventEngine::runConnThread, this);
+	}
 
 	return "";	// same as _ENGINE_ERROR_NONE
 }

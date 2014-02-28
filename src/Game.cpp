@@ -326,6 +326,12 @@ void Game::playCutSceneLevelBeginning() {
 	}
 	
 	if (eventSystem->isPressed(Key::SPACE) || (isLevelBuilt() && cutSceneFrame > 0)) {
+		while (!isLevelBuilt()) {
+			buildPlatforms();
+		}
+
+		cout << currentLevel->data[4][29] << endl;
+
 		camera->follow(player);
 		resetCutScene();
 		spawnAllBlocks();
@@ -386,9 +392,12 @@ void Game::resetCutScene() {
 }
 
 void Game::buildPlatforms() {
+	list<Point2> neighbors;
+
 	for (auto point : openPlatforms) {
-		currentNode = point;
-		getNeighborPlatforms();
+		list<Point2> tmp = getNeighborPlatforms(point);
+		for (auto p : tmp)
+			neighbors.push_back(p);
 
 		float x = 2.0f * point.x - currentLevel->width;
 		float y = 0.0f;
@@ -400,11 +409,12 @@ void Game::buildPlatforms() {
 		platforms.push_back(plat);
 	}
 
-	openPlatforms = openPlatforms2;
-	openPlatforms2.clear();
+	openPlatforms = neighbors;
 }
 
-void Game::getNeighborPlatforms() {
+list<Point2> Game::getNeighborPlatforms(Point2 currentNode) {
+	list<Point2> openNodes;
+
 	int x1 = currentNode.x - 1;
 	int x2 = currentNode.x + 1;
 	int y1 = currentNode.y - 1;
@@ -412,35 +422,33 @@ void Game::getNeighborPlatforms() {
 
 	if (x1 >= 0) {
 		if (!currentLevel->data[x1][currentNode.y]) {
-			Point2 p = { x1, currentNode.y };
-			openPlatforms2.push_back(p);
+			openNodes.push_back(Point2(x1, currentNode.y));
 			currentLevel->data[x1][currentNode.y] = true;
 		}
 	}
 
 	if (x2 < currentLevel->width) {
 		if (!currentLevel->data[x2][currentNode.y]) {
-			Point2 p = { x2, currentNode.y };
-			openPlatforms2.push_back(p);
+			openNodes.push_back(Point2(x2, currentNode.y));
 			currentLevel->data[x2][currentNode.y] = true;
 		}
 	}
 
 	if (y1 >= 0) {
 		if (!currentLevel->data[currentNode.x][y1]) {
-			Point2 p = { currentNode.x, y1 };
-			openPlatforms2.push_back(p);
+			openNodes.push_back(Point2(currentNode.x, y1));
 			currentLevel->data[currentNode.x][y1] = true;
 		}
 	}
 
 	if (y2 < currentLevel->length) {
 		if (!currentLevel->data[currentNode.x][y2]) {
-			Point2 p = { currentNode.x, y2 };
-			openPlatforms2.push_back(p);
+			openNodes.push_back(Point2(currentNode.x, y2));
 			currentLevel->data[currentNode.x][y2] = true;
 		}
 	}
+
+	return openNodes;
 }
 
 bool Game::isLevelBuilt() {
@@ -460,31 +468,25 @@ void Game::nextLevel() {
 		return;
 	}
 
-
+	// clear everything associated with level
 	mainBlocks.clear();
 	extraBlocks.clear();
 	freeBlockSlots.clear();
 	platforms.clear();
 	openPlatforms.clear();
-	openPlatforms2.clear();
+	//openPlatforms2.clear();
 
-	// TODO: clean that
-	Point2 p = { 2, 0 };
-	currentNode = p;
-	openPlatforms.push_back(currentNode);
-
+	// init the level
 	currentLevel = Level::getNext();
+	openPlatforms.push_back(Point2(currentLevel->width / 2, 0));
+	currentLevel->data[currentLevel->width / 2][0] = true;
 
-	currentLevel->data[2][0] = true;
-
-
-
+	// return objects to initial state
 	player->setCenter(Point3f(0-1.0f, 2.0f, -currentLevel->length + 3 * 2.0f));
 	prize->setCenter(Point3f(0-1.0f, 0.0f + 1.0f, currentLevel->length - 2.0f));
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
 	currentStep = 0; 
-	
 	
 	currentCutScene = CutScene::LEVEL_BEGINNING;
 }
