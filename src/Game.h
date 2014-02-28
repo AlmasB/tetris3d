@@ -38,13 +38,14 @@ enum CutScene {
 
 class Game {
 	private:
-		/* ENGINE SUB-SYSTEMS */
+		/* ENGINE OBJECTS */
 		shared_ptr<GraphicsEngine> gfx;
 		shared_ptr<EventEngine> eventSystem;
-		Camera * camera;	// TODO: shared_ptr
+		shared_ptr<Camera> camera;
 
 		/* GAME OBJECTS */
 		shared_ptr<Player> player;
+		shared_ptr<GameObject> crosshair;
 
 		/**
 		* Invisible entity used to "shoot"

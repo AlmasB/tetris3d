@@ -43,9 +43,15 @@ class Movable {
 		void lookRight(float degrees);
 		void lookAt(const Point3f &point);
 
+		void setDirection(const Vector3f & dir);
+		void setUpVector(const Vector3f & up);
+
 		Vector3f getDirection();
 		Vector3f getUpVector();
 		virtual Point3f getCenter() = 0;
+
+		float getHorAngle();
+		float getVerAngle();
 
 #ifdef __DEBUG
 		void printDebug(uint infoFlag);

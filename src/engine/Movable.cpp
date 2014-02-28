@@ -20,6 +20,13 @@ Movable::Movable() {
 	verAngle = -toDegree(asin(direction.y));
 }
 
+void Movable::setDirection(const Vector3f & dir) {
+	direction = dir;
+}
+
+void Movable::setUpVector(const Vector3f & _up) {
+	up = _up;
+}
 
 Vector3f Movable::getDirection() {
 	return direction;
@@ -32,12 +39,12 @@ Vector3f Movable::getUpVector() {
 void Movable::adjustDirection() {
 	const Vector3f vAxis(0.0f, 1.0f, 0.0f);
 
-	// Rotate the view vector by the horizontal angle around the vertical axis
+	// rotate the view vector by the horizontal angle around the vertical axis
 	Vector3f view(1.0f, 0.0f, 0.0f);
 	view.rotate(horAngle, vAxis);
 	view.normalize();
 
-	// Rotate the view vector by the vertical angle around the horizontal axis
+	// rotate the view vector by the vertical angle around the horizontal axis
 	Vector3f hAxis = vAxis.cross(view);
 	hAxis.normalize();
 	view.rotate(verAngle, hAxis);
@@ -103,6 +110,14 @@ void Movable::lookRight(float degrees) {
 
 void Movable::lookAt(const Point3f &point) {
 	direction = point - getCenter();
+}
+
+float Movable::getHorAngle() {
+	return horAngle;
+}
+
+float Movable::getVerAngle() {
+	return verAngle;
 }
 
 #ifdef __DEBUG

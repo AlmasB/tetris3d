@@ -38,20 +38,14 @@ class Camera : public Movable {
 	friend class CameraTransformer;
 	friend class GraphicsEngine;
 	private:
-
-		//static std::shared_ptr<Camera> instance;
-
 		Point3f center;
-		static Camera * instance;
 		Perspective cameraPerspective;
 
 		std::shared_ptr<Movable> assigned;
-
+		static std::shared_ptr<Camera> instance;
 		Camera();
 	public:
 		void updateView();
-		//static std::shared_ptr<Camera> getInstance();
-		static Camera * getInstance();
 		void move(const Vector3f & v);
 		Point3f getCenter();
 
@@ -116,6 +110,8 @@ class GraphicsEngine {
 		void setFrameStart();
 		void adjustFPSDelay(const Uint32 &);
 		Uint32 getAverageFPS();
+
+		std::shared_ptr<Camera> getCamera();
 };
 
 typedef GraphicsEngine GFX;

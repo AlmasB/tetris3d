@@ -1,14 +1,6 @@
 #include "Game.h"
 
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
-	camera = Camera::getInstance();
-
-
-	srand(0);
-	
-#ifdef __DEBUG
-	debug("Game::Game() finished");
-#endif
 }
 
 Game::~Game() {
@@ -16,8 +8,10 @@ Game::~Game() {
 	debug("Game::~Game() started");
 #endif
 
-	// kill game instance pointers
+	// kill Game class' instance pointers
 	// so that engine is isolated from the outside world
+	// before shutting down
+	camera.reset();
 	gfx.reset();
 	eventSystem.reset();
 
@@ -43,6 +37,7 @@ bool Game::init() {
 
 	gfx = engine->getGraphicsEngine();
 	eventSystem = engine->getEventEngine();
+	camera = gfx->getCamera();
 
 	gfx->setWindowTitle("Tetris3D ~ ");
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
@@ -53,6 +48,7 @@ bool Game::init() {
 	// atm we don't care where we place them, nextLevel() takes care of everything
 	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
+	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
 	camera->follow(player);
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
@@ -60,7 +56,7 @@ bool Game::init() {
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 
-	
+	srand(SDL_GetTicks());
 
 	nextLevel();
 
@@ -114,10 +110,9 @@ void Game::update() {
 		}
 	}
 
-
 	buildBlock();
 
-	if (currentLevel->width * currentLevel->height == mainBlocks.size()) {	// TODO: optimize
+	if (mainBlocks.size() == currentLevel->width * currentLevel->height) {	// TODO: optimize
 		player->addScore(__SCORE_PER_STEP);
 		nextStep();
 	}
@@ -128,6 +123,8 @@ void Game::update() {
 	}
 
 	updateUI();
+	crosshair->setCenter(player->getCenter() + player->getDirection() * 2.0f);
+	crosshair->setRotate(player->getVerAngle(), -player->getHorAngle(), -player->getVerAngle());
 
 	// after updating positions of objects, update camera last
 	camera->updateView();
@@ -152,6 +149,7 @@ void Game::render() {
 
 	scoreboard->draw();
 	prize->draw();
+	crosshair->draw();
 
 	gfx->showScreen();
 }
@@ -319,8 +317,6 @@ void Game::playCutSceneLevelBeginning() {
 		while (!isLevelBuilt()) {
 			buildPlatforms();
 		}
-
-		cout << currentLevel->data[4][29] << endl;
 
 		camera->follow(player);
 		resetCutScene();

@@ -142,9 +142,13 @@ Uint32 GraphicsEngine::getAverageFPS() {
 	return fpsAverage;
 }
 
+std::shared_ptr<Camera> GraphicsEngine::getCamera() {
+	return Camera::instance;
+}
+
 /* CAMERA CLASS DEFINITION BEGIN */
 
-Camera * Camera::instance = nullptr;
+std::shared_ptr<Camera> Camera::instance = std::shared_ptr<Camera>(new Camera());
 
 Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
 	assigned = nullptr;
@@ -153,12 +157,6 @@ Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
 	cameraPerspective.height = __ENGINE_WINDOW_H * 1.0f;
 	cameraPerspective.zNear = 1.0f;
 	cameraPerspective.zFar = 100.0f;
-}
-
-Camera* Camera::getInstance() {
-	if (instance == nullptr)
-		instance = new Camera();
-	return instance;
 }
 
 void Camera::follow(std::shared_ptr<Movable> objectToFollow) {
@@ -196,7 +194,7 @@ const Matrix4f * CameraTransformer::transform() {
 	rotateTrans.initRotateTransform(rotate.x, rotate.y, rotate.z);
 	translationTrans.initTranslationTransform(center.x, center.y, center.z);
 
-	Camera * camera = Camera::getInstance();
+	std::shared_ptr<Camera> camera = Camera::instance;
 
 	// camera transformations
 	cameraTranslationTrans.initTranslationTransform(-camera->getCenter().x, -camera->getCenter().y, -camera->getCenter().z);
