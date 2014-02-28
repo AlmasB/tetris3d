@@ -2,8 +2,8 @@
 
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
 	camera = Camera::getInstance();
-	gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
-	eventSystem = unique_ptr<EventEngine>(new EventEngine());
+	//gfx = unique_ptr<GraphicsEngine>(new GraphicsEngine());
+	//eventSystem = unique_ptr<EventEngine>(new EventEngine());
 
 	srand(0);
 	
@@ -18,7 +18,7 @@ Game::~Game() {
 #endif
 
 	// TODO: clean after everything is written
-	ResourceManager::freeResources();
+	ResourceManager::freeResources();	// move to game engine
 
 #ifdef __DEBUG
 	debug("Game::~Game() finished");
@@ -34,12 +34,7 @@ bool Game::init() {
 	#endif
 #endif
 
-	std::string error;
-	if (_ENGINE_ERROR_NONE != (error = gfx->init())) {
-		std::cout << error << std::endl;
-		getchar();
-		return false;
-	}
+
 
 	// at this point SDL/GL/GLEW are initialised and OK to use
 #ifdef __DEBUG
@@ -54,17 +49,19 @@ bool Game::init() {
 	//resources.push_back(_RES_TEX_DOORUP);
 	//resources.push_back(_RES_TEX_DOORDOWN);
 
-	if (_ENGINE_ERROR_NONE != (error = ResourceManager::loadResources(resources))) {
-		std::cout << error << std::endl;
-		getchar();
-		return false;
-	}
+	shared_ptr<GameEngine> engine = GameEngine::getInstance();
+	engine->init(resources);
+
+	gfx = engine->getGraphicsEngine();
+	eventSystem = engine->getEventEngine();
+
+
 
 #ifdef __DEBUG
 	debug("ResourceManager::loadResources() successful");
 #endif
 
-	eventSystem->init();
+	//eventSystem->init();
 
 	gfx->setWindowTitle("Tetris3D ~ ");
 

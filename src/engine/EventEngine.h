@@ -7,10 +7,10 @@
 #include <SDL.h>
 #include <SDL_net.h>
 
+#include "EngineCommon.h"
 #include "GameMath.h"
-#include "Debug.h"
 
-#define safeDelete(ptr) if (ptr) delete ptr
+
 
 //just the useful ones for now
 enum Key {
@@ -22,6 +22,7 @@ enum Mouse {
 };
 
 class EventEngine {
+	friend class GameEngine;
 	private:
 		bool running;
 		SDL_Event event;
@@ -42,8 +43,8 @@ class EventEngine {
 		Uint32 ipaddr;
 		Uint16 port;
 
-	public:
 		EventEngine();
+	public:
 		~EventEngine();
 
 		std::string init();
@@ -66,6 +67,10 @@ class EventEngine {
 		*/
 		Point2 getMouseDPos();
 
+		/**
+		* Starts executing android "joystick" listener
+		* on a separate thread
+		*/
 		void runConnThread();
 };
 

@@ -6,10 +6,8 @@
 #include <list>
 #include <memory>
 
-#include "engine/EventEngine.h"
+#include "engine/GameEngine.h"
 #include "Player.h"
-#include "engine/ResourceManager.h"
-#include "engine/GraphicsEngine.h"
 #include "engine/Timer.h"
 #include "Level.h"
 
@@ -41,8 +39,8 @@ enum CutScene {
 class Game {
 	private:
 		/* ENGINE SUB-SYSTEMS */
-		unique_ptr<GraphicsEngine> gfx;
-		unique_ptr<EventEngine> eventSystem;
+		shared_ptr<GraphicsEngine> gfx;
+		shared_ptr<EventEngine> eventSystem;
 		Camera * camera;
 
 		/* GAME OBJECTS */

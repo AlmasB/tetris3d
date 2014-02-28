@@ -6,15 +6,13 @@
 #include <iostream>
 
 #include <SDL.h>
-#include <SDL_image.h>	// some of them will go when engine assembled
+#include <SDL_image.h>
 #include <SDL_ttf.h>
-#include <SDL_net.h>
 #include <GL/glew.h>
 #include <GL/glu.h>
 
+#include "EngineCommon.h"
 #include "Movable.h"
-
-#define _ENGINE_ERROR_NONE     ""
 
 /* ENGINE DEFAULT SETTINGS */
 
@@ -75,18 +73,20 @@ class CameraTransformer {
 };
 
 class GraphicsEngine {
+	friend class GameEngine;
 	private:
-		
+		SDL_Window * window;
 		SDL_GLContext glContext;
-		SDL_Renderer * renderer;
 
 		TTF_Font * font;
 
 		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
-	public:
-		SDL_Window * window;
+		
 		GraphicsEngine();
+
+	public:
+		
 		~GraphicsEngine();
 		std::string init();
 		void initGL();

@@ -6,7 +6,6 @@ GraphicsEngine::~GraphicsEngine() {
 	
 	IMG_Quit();
 	TTF_Quit();
-	SDLNet_Quit();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
@@ -37,37 +36,24 @@ std::string GraphicsEngine::init() {
 	if (TTF_Init() < 0)
 		return "Failed to init SDL_ttf: " + std::string(TTF_GetError());
 
-	if (SDLNet_Init() < 0)
-		return "Failed to init SDL_Net: " + std::string(SDLNet_GetError());
-
-	glEnable(GL_DEPTH_TEST);	// TODO: when do we do that? before/after
-	glDepthFunc(GL_LESS);
+	
 
 	if (glewInit() != GLEW_OK)
 		return "Failed to init GLEW";
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	
 
-	/*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClearDepth(1.0f); // Set background depth to farthest
-	glEnable(GL_DEPTH_TEST);	// not sure if need them
-	glDepthFunc(GL_LESS);
-	glDepthFunc(GL_LEQUAL);*/
-
-	/*glFrontFace(GL_CCW);
-	glCullFace(GL_FRONT);	// TODO: check documentation
-	glEnable(GL_CULL_FACE);*/
-
-	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-	SDL_GL_SetSwapInterval(0);	// on NVIDIA drivers setting to 1 causes high cpu load
-
-	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
+	
 
 	return _ENGINE_ERROR_NONE;
 }
 
 void GraphicsEngine::initGL() {
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	SDL_GL_SetSwapInterval(0);	// on NVIDIA drivers setting to 1 causes high cpu load
 }
 
 void GraphicsEngine::setWindowTitle(const char * title) {

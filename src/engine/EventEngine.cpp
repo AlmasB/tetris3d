@@ -23,15 +23,20 @@ EventEngine::~EventEngine() {
 		SDLNet_TCP_Close(client);
 	//SDLNet_TCP_Close(server);
 
-	
-	//delete connThread;
 	safeDelete(connThread);
+	SDLNet_Quit();
+
 #ifdef __DEBUG
 	debug("EventEngine::~EventEngine() finished");
 #endif
 }
 
 std::string EventEngine::init() {
+	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
+
+	if (SDLNet_Init() < 0)
+		return "Failed to init SDL_Net: " + std::string(SDLNet_GetError());
+
 	if (androidCtrlEnabled) {
 
 		port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
@@ -45,7 +50,7 @@ std::string EventEngine::init() {
 		connThread = new std::thread(&EventEngine::runConnThread, this);
 	}
 
-	return "";	// same as _ENGINE_ERROR_NONE
+	return _ENGINE_ERROR_NONE;
 }
 
 void EventEngine::runConnThread() {
