@@ -60,11 +60,20 @@
 
 #include <cstdlib>
 
-#define __PI       3.14159265358979323846
-#define toRadian(x) (float)(((x) * __PI / 180.0f))	// TODO: precalculate
-#define toDegree(x) (float)(((x) * 180.0f / __PI))
-
 typedef unsigned int uint;
+
+static const float PI_OVER_180 = (float)(3.14159265358979323846 / 180.0f);
+static const float _180_OVER_PI = (float)(180.0f / 3.14159265358979323846);
+//#define toRadian(x) (float)(((x) * __PI / 180.0f))	// TODO: precalculate
+//#define toDegree(x) (float)(((x) * 180.0f / __PI))
+
+inline float toRadian(float deg) {
+	return deg * PI_OVER_180;
+}
+
+inline float toDegree(float rad) {
+	return rad * _180_OVER_PI;
+}
 
 struct Quaternion {
 	float x, y, z, w;

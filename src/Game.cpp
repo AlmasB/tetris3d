@@ -13,7 +13,16 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 }
 
 Game::~Game() {
+#ifdef __DEBUG
+	debug("Game::~Game() started");
+#endif
+
 	// TODO: clean after everything is written
+	ResourceManager::freeResources();
+
+#ifdef __DEBUG
+	debug("Game::~Game() finished");
+#endif
 }
 
 bool Game::init() {
@@ -37,16 +46,10 @@ bool Game::init() {
 	debug("GraphicsEngine::init() successful");
 #endif
 
-	eventSystem->init();
-
-	gfx->setWindowTitle("Tetris3D ~ ");
-
-	TTF_Font * font = TTF_OpenFont(_RES_FONT, 36);
-	gfx->useFont(font);
-
 	vector<string> resources;
 	resources.push_back(_RES_TEX_BRICK);
 	resources.push_back(_RES_TEX_PRIZE);
+	resources.push_back(_RES_FONT);
 	//resources.push_back(_RES_TEX_WALL);
 	//resources.push_back(_RES_TEX_DOORUP);
 	//resources.push_back(_RES_TEX_DOORDOWN);
@@ -56,6 +59,16 @@ bool Game::init() {
 		getchar();
 		return false;
 	}
+
+#ifdef __DEBUG
+	debug("ResourceManager::loadResources() successful");
+#endif
+
+	eventSystem->init();
+
+	gfx->setWindowTitle("Tetris3D ~ ");
+
+	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 
 	// where do we want to "actually" draw the ground line 0,0,0 ?
 	// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f

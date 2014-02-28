@@ -9,12 +9,19 @@
 class ResourceManager {
 	private:
 		static std::map<std::string, GLuint> textures;
+		static std::map<std::string, TTF_Font *> fonts;
 	public:
+		/**
+		* Loads all resources into several maps (cache)
+		*
+		* The resources can be retrieved with an appropriate call to get*
+		*/
 		static std::string loadResources(std::vector<std::string> fileNames);
+		static void freeResources();
 
-		/* GLuint is typedef unsigned int, 
-		so no reason to pull GL/glew just for that*/
+
 		static GLuint getTextureID(std::string fileName);
+		static TTF_Font * getFont(std::string fileName);
 };
 
 #endif

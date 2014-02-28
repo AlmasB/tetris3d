@@ -7,8 +7,10 @@
 	If enabled, most of the classes/structs will have
 	a printDebug() function, which prints debug info to std out
 	Also debug info will be shown at crucial stages
+
+	Uncomment the following to remove debug code from release build
 */
-#define __DEBUG 1
+#define __DEBUG
 
 inline static void debug(const char * msg) {
 	std::cout << "DEBUG: " << msg << std::endl;

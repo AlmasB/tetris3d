@@ -3,6 +3,10 @@
 GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
 
 GraphicsEngine::~GraphicsEngine() {
+	
+	IMG_Quit();
+	TTF_Quit();
+	SDLNet_Quit();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
@@ -30,10 +34,10 @@ std::string GraphicsEngine::init() {
 		return "Failed to init SDL_image: " + std::string(IMG_GetError());
 	}
 
-	if (TTF_Init() == -1)
+	if (TTF_Init() < 0)
 		return "Failed to init SDL_ttf: " + std::string(TTF_GetError());
 
-	if (SDLNet_Init() == -1)
+	if (SDLNet_Init() < 0)
 		return "Failed to init SDL_Net: " + std::string(SDLNet_GetError());
 
 	glEnable(GL_DEPTH_TEST);	// TODO: when do we do that? before/after
