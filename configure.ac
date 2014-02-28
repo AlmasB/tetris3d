@@ -8,6 +8,8 @@ PKG_CHECK_MODULES([gl], [gl])
 PKG_CHECK_MODULES([glew], [glew])
 PKG_CHECK_MODULES([sdl2], [sdl2])
 PKG_CHECK_MODULES([SDL2_image], [SDL2_image])
+PKG_CHECK_MODULES([SDL_ttf], [SDL_ttf])
+PKG_CHECK_MODULES([SDL_net], [SDL_net])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

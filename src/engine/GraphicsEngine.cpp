@@ -48,10 +48,10 @@ std::string GraphicsEngine::init() {
 	glClearDepth(1.0f); // Set background depth to farthest
 	glEnable(GL_DEPTH_TEST);	// not sure if need them
 	glDepthFunc(GL_LESS);
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_LEQUAL);*/
 
-	glFrontFace(GL_CW);
-	glCullFace(GL_BACK);	// TODO: check documentation
+	/*glFrontFace(GL_CCW);
+	glCullFace(GL_FRONT);	// TODO: check documentation
 	glEnable(GL_CULL_FACE);*/
 
 	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

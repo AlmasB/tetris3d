@@ -47,9 +47,9 @@ bool Game::init() {
 	vector<string> resources;
 	resources.push_back(_RES_TEX_BRICK);
 	resources.push_back(_RES_TEX_PRIZE);
-	resources.push_back(_RES_TEX_WALL);
-	resources.push_back(_RES_TEX_DOORUP);
-	resources.push_back(_RES_TEX_DOORDOWN);
+	//resources.push_back(_RES_TEX_WALL);
+	//resources.push_back(_RES_TEX_DOORUP);
+	//resources.push_back(_RES_TEX_DOORDOWN);
 
 	if (_ENGINE_ERROR_NONE != (error = ResourceManager::loadResources(resources))) {
 		std::cout << error << std::endl;
