@@ -106,9 +106,15 @@ class Game {
 
 
 		list<Point2> openPlatforms;
-
-		void buildPlatforms();
 		list<Point2> getNeighborPlatforms(Point2 current);
+
+		/**
+		* Builds/destroy a certain amount of platforms at a time
+		* until there are no more platforms
+		*/
+		void buildPlatforms();
+		void killPlatforms();
+		
 
 		void buildBlock();
 
@@ -116,6 +122,7 @@ class Game {
 
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
+		Timer worldTimer;
 		void nextLevel();
 		bool isLevelBuilt();
 		shared_ptr<Level> currentLevel;

@@ -38,7 +38,8 @@ void ResourceManager::freeResources() {
 		if (pair.second) {
 			TTF_CloseFont(pair.second);
 #ifdef __DEBUG
-			debug("Font closed");
+			debug("Font closed:");
+			debug(pair.first.c_str());
 #endif
 		}
 	}

@@ -112,6 +112,11 @@ void Game::update() {
 
 	buildBlock();
 
+	if (CutScene::NONE == currentCutScene && worldTimer.getElapsed() >= 5 * __SECOND) {
+		killPlatforms();
+		worldTimer.measure();
+	}
+
 	if (mainBlocks.size() == currentLevel->width * currentLevel->height) {	// TODO: optimize
 		player->addScore(__SCORE_PER_STEP);
 		nextStep();
@@ -398,6 +403,12 @@ void Game::buildPlatforms() {
 	openPlatforms = neighbors;
 }
 
+void Game::killPlatforms() {
+	if (!platforms.empty()) {
+		platforms.pop_front();
+	}
+}
+
 list<Point2> Game::getNeighborPlatforms(Point2 currentNode) {
 	list<Point2> openNodes;
 
@@ -460,7 +471,6 @@ void Game::nextLevel() {
 	freeBlockSlots.clear();
 	platforms.clear();
 	openPlatforms.clear();
-	//openPlatforms2.clear();
 
 	// init the level
 	currentLevel = Level::getNext();
@@ -473,6 +483,8 @@ void Game::nextLevel() {
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
 	currentStep = 0; 
+
+	worldTimer.reset();
 	
 	currentCutScene = CutScene::LEVEL_BEGINNING;
 }

@@ -49,7 +49,6 @@ class Camera : public Movable {
 		void move(const Vector3f & v);
 		Point3f getCenter();
 
-
 		void follow(std::shared_ptr<Movable> objectToFollow);
 };
 

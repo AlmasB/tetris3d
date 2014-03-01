@@ -10,9 +10,6 @@
 #include "EngineCommon.h"
 #include "GameMath.h"
 
-
-
-//just the useful ones for now
 enum Key {
 	W, S, A, D, ESC, SPACE, UP, DOWN, LEFT, RIGHT, LAST
 };
