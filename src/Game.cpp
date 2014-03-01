@@ -33,7 +33,8 @@ bool Game::init() {
 	//resources.push_back(_RES_TEX_DOORDOWN);
 
 	shared_ptr<GameEngine> engine = GameEngine::getInstance();
-	engine->init(resources);
+	if (!engine->init(resources))
+		return false;
 
 	gfx = engine->getGraphicsEngine();
 	eventSystem = engine->getEventEngine();
