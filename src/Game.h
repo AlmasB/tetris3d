@@ -30,7 +30,8 @@
 
 using namespace std;	// for debugging
 
-static const uint GAME_FPS_DELAY = 1000 / __APP_FPS;
+static const uint GAME_FPS_DELAY_MSEC = __SECOND / __APP_FPS; 
+static const float GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN, GAME_LOSE
@@ -95,6 +96,7 @@ class Game {
 		* This object isn't meant to be drawn
 		*/
 		shared_ptr<Movable> dummyCameraObject;
+		shared_ptr<GameObject> testObj;
 
 		/**
 		* Contains x,y values of the obstacle's blocks

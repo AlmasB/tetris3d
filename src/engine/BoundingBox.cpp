@@ -55,6 +55,17 @@ std::pair<float, float> BoundingBox::projectOntoAxis(const BoundingBox & b, enum
 	return std::make_pair(lo, hi);
 }
 
+bool BoundingBox::isColliding(const BoundingBox & other) {
+	if (center.y + _halfDistY < other.center.y - other._halfDistY ||
+		center.y - _halfDistY > other.center.y + other._halfDistY)
+		return false;
+
+	Rect r1 = { center.x - _halfDistX, center.z - _halfDistZ, 2* _halfDistX, 2* _halfDistZ };
+	Rect r2 = { other.center.x - other._halfDistX, other.center.z - other._halfDistZ, 2*other._halfDistX,2* other._halfDistZ };
+
+	return r1.intersects(r2);
+}
+
 
 
 

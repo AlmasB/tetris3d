@@ -54,6 +54,7 @@ bool Game::init() {
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
 	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
+	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 
@@ -87,7 +88,7 @@ void Game::runMainLoop() {
 		update();
 		render();
 
-		gfx->adjustFPSDelay(GAME_FPS_DELAY);
+		gfx->adjustFPSDelay(GAME_FPS_DELAY_MSEC);
 	}
 
 #ifdef __DEBUG
@@ -96,20 +97,30 @@ void Game::runMainLoop() {
 }
 
 void Game::update() {
-	Vector3f gravity(0, -0.01f, 0);
+	// gravity value 1.0f, set gravity and update time to phys engine
+	Vector3f gravity(0, -GAME_FPS_DELAY_SEC * 1.0f, 0);
 
 	for (auto block : extraBlocks)
-		if (selected != block)
+		if (selected != block /*&& block->getCenter().y - block->getHalfDistY() > 0*/ && !block->isColliding(*testObj))
 			block->move(gravity);
 
-	for (auto block : extraBlocks) {
+	/*for (auto block : extraBlocks) {
 		for (auto platform : platforms) {
 			if (platform->collidesWith(*block)) {	// TODO: implement box - > GameObject collision
-				block->move(gravity * (-1.0f));
+				block->move(gravity);
 				break;
 			}
 		}
-	}
+	}*/
+
+		Rect r1 = { prize->getCenter().x - 1.0f, prize->getCenter().z - 1.0f, 2, 2};
+		Rect r2 = { testObj->getCenter().x - 1.0f, testObj->getCenter().z - 1.0f, 2, 2 };
+
+		//cout << "R1" << r1.x << " " << r1.y << " " << r1.x + r1.w << " " << r1.y + r1.h << endl;
+		//cout << r2.x << " " << r2.y << " " << r2.x + r2.w << " " << r2.y + r2.h << endl;
+
+		if (r1.intersects(r2))
+			std::cout << "yes" << std::endl;
 
 	buildBlock();
 
@@ -156,6 +167,7 @@ void Game::render() {
 	scoreboard->draw();
 	prize->draw();
 	crosshair->draw();
+	testObj->draw();
 
 	gfx->showScreen();
 }
@@ -272,8 +284,9 @@ void Game::spawnAllBlocks() {
 
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
-	for (int i = 0; i < blocksNeeded; ++i) {
-		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
+	for (int i = 0; i < 2; ++i) {
+		//Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
+		Point3f p(i*2.0f, 4 + i*4.0f, -25.0f);
 		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
 	}
 }
