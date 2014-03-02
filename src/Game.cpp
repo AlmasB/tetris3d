@@ -108,6 +108,7 @@ void Game::update() {
 		}
 	}
 
+	// block - platform collision
 	for (auto block : extraBlocks) {
 		for (auto platform : platforms) {
 			if (platform->isColliding(*block)) {
@@ -117,6 +118,24 @@ void Game::update() {
 		}
 	}
 
+	// block - block collision
+	list<shared_ptr<GameObject>> tmp;
+	for (auto obj : extraBlocks)
+		tmp.push_back(obj);
+
+	while (!tmp.empty()) {
+		shared_ptr<GameObject> tmpObj = tmp.front();
+		tmp.pop_front();
+
+		for (auto obj : tmp) {
+			if (obj->isColliding(*tmpObj)) {
+				tmpObj->move(gravity * -1.0f);
+				break;
+			}
+		}
+	}
+
+	// player - platform collision
 	if (CutScene::NONE == currentCutScene) {
 		bool death = true;
 
@@ -294,7 +313,7 @@ void Game::spawnAllBlocks() {
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
 	for (int i = 0; i < blocksNeeded; ++i) {
-		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
+		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, 4 + i*2.0f, player->getCenter().z + getRandom(-5, 5));
 		//Point3f p(i*2.0f, 4 + i*4.0f, -25.0f);
 		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, getRandomColor(50, 200)));
 	}
