@@ -183,6 +183,7 @@ class Game {
 		void handleAllEvents();
 		void handleKeyEvents();
 		void handleMouseEvents();
+		void handlePlayerMovement();
 
 		/**
 		* Updates the game world

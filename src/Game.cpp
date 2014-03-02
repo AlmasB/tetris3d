@@ -207,10 +207,7 @@ void Game::handleAllEvents() {
 
 void Game::handleKeyEvents() {
 	if (nullptr == selected) {
-		if (eventSystem->isPressed(Key::W)) player->moveForward();
-		if (eventSystem->isPressed(Key::S)) player->moveBackward();
-		if (eventSystem->isPressed(Key::A)) player->moveLeft(0.15f);
-		if (eventSystem->isPressed(Key::D)) player->moveRight(0.15f);
+		handlePlayerMovement();
 	}
 	else {
 		if (eventSystem->isPressed(Key::W)) selected->move(player->getDirection());
@@ -227,6 +224,34 @@ void Game::handleKeyEvents() {
 
 	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
 	if (eventSystem->isPressed(Key::ESC)) running = false;
+}
+
+void Game::handlePlayerMovement() {
+	float zLine = -currentLevel->length / 2.0f + 3 * 2.0f + 4.0f + 4 * currentStep - 1.0f;
+
+	if (eventSystem->isPressed(Key::W)) {
+		player->moveForward();
+		if (player->getCenter().z > zLine)
+			player->moveBackward();
+	}
+
+	if (eventSystem->isPressed(Key::S)) {
+		player->moveBackward();
+		if (player->getCenter().z > zLine)
+			player->moveForward();
+	}
+
+	if (eventSystem->isPressed(Key::A)) {
+		player->moveLeft(0.15f);
+		if (player->getCenter().z > zLine)
+			player->moveRight(0.15f);
+	}
+
+	if (eventSystem->isPressed(Key::D)) {
+		player->moveRight(0.15f);
+		if (player->getCenter().z > zLine)
+			player->moveLeft(0.15f);
+	}
 }
 
 void Game::handleMouseEvents() {
