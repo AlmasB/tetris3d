@@ -125,6 +125,7 @@ class Game {
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
 		Timer worldTimer;
+		void resetLevel();
 		void nextLevel();
 		bool isLevelBuilt();
 		shared_ptr<Level> currentLevel;

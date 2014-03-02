@@ -73,6 +73,9 @@ void GraphicsEngine::showScreen() {
 }
 
 void GraphicsEngine::useFont(TTF_Font * _font) {
+	if (nullptr == _font)
+		std::cout << "Font isn't usable" << std::endl;
+
 	if (nullptr != font) {
 		TTF_CloseFont(font);
 	}
@@ -88,7 +91,7 @@ void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 GLuint GraphicsEngine::createGLTextureFromText(std::string text, SDL_Color color) {
 	// blend is supposed to be much nicer when no need for fast swapping
 	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
-	SDL_Surface * background = IMG_Load("res/white128.png");
+	SDL_Surface * background = IMG_Load("res/trans128.png");	// TODO: load to RM
 
 	SDL_BlitSurface(textSurface, 0, background, 0);
 
@@ -165,7 +168,7 @@ void Camera::follow(std::shared_ptr<Movable> objectToFollow) {
 
 void Camera::updateView() {
 	if (assigned != nullptr) {
-		center = assigned->getCenter();
+		center = assigned->getCenter() + Vector3f(0, 1.0f, 0);	// use object's "head", we prob need length in Y dir
 		direction = assigned->getDirection();
 		up = assigned->getUpVector();
 	}

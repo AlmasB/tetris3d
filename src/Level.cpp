@@ -20,6 +20,10 @@ Level::~Level() {
 	for (int i = 0; i < width; ++i)
 		delete[] data[i];
 	delete[] data;
+
+#ifdef __DEBUG
+	debug("Level::~Level() finished");
+#endif
 }
 
 void Level::createLevels() {
@@ -33,7 +37,7 @@ void Level::createLevels() {
 }
 
 std::shared_ptr<Level> Level::getNext() {
-	if (levels.size() == 0)	// running for first time or someone forgot to check max level...
+	if (levels.empty())	// running for first time or someone forgot to check max level...
 		createLevels();	// in either cases we promise not to crash but feed u same levels
 
 	std::shared_ptr<Level> level = levels.front();

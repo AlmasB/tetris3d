@@ -133,6 +133,7 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 	compileShaders();
 }
 
+// TODO: isolate code for shader compilation and return program
 GLuint Cuboid::createShader(const char * shaderCode, GLenum shaderType) {
 	GLuint shader = glCreateShader(shaderType);
 	if (shader == 0) {
@@ -151,7 +152,7 @@ GLuint Cuboid::createShader(const char * shaderCode, GLenum shaderType) {
 	GLint ok;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
 	if (!ok) {
-		std::cout << "Failed compile" << std::endl;
+		std::cout << "Failed to compile shader" << std::endl;
 		/*
 		GLchar InfoLog[1024];
 		glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);

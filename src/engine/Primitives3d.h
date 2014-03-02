@@ -28,9 +28,15 @@ varying vec2 outUV;						                                            \n\
 uniform vec4 color;                                                                 \n\
 uniform sampler2D sampler;														    \n\
 uniform int useTexture;                                                             \n\
+//uniform int useUI;																					\n\
 																					\n\
 void main() {                                                                       \n\
-	gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
+	//if (useUI > 0) {	\n\
+		gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
+	//} \n\
+	//else {\n\
+		//gl_FragColor = 						\n\
+	//}\n\
 }";
 
 // TODO: once there's an actual 3d model, md2, md3 or whatever

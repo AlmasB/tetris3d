@@ -26,6 +26,11 @@ static const SDL_Color SDL_COLOR_RED = { 0xFF, 0, 0 };
 static const SDL_Color SDL_COLOR_GREEN = { 0, 0xFF, 0 };
 static const SDL_Color SDL_COLOR_BLUE = { 0, 0, 0xFF };
 
+inline SDL_Color getRandomColor(int minRGB, int maxRGB) {
+	SDL_Color color = { getRandom(minRGB, maxRGB), getRandom(minRGB, maxRGB), getRandom(minRGB, maxRGB) };
+	return color;
+}
+
 struct Perspective {
 	float fov;	// field of view
 	float width;

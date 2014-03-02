@@ -58,7 +58,7 @@ bool Game::init() {
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 
-	srand(SDL_GetTicks());
+	srand(SDL_GetTicks());	// should be on engine side
 
 	nextLevel();
 
@@ -82,6 +82,8 @@ void Game::runMainLoop() {
 			handleAllEvents();
 		}
 		else {
+			if (eventSystem->isPressed(Key::ESC))	// debug escape
+				running = false;
 			playCutScene();
 		}
 
@@ -100,27 +102,34 @@ void Game::update() {
 	// gravity value 1.0f, set gravity and update time to phys engine
 	Vector3f gravity(0, -GAME_FPS_DELAY_SEC * 1.0f, 0);
 
-	for (auto block : extraBlocks)
-		if (selected != block /*&& block->getCenter().y - block->getHalfDistY() > 0*/ && !block->isColliding(*testObj))
+	for (auto block : extraBlocks) {
+		if (selected != block) {
 			block->move(gravity);
+		}
+	}
 
-	/*for (auto block : extraBlocks) {
+	for (auto block : extraBlocks) {
 		for (auto platform : platforms) {
-			if (platform->collidesWith(*block)) {	// TODO: implement box - > GameObject collision
-				block->move(gravity);
+			if (platform->isColliding(*block)) {
+				block->move(gravity * -1.0f);
 				break;
 			}
 		}
-	}*/
+	}
 
-		Rect r1 = { prize->getCenter().x - 1.0f, prize->getCenter().z - 1.0f, 2, 2};
-		Rect r2 = { testObj->getCenter().x - 1.0f, testObj->getCenter().z - 1.0f, 2, 2 };
+	if (CutScene::NONE == currentCutScene) {
+		bool death = true;
 
-		//cout << "R1" << r1.x << " " << r1.y << " " << r1.x + r1.w << " " << r1.y + r1.h << endl;
-		//cout << r2.x << " " << r2.y << " " << r2.x + r2.w << " " << r2.y + r2.h << endl;
+		for (auto plat : platforms) {
+			if (player->isColliding(*plat)) {
+				death = false;
+				break;
+			}
+		}
 
-		if (r1.intersects(r2))
-			std::cout << "yes" << std::endl;
+		if (death)
+			currentCutScene = CutScene::PLAYER_DEATH;
+	}
 
 	buildBlock();
 
@@ -140,7 +149,7 @@ void Game::update() {
 	}
 
 	updateUI();
-	crosshair->setCenter(player->getCenter() + player->getDirection() * 2.0f);
+	crosshair->setCenter(player->getCenter() + Vector3f(0, 1.0f, 0) + player->getDirection() * 2.0f);
 	crosshair->setRotate(player->getVerAngle(), -player->getHorAngle(), -player->getVerAngle());
 
 	// after updating positions of objects, update camera last
@@ -167,7 +176,7 @@ void Game::render() {
 	scoreboard->draw();
 	prize->draw();
 	crosshair->draw();
-	testObj->draw();
+	//testObj->draw();
 
 	gfx->showScreen();
 }
@@ -284,10 +293,10 @@ void Game::spawnAllBlocks() {
 
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
-	for (int i = 0; i < 2; ++i) {
-		//Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
-		Point3f p(i*2.0f, 4 + i*4.0f, -25.0f);
-		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, SDL_COLOR_RED));
+	for (int i = 0; i < blocksNeeded; ++i) {
+		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, getRandom(10, 15)*1.0f, player->getCenter().z + getRandom(-5, 5));
+		//Point3f p(i*2.0f, 4 + i*4.0f, -25.0f);
+		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, getRandomColor(50, 200)));
 	}
 }
 
@@ -379,7 +388,17 @@ void Game::playCutSceneLevelEnd() {
 }
 
 void Game::playCutScenePlayerDeath() {
+	if (cutSceneTimer.getElapsed() >= 0.025 * __SECOND) {
+		player->move(Vector3f(0, -0.25, 0));
+		player->lookAt(prize->getCenter());
 
+		cutSceneTimer.measure();
+	}
+
+	if (eventSystem->isPressed(Key::SPACE) || player->getCenter().y <= -30) {
+		resetCutScene();
+		running = false;
+	}
 }
 
 void Game::playCutSceneGameWin() {
@@ -473,12 +492,7 @@ bool Game::isLevelBuilt() {
 	return true;
 }
 
-void Game::nextLevel() {
-	if (Level::getNumberOfLevels() == __MAX_LEVELS) {
-		currentCutScene = CutScene::GAME_WIN;
-		return;
-	}
-
+void Game::resetLevel() {
 	// clear everything associated with level
 	mainBlocks.clear();
 	extraBlocks.clear();
@@ -486,21 +500,30 @@ void Game::nextLevel() {
 	platforms.clear();
 	openPlatforms.clear();
 
-	// init the level
-	currentLevel = Level::getNext();
 	openPlatforms.push_back(Point2(currentLevel->width / 2, 0));
 	currentLevel->data[currentLevel->width / 2][0] = true;
 
 	// return objects to initial state
-	player->setCenter(Point3f(0-1.0f, 2.0f, -currentLevel->length + 3 * 2.0f));
-	prize->setCenter(Point3f(0-1.0f, 0.0f + 1.0f, currentLevel->length - 2.0f));
+	player->setCenter(Point3f(0 - 1.0f, 1.0f, -currentLevel->length + 3 * 2.0f));
+	prize->setCenter(Point3f(0 - 1.0f, 0.0f + 1.0f, currentLevel->length - 2.0f));
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
-	currentStep = 0; 
+	currentStep = 0;
 
 	worldTimer.reset();
-	
+
 	currentCutScene = CutScene::LEVEL_BEGINNING;
+}
+
+void Game::nextLevel() {
+	if (Level::getNumberOfLevels() == __MAX_LEVELS) {
+		currentCutScene = CutScene::GAME_WIN;
+		return;
+	}
+
+	// init the level
+	currentLevel = Level::getNext();
+	resetLevel();
 }
 
 void Game::nextStep() {
