@@ -1,12 +1,12 @@
 #include "GameObject.h"
 
 GameObject::GameObject(const Point3f &_center, float x, float y, float z, SDL_Color _color)
-: Cuboid(_center, x, y, z, _color) {
+: Cuboid(_center, x, y, z, _color), locked(false) {
 
 }
 
 GameObject::GameObject(const Point3f &_center, float x, float y, float z, GLuint _textureID)
-: Cuboid(_center, x, y, z, _textureID) {
+: Cuboid(_center, x, y, z, _textureID), locked(false) {
 
 }
 

@@ -12,7 +12,7 @@
 */
 #define __DEBUG
 
-inline static void debug(const char * msg) {
+inline void debug(const char * msg) {
 	std::cout << "DEBUG: " << msg << std::endl;
 }
 

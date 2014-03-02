@@ -2,9 +2,7 @@
 
 // TODO: use delegating constructors
 Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _color)
-: BoundingBox(_center, x, y, z), color(_color), textureID(0), transformer(_center) {
-
-	originalColor = color;
+: BoundingBox(_center, x, y, z), color(_color), originalColor(_color), textureID(0), transformer(_center) {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -68,9 +66,7 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _col
 }
 
 Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textureID)
-: BoundingBox(_center, x, y, z), textureID(_textureID), transformer(_center) {
-	color = SDL_COLOR_GRAY;
-	originalColor = color;
+: BoundingBox(_center, x, y, z), textureID(_textureID), transformer(_center), color(SDL_COLOR_GRAY), originalColor(SDL_COLOR_GRAY) {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
