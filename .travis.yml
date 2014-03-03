@@ -3,6 +3,41 @@ compiler:
   - gcc
   - clang
 # Change this to your needs
-install: sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-net-dev libsdl-ttf2.0-dev libglew-dev
+
+before_install: 
+  - cd ~
+  - hg clone http://hg.libsdl.org/SDL
+  - hg clone http://hg.libsdl.org/SDL_image
+  - hg clone http://hg.libsdl.org/SDL_net
+  - hg clone http://hg.libsdl.org/SDL_ttf
+  - mkdir SDL-build
+  - mkdir SDL-image-build
+  - mkdir SDL-net-build
+  - mkdir SDL-ttf-build
+  - cd SDL-build
+  - ../SDL/configure
+  - make
+  - sudo make install
+  - cd ../
+  - cd SDL-image-build
+  - ../SDL_image/configure
+  - make
+  - sudo make install
+  - cd ../
+  - cd SDL-net-build
+  - ../SDL_net/configure
+  - make
+  - sudo make install
+  - cd ../
+  - cd SDL-ttf-build
+  - ../SDL_ttf/configure
+  - make
+  - sudo make install
+  - cd ../
+
+
+
+
+install: sudo apt-get install libglew-dev
 before_script: autoreconf -i
 script: ./configure && make
