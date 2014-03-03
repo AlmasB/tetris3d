@@ -5,11 +5,10 @@ compiler:
 
 before_install: 
   - sudo apt-get update
-  - sudo apt-get install yum
-  - sudo yum deplist SDL
+  - sudo apt-get install libsdl2-static-dev
 
 
 
-install: sudo apt-get install libglew-dev libsdl2-dev
+install: sudo apt-get install libglew-dev
 before_script: autoreconf -i
 script: ./configure && make
