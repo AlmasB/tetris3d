@@ -5,38 +5,8 @@ compiler:
 # Change this to your needs
 
 before_install: 
-  - sudo apt-get install autotools-dev
-  - sudo apt-get install automake
-  - sudo apt-get install aclocal
-  - cd ~
-  - hg clone http://hg.libsdl.org/SDL
-  - hg clone http://hg.libsdl.org/SDL_image
-  - hg clone http://hg.libsdl.org/SDL_net
-  - hg clone http://hg.libsdl.org/SDL_ttf
-  - mkdir SDL-build
-  - mkdir SDL-image-build
-  - mkdir SDL-net-build
-  - mkdir SDL-ttf-build
-  - cd SDL-build
-  - ../SDL/configure
-  - make
-  - sudo make install
-  - cd ../
-  - cd SDL-image-build
-  - ../SDL_image/configure
-  - make
-  - sudo make install
-  - cd ../
-  - cd SDL-net-build
-  - ../SDL_net/configure
-  - make
-  - sudo make install
-  - cd ../
-  - cd SDL-ttf-build
-  - ../SDL_ttf/configure
-  - make
-  - sudo make install
-  - cd ../
+  - sudo apt-get install yum
+  - yum install SDL2*
 
 
 
