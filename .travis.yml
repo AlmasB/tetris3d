@@ -6,6 +6,7 @@ compiler:
 
 before_install: 
   - sudo apt-get update -qq
+  - apt-cache search libsdl2
 
 
 
