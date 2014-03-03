@@ -5,12 +5,11 @@ compiler:
 # Change this to your needs
 
 before_install: 
-  - sudo apt-get install yum
-  - sudo yum install SDL2* SDL_net* SDL_ttf*
+  - sudo apt-get update -qq
 
 
 
 
-install: sudo apt-get install libglew-dev
+install: sudo apt-get install libglew-dev libsdl2-dev
 before_script: autoreconf -i
 script: ./configure && make
