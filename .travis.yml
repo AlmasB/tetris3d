@@ -3,5 +3,6 @@ compiler:
   - gcc
   - clang
 # Change this to your needs
-script: autoreconf -i
+install: sudo apt-get install libsdl2* libglew*
+before_script: autoreconf -i
 script: ./configure && make
