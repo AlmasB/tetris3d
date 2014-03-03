@@ -49,7 +49,7 @@ bool Game::init() {
 	// atm we don't care where we place them, nextLevel() takes care of everything
 	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
-	player->setSensitivity(0.25f);
+	player->setSensitivity(0.15f);
 	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
 	camera->follow(player);
 
@@ -259,8 +259,8 @@ void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
 	// TODO: values need tweaking for greater experience
-	player->lookRight(pos.x);
-	player->lookUp(-pos.y);	// invert, because UP is negative in SDL
+	player->lookRight((float)pos.x);
+	player->lookUp((float)-pos.y);	// invert, because UP is negative in SDL
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();
