@@ -17,6 +17,7 @@ class Movable {
 
 		float horAngle, verAngle;
 		float speed;
+		float sensitivity;
 
 		void adjustDirection();
 
@@ -43,6 +44,7 @@ class Movable {
 		void lookRight(float degrees);
 		void lookAt(const Point3f &point);
 
+		void setSensitivity(float val);
 		void setDirection(const Vector3f & dir);
 		void setUpVector(const Vector3f & up);
 

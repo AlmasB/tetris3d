@@ -49,6 +49,7 @@ bool Game::init() {
 	// atm we don't care where we place them, nextLevel() takes care of everything
 	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
+	player->setSensitivity(0.25f);
 	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
 	camera->follow(player);
 
@@ -217,10 +218,10 @@ void Game::handleKeyEvents() {
 	}
 
 	// TODO: values need tweaking for greater experience
-	if (eventSystem->isPressed(Key::UP)) player->lookUp(20 * 0.05f);
-	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20 * 0.05f);
-	if (eventSystem->isPressed(Key::RIGHT)) player->lookRight(20 * 0.05f);
+	if (eventSystem->isPressed(Key::UP)) player->lookUp(20);
+	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(-20);
+	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20);
+	if (eventSystem->isPressed(Key::RIGHT)) player->lookRight(20);
 
 	if (eventSystem->isPressed(Key::SPACE)) onPrimaryAction();
 	if (eventSystem->isPressed(Key::ESC)) running = false;
@@ -258,8 +259,8 @@ void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
 	// TODO: values need tweaking for greater experience
-	player->lookRight(pos.x * 0.05f);
-	player->lookUp(-pos.y * 0.05f);	// invert, because UP is negative in SDL
+	player->lookRight(pos.x);
+	player->lookUp(-pos.y);	// invert, because UP is negative in SDL
 
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
 		onPrimaryAction();

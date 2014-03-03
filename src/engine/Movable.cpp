@@ -1,8 +1,6 @@
 #include "Movable.h"
 
-Movable::Movable() {
-	speed = 0.15f;
-
+Movable::Movable() : sensitivity(0.05f), speed(0.15f) {
 	direction = Vector3f(0.0f, 0.0f, 1.0f);
 	direction.normalize();
 	up = Vector3f(0.0f, 1.0f, 0.0f);
@@ -18,6 +16,10 @@ Movable::Movable() {
 	}
 
 	verAngle = -toDegree(asin(direction.y));
+}
+
+void Movable::setSensitivity(float val) {
+	sensitivity = val;
 }
 
 void Movable::setDirection(const Vector3f & dir) {
@@ -99,12 +101,12 @@ void Movable::moveLeft(float _speed) {
 
 void Movable::lookUp(float degrees) {
 	degrees = -degrees;	// to make more natural to use
-	verAngle += degrees;
+	verAngle += degrees * sensitivity;
 	adjustDirection();
 }
 
 void Movable::lookRight(float degrees) {
-	horAngle += degrees;
+	horAngle += degrees * sensitivity;
 	adjustDirection();
 }
 

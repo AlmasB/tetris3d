@@ -78,6 +78,8 @@ class GraphicsEngine {
 
 		TTF_Font * font;
 
+		SDL_Surface * textureBackground;
+
 		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
 		

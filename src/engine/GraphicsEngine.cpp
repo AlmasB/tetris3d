@@ -7,6 +7,7 @@ GraphicsEngine::~GraphicsEngine() {
 	debug("GraphicsEngine::~GraphicsEngine() started");
 #endif
 
+	SDL_FreeSurface(textureBackground);
 	IMG_Quit();
 	TTF_Quit();
 	SDL_GL_DeleteContext(glContext);
@@ -47,6 +48,10 @@ std::string GraphicsEngine::init() {
 		return "Failed to init GLEW";
 
 	initGL();
+
+	textureBackground = IMG_Load("res/white128.png");
+	if (nullptr == textureBackground)
+		return "Failed to load background for textures " + std::string(IMG_GetError());
 
 	return _ENGINE_ERROR_NONE;
 }
@@ -91,7 +96,7 @@ void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 GLuint GraphicsEngine::createGLTextureFromText(std::string text, SDL_Color color) {
 	// blend is supposed to be much nicer when no need for fast swapping
 	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
-	SDL_Surface * background = IMG_Load("res/trans128.png");	// TODO: load to RM
+	SDL_Surface * background = SDL_ConvertSurface(textureBackground, textureBackground->format, textureBackground->flags);
 
 	SDL_BlitSurface(textSurface, 0, background, 0);
 
