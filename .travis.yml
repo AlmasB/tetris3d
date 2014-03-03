@@ -1,13 +1,12 @@
 language: cpp
 compiler:
   - gcc
-  - clang
 # Change this to your needs
 
 before_install: 
-  - sudo apt-get update -qq
-  - apt-cache search libsdl2
-
+  - sudo apt-get update
+  - sudo apt-get install yum
+  - sudo yum deplist SDL
 
 
 
