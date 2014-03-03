@@ -6,10 +6,7 @@ compiler:
 
 before_install: 
   - sudo apt-get install yum
-  - sudo yum install SDL2-devel.x86-64
-  - sudo yum install SDL2_image-devel.x86-64
-  - sudo yum install SDL_net-devel.x86-64
-  - sudo yum install SDL_ttf-devel.i686
+  - sudo yum install SDL2* SDL_net* SDL_ttf*
 
 
 
