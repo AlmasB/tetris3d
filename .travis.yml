@@ -5,6 +5,8 @@ compiler:
 # Change this to your needs
 
 before_install: 
+  - sudo apt-get install autotools-dev
+  - sudo apt-get install automake
   - cd ~
   - hg clone http://hg.libsdl.org/SDL
   - hg clone http://hg.libsdl.org/SDL_image
