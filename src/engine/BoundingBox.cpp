@@ -60,8 +60,8 @@ bool BoundingBox::isColliding(const BoundingBox & other) {
 		center.y - _halfDistY > other.center.y + other._halfDistY)
 		return false;
 
-	Rect r1 = { center.x - _halfDistX, center.z - _halfDistZ, 2* _halfDistX, 2* _halfDistZ };
-	Rect r2 = { other.center.x - other._halfDistX, other.center.z - other._halfDistZ, 2*other._halfDistX,2* other._halfDistZ };
+	Rect r1 = { (int)(center.x - _halfDistX), (int)(center.z - _halfDistZ), 2 * (int)_halfDistX, 2 * (int)_halfDistZ };
+	Rect r2 = { (int)(other.center.x - other._halfDistX), (int)(other.center.z - other._halfDistZ), 2 * (int)other._halfDistX, 2 * (int)other._halfDistZ };
 
 	return r1.intersects(r2);
 }
