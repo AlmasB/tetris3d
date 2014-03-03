@@ -6,7 +6,7 @@ compiler:
 
 before_install: 
   - sudo apt-get install yum
-  - yum install SDL2*
+  - sudo yum install SDL2* SDL_net* SDL_ttf*
 
 
 
