@@ -13,4 +13,3 @@ before_install:
 install: sudo apt-get install libglew-dev
 before_script: autoreconf -i
 script: ./configure && make
-after_script: ./TetrisV
