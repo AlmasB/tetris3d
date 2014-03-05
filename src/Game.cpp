@@ -57,13 +57,12 @@ bool Game::init() {
 	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
 	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
 
-
-	player->addScore(2159);	// test
-
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
-	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
 
 	srand(SDL_GetTicks());	// should be on engine side
+
+	
 
 	nextLevel();
 
@@ -164,15 +163,16 @@ void Game::update() {
 
 	if (mainBlocks.size() == currentLevel->width * currentLevel->height) {	// TODO: optimize
 		player->addScore(__SCORE_PER_STEP);
+		updateUI();
 		nextStep();
 	}
 
 	if (currentCutScene != CutScene::LEVEL_END && player->collidesWith(*prize)) {	// player reached prize aka end of level
 		player->addScore(__SCORE_PER_LEVEL);
+		updateUI();
 		currentCutScene = CutScene::LEVEL_END;
 	}
 
-	updateUI();
 	crosshair->setCenter(player->getCenter() + Vector3f(0, 1.0f, 0) + player->getDirection() * 2.0f);
 	crosshair->setRotate(player->getVerAngle(), -player->getHorAngle(), -player->getVerAngle());
 
@@ -180,9 +180,8 @@ void Game::update() {
 	camera->updateView();
 }
 
-// TODO: something more efficient
 void Game::updateUI() {
-	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
 }
 
 void Game::render() {
@@ -315,7 +314,7 @@ void Game::buildBlock() {
 			selected = nullptr;
 
 			player->addScore(__SCORE_PER_BLOCK);
-			scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
+			updateUI();
 			return;
 		}
 		++it;

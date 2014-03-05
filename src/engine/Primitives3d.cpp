@@ -62,7 +62,18 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _col
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-	compileShaders();
+	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
+
+	glUseProgram(shaderProgram);
+
+	mvpLocation = glGetUniformLocation(shaderProgram, "mvp");
+	colorLocation = glGetUniformLocation(shaderProgram, "color");
+	textureIDLocation = glGetUniformLocation(shaderProgram, "sampler");
+	useTextureLocation = glGetUniformLocation(shaderProgram, "useTexture");
+
+	useUI = glGetUniformLocation(shaderProgram, "useUI");
+
+	glUseProgram(0);
 }
 
 Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textureID)
@@ -131,8 +142,10 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 	glGenBuffers(1, &testVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, testVBO);
 
+	//float x = 0, y = 0;
 	float len = 200.0f;
 
+	// need to depend on screen size
 	GLfloat test[] = {
 		0, 0, 0, 1,
 		0, len, 0, 0,
@@ -146,38 +159,18 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	compileShaders();
-}
+	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
 
-// TODO: isolate code for shader compilation and return program
-GLuint Cuboid::createShader(const char * shaderCode, GLenum shaderType) {
-	GLuint shader = glCreateShader(shaderType);
-	if (shader == 0) {
-		// couldn't create shader, how do we wanna exit?
-	}
+	glUseProgram(shaderProgram);
 
-	const GLchar* strings[1];	// shader code strings
-	strings[0] = shaderCode;
+	mvpLocation = glGetUniformLocation(shaderProgram, "mvp");
+	colorLocation = glGetUniformLocation(shaderProgram, "color");
+	textureIDLocation = glGetUniformLocation(shaderProgram, "sampler");
+	useTextureLocation = glGetUniformLocation(shaderProgram, "useTexture");
 
-	GLint lengths[1];			// shader code lengths
-	lengths[0] = strlen(shaderCode);
+	useUI = glGetUniformLocation(shaderProgram, "useUI");
 
-	glShaderSource(shader, 1, strings, lengths);
-	glCompileShader(shader);
-
-	GLint ok;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
-	if (!ok) {
-		std::cout << "Failed to compile shader" << std::endl;
-		/*
-		GLchar InfoLog[1024];
-		glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
-		fprintf(stderr, "Error compiling shader type %d: '%s'\n", ShaderType, InfoLog);	// use here to determine error
-		*/
-		getchar();
-	}
-
-	return shader;
+	glUseProgram(0);
 }
 
 // not used
@@ -189,42 +182,9 @@ GLuint Cuboid::createBuffer(GLenum bufferType, const void *bufferData, GLsizei b
 	return buffer;
 }
 
-void Cuboid::compileShaders() {
-	GLuint program = glCreateProgram();
-	if (0 == program) {
-		// bad
-	}
-
-	glAttachShader(program, createShader(vertexShaderCode, GL_VERTEX_SHADER));
-	glAttachShader(program, createShader(fragmentShaderCode, GL_FRAGMENT_SHADER));
-	glLinkProgram(program);
-
-	GLint ok;
-	glGetProgramiv(program, GL_LINK_STATUS, &ok);
-	//GLchar ErrorLog[1024] = { 0 };
-	if (!ok) {
-		//glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
-		//fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
-	}
-
-	glValidateProgram(program);
-	glGetProgramiv(program, GL_VALIDATE_STATUS, &ok);
-	if (!ok) {
-		//glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
-		//fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
-	}
-
-	glUseProgram(program);
-
-	mvpLocation = glGetUniformLocation(program, "mvp");
-	colorLocation = glGetUniformLocation(program, "color");
-	textureIDLocation = glGetUniformLocation(program, "sampler");
-	useTextureLocation = glGetUniformLocation(program, "useTexture");
-
-	useUI = glGetUniformLocation(program, "useUI");
-}
-
 void Cuboid::draw() {
+	glUseProgram(shaderProgram);
+
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
 	glUniform4f(colorLocation, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// TODO: pre-calculate float values
 
@@ -274,6 +234,8 @@ void Cuboid::draw() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+
+	glUseProgram(0);
 }
 
 void Cuboid::setColor(SDL_Color _color) {

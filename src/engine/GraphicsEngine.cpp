@@ -94,10 +94,8 @@ void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 }
 
 GLuint GraphicsEngine::createGLTextureFromText(std::string text, SDL_Color color) {
-
-	SDL_Color color2 = { 199, 233, 12 };
 	// blend is supposed to be much nicer when no need for fast swapping
-	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color2);
+	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
 	SDL_Surface * background = SDL_ConvertSurface(textureBackground, textureBackground->format, textureBackground->flags);
 
 	SDL_BlitSurface(textSurface, 0, background, 0);

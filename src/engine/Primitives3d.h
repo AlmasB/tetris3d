@@ -7,6 +7,8 @@
 #include "Movable.h"
 #include "GraphicsEngine.h"
 
+#include "ShaderManager.h"
+
 static const char* vertexShaderCode = "                                             \n\
 #version 120                                                                        \n\
 																					\n\
@@ -57,6 +59,7 @@ void main() {                                                                   
 
 class Cuboid : public BoundingBox, public Movable {
 	protected:
+		GLuint shaderProgram;
 
 		GLuint vbo;	// vertex buffer object
 		CameraTransformer transformer;
@@ -75,8 +78,6 @@ class Cuboid : public BoundingBox, public Movable {
 		GLuint testVBO;
 
 		GLuint createBuffer(GLenum, const void *, GLsizei);
-		GLuint createShader(const char * shaderCode, GLenum shaderType);
-		void compileShaders();
 	public:
 		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color);
 		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, GLuint textureID);
