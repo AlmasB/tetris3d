@@ -16,11 +16,11 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 ## Compile and run
 
 For Linux run:
-    $ mkdir build && cd build && cmake ..
-    $ make
+    `$ mkdir build && cd build && cmake ..`
+    `$ make`
 
 For Windows:
-    TODO: MS Visual Studio Project will be here soon
+    `TODO: MS Visual Studio Project will be here soon`
     
 ## Extra:
 
