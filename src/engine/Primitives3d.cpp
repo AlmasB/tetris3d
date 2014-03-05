@@ -126,6 +126,26 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &testVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, testVBO);
+
+	float len = 200.0f;
+
+	GLfloat test[] = {
+		0, 0, 0, 1,
+		0, len, 0, 0,
+		len, 0, 0.9f, 1,
+
+		0, len, 0, 0,
+		len, len, 0.9f, 0,
+		len, 0, 0.9f, 1
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(test), test, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	compileShaders();
 }
 
@@ -200,6 +220,8 @@ void Cuboid::compileShaders() {
 	colorLocation = glGetUniformLocation(program, "color");
 	textureIDLocation = glGetUniformLocation(program, "sampler");
 	useTextureLocation = glGetUniformLocation(program, "useTexture");
+
+	useUI = glGetUniformLocation(program, "useUI");
 }
 
 void Cuboid::draw() {
@@ -215,15 +237,36 @@ void Cuboid::draw() {
 		glUniform1i(useTextureLocation, 0);
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	if (textureID > 2) {
+		glUniform1i(useUI, 1);
+		glBindBuffer(GL_ARRAY_BUFFER, testVBO);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);	// x,y,z, repeat every 5 values
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);	// x,y,z, repeat every 5 values
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (const GLvoid*)(2 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	}
+	else {
+		glUniform1i(useUI, 0);
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);	// x,y,z, repeat every 5 values
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
+
+	}
 	glDrawArrays(GL_TRIANGLES, 0, 36);	/// cuboid 12*3
+
+	glDisable(GL_BLEND);
 
 	// unbind everything
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

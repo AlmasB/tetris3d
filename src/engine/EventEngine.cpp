@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true), androidCtrlEnabled(true) {
+EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}

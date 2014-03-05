@@ -15,9 +15,18 @@ attribute vec2 UV;                                                              
 uniform mat4 mvp;                                                                   \n\
 varying vec2 outUV;                                                                 \n\
 																				    \n\
+uniform int useUI;  \n\
 void main() {                                                                       \n\
-    gl_Position = mvp * vec4(position, 1.0);                                        \n\
-	outUV = UV;																		\n\
+	if (useUI == 0) { \n\
+		gl_Position = mvp * vec4(position, 1.0);                                        \n\
+																			\n\
+	}else{														\n\
+		vec2 size = position.xy - vec2(400, 300);			\n\
+		size /= vec2(400, 300);									\n\
+		gl_Position = vec4(size, 0, 1);																\n\
+	}																		\n\
+						\n\
+	outUV = UV;			\n\
 }";
 
 
@@ -61,6 +70,9 @@ class Cuboid : public BoundingBox, public Movable {
 		GLuint useTextureLocation;	// we pass 1 to use texture and 0 to use color
 
 		GLuint mvpLocation;	// model view projection
+		GLuint useUI;
+
+		GLuint testVBO;
 
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 		GLuint createShader(const char * shaderCode, GLenum shaderType);

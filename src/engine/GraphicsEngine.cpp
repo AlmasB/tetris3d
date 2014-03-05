@@ -49,7 +49,7 @@ std::string GraphicsEngine::init() {
 
 	initGL();
 
-	textureBackground = IMG_Load("res/white128.png");
+	textureBackground = IMG_Load("res/trans128.png");
 	if (nullptr == textureBackground)
 		return "Failed to load background for textures " + std::string(IMG_GetError());
 
@@ -94,8 +94,10 @@ void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 }
 
 GLuint GraphicsEngine::createGLTextureFromText(std::string text, SDL_Color color) {
+
+	SDL_Color color2 = { 199, 233, 12 };
 	// blend is supposed to be much nicer when no need for fast swapping
-	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
+	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color2);
 	SDL_Surface * background = SDL_ConvertSurface(textureBackground, textureBackground->format, textureBackground->flags);
 
 	SDL_BlitSurface(textSurface, 0, background, 0);
@@ -117,6 +119,7 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

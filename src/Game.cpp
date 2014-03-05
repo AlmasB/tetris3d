@@ -57,7 +57,11 @@ bool Game::init() {
 	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
 	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
 
+
+	player->addScore(2159);	// test
+
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
+	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_RED));
 
 	srand(SDL_GetTicks());	// should be on engine side
 
