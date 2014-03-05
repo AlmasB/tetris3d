@@ -18,11 +18,15 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 For Linux:
 
 `$ autoreconf -i`
+
 `$ ./configure`
+
 `$ make`
+
 `$ ./TetrisV`
 
 For Windows:
+
 `TODO: MS Visual Studio Project will be here soon`
     
 ## Extra: ##
