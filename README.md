@@ -14,10 +14,16 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 * **[GLEW](http://glew.sourceforge.net/) 1.6**+
 
 ## Compile and run ##
+You will have to have the SDL development libraries installed on
+your system.  The easiest way to compile is to use a command-line
+and type
 
-For Linux run:
-    `$ mkdir build && cd build && cmake ..`
-    `$ make`
+`make`
+
+OR
+
+`$ g++ -c -std=c++11 src/*.cpp -I /usr/include/sigc++-2.0/ -I /usr/lib64/sigc++-2.0/include/`
+`$ g++ -o SF *.o -l SDL -l SDL_image -l sigc-2.0`
 
 For Windows:
     `TODO: MS Visual Studio Project will be here soon`
