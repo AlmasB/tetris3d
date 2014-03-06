@@ -105,7 +105,7 @@ class Game {
 		list<Point3f> freeBlockSlots;
 
 		///////////////////////////////////// CLEAN //////////////////////////////////////
-
+		SDL_Surface * cross;
 
 		list<Point2> openPlatforms;
 		list<Point2> getNeighborPlatforms(Point2 current);
@@ -117,7 +117,6 @@ class Game {
 		void buildPlatforms();
 		void killPlatforms();
 		
-
 		void buildBlock();
 
 		//////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +188,6 @@ class Game {
 		* Updates the game world
 		*/
 		void update();
-		void updateUI();
 
 		/**
 		* Renders the game world

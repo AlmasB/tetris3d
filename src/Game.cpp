@@ -27,7 +27,9 @@ bool Game::init() {
 	vector<string> resources;
 	resources.push_back(_RES_TEX_BRICK);
 	resources.push_back(_RES_TEX_PRIZE);
+	resources.push_back("res/crosshair.png");
 	resources.push_back(_RES_FONT);
+
 	//resources.push_back(_RES_TEX_WALL);
 	//resources.push_back(_RES_TEX_DOORUP);
 	//resources.push_back(_RES_TEX_DOORDOWN);
@@ -58,11 +60,11 @@ bool Game::init() {
 	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
-	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
+	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
 
 	srand(SDL_GetTicks());	// should be on engine side
 
-	
+	cross = IMG_Load("res/crosshair.png");
 
 	nextLevel();
 
@@ -163,13 +165,11 @@ void Game::update() {
 
 	if (mainBlocks.size() == currentLevel->width * currentLevel->height) {	// TODO: optimize
 		player->addScore(__SCORE_PER_STEP);
-		updateUI();
 		nextStep();
 	}
 
 	if (currentCutScene != CutScene::LEVEL_END && player->collidesWith(*prize)) {	// player reached prize aka end of level
 		player->addScore(__SCORE_PER_LEVEL);
-		updateUI();
 		currentCutScene = CutScene::LEVEL_END;
 	}
 
@@ -178,10 +178,6 @@ void Game::update() {
 
 	// after updating positions of objects, update camera last
 	camera->updateView();
-}
-
-void Game::updateUI() {
-	scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
 }
 
 void Game::render() {
@@ -199,7 +195,10 @@ void Game::render() {
 	scoreboard->draw();
 	prize->draw();
 	crosshair->draw();
-	//testObj->draw();
+
+	gfx->drawText(to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);
+	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
+	gfx->drawSDLSurface(cross, 800/2 - 15, 600/2 - 15, 30, 30);
 
 	gfx->showScreen();
 }
@@ -314,7 +313,6 @@ void Game::buildBlock() {
 			selected = nullptr;
 
 			player->addScore(__SCORE_PER_BLOCK);
-			updateUI();
 			return;
 		}
 		++it;

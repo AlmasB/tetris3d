@@ -126,8 +126,21 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 	return texture;
 }
 
-// TODO: drawSDLSurface
-void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
+void GraphicsEngine::drawText(std::string text, SDL_Color color, int x, int y) {
+	// blend is supposed to be much nicer when no need for fast swapping
+	// we ARE fast swapping now, should we change to different?
+	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
+	SDL_Surface * background = SDL_ConvertSurface(textureBackground, textureBackground->format, textureBackground->flags);
+
+	SDL_BlitSurface(textSurface, 0, background, 0);
+
+	drawSDLSurface(background, x, y);
+
+	SDL_FreeSurface(textSurface);
+	SDL_FreeSurface(background);
+}
+
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y, int textureW, int textureH) {
 	if (nullptr == surface)
 		return;
 
@@ -143,19 +156,23 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
 
 	GLuint textureID = createGLTextureFromSurface(surface);
 
-	// need to depend on screen size
 	GLfloat textureVertexData[] = {
-		x,				h - y + surface->h, 0, 1,
-		x,				h - y,				0, 0,
-		x + surface->w, h - y + surface->h,	0.99f, 1,
+		x, h - y - textureH, 0, 1,
+		x, h - y, 0, 0,
+		x + textureW, h - y - textureH, 0.99f, 1,
 
-		x,				h - y,				0, 0,
-		x + surface->w, h - y,				0.99f, 0,
-		x + surface->w, h - y + surface->h,	0.99f, 1
+		x, h - y, 0, 0,
+		x + textureW, h - y, 0.99f, 0,
+		x + textureW, h - y - textureW, 0.99f, 1
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(textureVertexData), textureVertexData, GL_STATIC_DRAW);
 
-	/*glUseProgram(shaderProgram);
+	GLuint shaderProgram = ShaderManager::getInstance()->getCurrentProgram();
+
+	GLuint useTextureLocation = glGetUniformLocation(shaderProgram, "useTexture");
+	GLuint useUI = glGetUniformLocation(shaderProgram, "useUI");
+
+	glUseProgram(shaderProgram);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glUniform1i(useTextureLocation, 1);
@@ -171,7 +188,7 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);	/// cuboid 12*3
+	glDrawArrays(GL_TRIANGLES, 0, 6);	// 2*3
 
 	glDisable(GL_BLEND);
 
@@ -182,7 +199,17 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 
-	glUseProgram(0);*/
+	glUseProgram(0);
+
+	glDeleteBuffers(1, &textureVBO);
+	glDeleteTextures(1, &textureID);
+}
+
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
+	if (nullptr == surface)
+		return;
+
+	drawSDLSurface(surface, x, y, surface->w, surface->h);
 }
 
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {

@@ -64,9 +64,7 @@ class Cuboid : public BoundingBox, public Movable {
 		GLuint useTextureLocation;	// we pass 1 to use texture and 0 to use color
 
 		GLuint mvpLocation;	// model view projection
-		GLuint useUI;
-
-		GLuint testVBO;
+		GLuint useUI;	// TODO: rename
 
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 	public:

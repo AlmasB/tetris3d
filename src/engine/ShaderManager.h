@@ -17,6 +17,7 @@ class ShaderManager {
 		static std::shared_ptr<ShaderManager> getInstance();
 		GLuint createShader(const char * shaderCode, GLenum shaderType);
 		GLuint createProgram(const char * vertexShaderCode, const char * fragmentShaderCode);
+		GLuint getCurrentProgram();	// TODO: do differently
 };
 
 #endif

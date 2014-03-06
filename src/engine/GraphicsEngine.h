@@ -14,6 +14,8 @@
 #include "EngineCommon.h"
 #include "Movable.h"
 
+#include "ShaderManager.h"
+
 /* ENGINE DEFAULT SETTINGS */
 
 #define _ENGINE_TITLE     "Powered by T.W.O. Game Engine, by Almas"
@@ -112,6 +114,8 @@ class GraphicsEngine {
 		* Call this method after you have finished drawing
 		*/
 		void showScreen();
+
+		void drawText(std::string text, SDL_Color color, int x, int y);
 		
 		/**
 		* Draws SDL_Surface on screen starting at x, y (NOT FINISHED)
@@ -122,6 +126,7 @@ class GraphicsEngine {
 		* @pre-condition: surface must be valid, i.e. != nullptr
 		*/
 		void drawSDLSurface(SDL_Surface * surf, int x, int y);
+		void drawSDLSurface(SDL_Surface * surf, int x, int y, int w, int h);
 
 		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);

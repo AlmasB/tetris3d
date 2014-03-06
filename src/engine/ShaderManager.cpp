@@ -6,6 +6,10 @@ std::shared_ptr<ShaderManager> ShaderManager::getInstance() {
 	return instance;
 }
 
+GLuint ShaderManager::getCurrentProgram() {
+	return shaderPrograms.begin()->second;
+}
+
 ShaderManager::ShaderManager() {}
 
 GLuint ShaderManager::createShader(const char * shaderCode, GLenum shaderType) {
