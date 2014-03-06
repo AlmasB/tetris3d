@@ -25,7 +25,7 @@ std::string GraphicsEngine::init() {
 
 	window = SDL_CreateWindow(_ENGINE_TITLE,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		__ENGINE_WINDOW_W, __ENGINE_WINDOW_H,
+		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
 	if (nullptr == window)
@@ -254,8 +254,8 @@ std::shared_ptr<Camera> Camera::instance = std::shared_ptr<Camera>(new Camera())
 Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
 	assigned = nullptr;
 	cameraPerspective.fov = 60.0f;
-	cameraPerspective.width = __ENGINE_WINDOW_W * 1.0f;
-	cameraPerspective.height = __ENGINE_WINDOW_H * 1.0f;
+	cameraPerspective.width = (float) DEFAULT_WINDOW_WIDTH;
+	cameraPerspective.height = (float) DEFAULT_WINDOW_HEIGHT;
 	cameraPerspective.zNear = 1.0f;
 	cameraPerspective.zFar = 100.0f;
 }
@@ -282,33 +282,25 @@ Point3f Camera::getCenter() {
 
 /* CAMERA TRANSFORMER CLASS DEFINITION BEGIN */
 
-CameraTransformer::CameraTransformer(Point3f _center)
-: scale(Vector3f(1.0f, 1.0f, 1.0f)), center(Vector3f(_center.x, _center.y, _center.z)), rotate(Vector3f(0, 0, 0)) {
-
-}
+CameraTransformer::CameraTransformer(Point3f center)
+: scale(Vector3f(1.0f, 1.0f, 1.0f)), center(Vector3f(center.x, center.y, center.z)), rotate(Vector3f(0, 0, 0)) {}
 
 const Matrix4f * CameraTransformer::transform() {
 	Matrix4f scaleTrans, rotateTrans, translationTrans, cameraTranslationTrans, cameraRotateTrans, persProjTrans;
 
 	// scale, rotate, translate
-	scaleTrans.initScaleTransform(scale.x, scale.y, scale.z);
-	rotateTrans.initRotateTransform(rotate.x, rotate.y, rotate.z);
-	translationTrans.initTranslationTransform(center.x, center.y, center.z);
+	scaleTrans.scale(scale.x, scale.y, scale.z);
+	rotateTrans.rotate(rotate.x, rotate.y, rotate.z);
+	translationTrans.translate(center.x, center.y, center.z);
 
 	std::shared_ptr<Camera> camera = Camera::instance;
 
 	// camera transformations
-	cameraTranslationTrans.initTranslationTransform(-camera->getCenter().x, -camera->getCenter().y, -camera->getCenter().z);
-	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getUpVector());	// careful passing references
-	persProjTrans.initPersProjTransform(camera->cameraPerspective.fov, camera->cameraPerspective.width, camera->cameraPerspective.height, camera->cameraPerspective.zNear, camera->cameraPerspective.zFar);
+	cameraTranslationTrans.translate(-camera->getCenter().x, -camera->getCenter().y, -camera->getCenter().z);
+	cameraRotateTrans.initCameraTransform(camera->getDirection(), camera->getUpVector());
+	persProjTrans.setPerspectiveProjection(camera->cameraPerspective.fov, camera->cameraPerspective.width, camera->cameraPerspective.height, camera->cameraPerspective.zNear, camera->cameraPerspective.zFar);
 
 	transformation = persProjTrans * cameraRotateTrans * cameraTranslationTrans * translationTrans * rotateTrans * scaleTrans;
 
-
 	return &transformation;
-	//return trans;
-}
-
-void CameraTransformer::printDebug() {
-	std::cout << center.x << " " << center.y << " " << center.z << std::endl;
 }

@@ -19,8 +19,9 @@
 /* ENGINE DEFAULT SETTINGS */
 
 #define _ENGINE_TITLE     "Powered by T.W.O. Game Engine, by Almas"
-#define __ENGINE_WINDOW_W 800
-#define __ENGINE_WINDOW_H 600
+
+static const int DEFAULT_WINDOW_WIDTH = 800;
+static const int DEFAULT_WINDOW_HEIGHT = 600;
 
 static const SDL_Color SDL_COLOR_GRAY = { 0x80, 0x80, 0x80 };
 static const SDL_Color SDL_COLOR_YELLOW = {0xFF, 0xFF, 0};
@@ -68,8 +69,6 @@ class CameraTransformer {
 		Vector3f center;
 		Vector3f rotate;
 		const Matrix4f* transform();
-
-		void printDebug();
 };
 
 class GraphicsEngine {

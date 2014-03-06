@@ -4,6 +4,9 @@
 Cuboid::Cuboid(const Point3f & center, float x, float y, float z, SDL_Color color)
 : Cuboid(center, x, y, z, color, 0) {}
 
+Cuboid::Cuboid(const Point3f & center, float x, float y, float z, GLuint textureID)
+: Cuboid(center, x, y, z, SDL_COLOR_GRAY, textureID) {}
+
 Cuboid::Cuboid(const Point3f &_center, float _x, float _y, float _z, SDL_Color color, GLuint _textureID)
 : PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(color), originalColor(color) {
 

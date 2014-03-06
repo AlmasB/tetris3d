@@ -67,7 +67,8 @@ class Cuboid : public PhysicsObject, public Movable {
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 	public:
 		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color);
-		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color, GLuint textureID = 0);
+		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, GLuint textureID);
+		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color, GLuint textureID);
 
 		void setColor(SDL_Color color);
 		void resetColor();
