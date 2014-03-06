@@ -17,21 +17,19 @@ attribute vec2 UV;                                                              
 uniform mat4 mvp;                                                                   \n\
 varying vec2 outUV;                                                                 \n\
 																				    \n\
-uniform int useUI;  \n\
+uniform int useUI;																	\n\
+																					\n\
 void main() {                                                                       \n\
-	if (useUI == 0) { \n\
-		gl_Position = mvp * vec4(position, 1.0);                                        \n\
-																			\n\
-	}else{														\n\
-		vec2 size = position.xy - vec2(400, 300);			\n\
-		size /= vec2(400, 300);									\n\
-		gl_Position = vec4(size, 0, 1);																\n\
-	}																		\n\
-						\n\
-	outUV = UV;			\n\
+	if (useUI == 0) {																\n\
+		gl_Position = mvp * vec4(position, 1.0);                                    \n\
+	}else{																			\n\
+		vec2 size = position.xy - vec2(400, 300);									\n\
+		size /= vec2(400, 300);														\n\
+		gl_Position = vec4(size, 0, 1);												\n\
+	}																				\n\
+																					\n\
+	outUV = UV;																		\n\
 }";
-
-
 
 static const char* fragmentShaderCode = "                                           \n\
 #version 120                                                                        \n\
@@ -39,15 +37,9 @@ varying vec2 outUV;						                                            \n\
 uniform vec4 color;                                                                 \n\
 uniform sampler2D sampler;														    \n\
 uniform int useTexture;                                                             \n\
-//uniform int useUI;																					\n\
 																					\n\
 void main() {                                                                       \n\
-	//if (useUI > 0) {	\n\
-		gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
-	//} \n\
-	//else {\n\
-		//gl_FragColor = 						\n\
-	//}\n\
+	gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
 }";
 
 // TODO: once there's an actual 3d model, md2, md3 or whatever
@@ -55,7 +47,6 @@ void main() {                                                                   
 // but for now this is my primitive
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
-
 
 class Cuboid : public BoundingBox, public Movable {
 	protected:
@@ -98,7 +89,5 @@ class Cuboid : public BoundingBox, public Movable {
 
 		void draw();
 };
-
-
 
 #endif

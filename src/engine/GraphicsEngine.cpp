@@ -126,10 +126,75 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 	return texture;
 }
 
+// TODO: drawSDLSurface
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
+	if (nullptr == surface)
+		return;
+
+	Dimension2i size = getWindowSize();
+	float w = (float)size.w, h = (float)size.h;
+
+	if (x > w || y > h)
+		return;
+
+	GLuint textureVBO;
+	glGenBuffers(1, &textureVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, textureVBO);
+
+	GLuint textureID = createGLTextureFromSurface(surface);
+
+	// need to depend on screen size
+	GLfloat textureVertexData[] = {
+		x,				h - y + surface->h, 0, 1,
+		x,				h - y,				0, 0,
+		x + surface->w, h - y + surface->h,	0.99f, 1,
+
+		x,				h - y,				0, 0,
+		x + surface->w, h - y,				0.99f, 0,
+		x + surface->w, h - y + surface->h,	0.99f, 1
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureVertexData), textureVertexData, GL_STATIC_DRAW);
+
+	/*glUseProgram(shaderProgram);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glUniform1i(useTextureLocation, 1);
+
+	glUniform1i(useUI, 1);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);	// x,y,z, repeat every 5 values
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (const GLvoid*)(2 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);	/// cuboid 12*3
+
+	glDisable(GL_BLEND);
+
+	// unbind everything
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+
+	glUseProgram(0);*/
+}
+
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {
 	SDL_SetWindowSize(window, w, h);
 	Camera::instance->cameraPerspective.width = w * 1.0f;
 	Camera::instance->cameraPerspective.width = h * 1.0f;
+}
+
+Dimension2i GraphicsEngine::getWindowSize() {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	return Dimension2i(w, h);
 }
 
 void GraphicsEngine::setFrameStart() {

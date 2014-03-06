@@ -414,6 +414,13 @@ struct Rectangle2 {
 
 typedef Rectangle2 Rect;
 
+struct Dimension2i {
+	int w, h;
+
+	Dimension2i() : w(0), h(0) {}
+	Dimension2i(int w, int h) : w(w), h(h) {}
+};
+
 /**
 * @return
 *			a random integer value between "min" and "max", both inclusive

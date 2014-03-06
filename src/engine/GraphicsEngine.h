@@ -107,11 +107,27 @@ class GraphicsEngine {
 		GLuint createGLTextureFromText(std::string text, SDL_Color textColor);
 
 		void clearScreen();
+
+		/**
+		* Call this method after you have finished drawing
+		*/
 		void showScreen();
+		
+		/**
+		* Draws SDL_Surface on screen starting at x, y (NOT FINISHED)
+		*
+		* Provides similar functionality to <em>deprecated</em> glOrtho in that
+		* it draws in a 2D screen space
+		*
+		* @pre-condition: surface must be valid, i.e. != nullptr
+		*/
+		void drawSDLSurface(SDL_Surface * surf, int x, int y);
 
 		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);
 		void setWindowTitle(const char *title);
+
+		Dimension2i getWindowSize();
 
 		void setFrameStart();
 		void adjustFPSDelay(const Uint32 &);

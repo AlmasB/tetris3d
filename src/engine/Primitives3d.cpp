@@ -76,8 +76,8 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _col
 	glUseProgram(0);
 }
 
-Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textureID)
-: BoundingBox(_center, x, y, z), textureID(_textureID), transformer(_center), color(SDL_COLOR_GRAY), originalColor(SDL_COLOR_GRAY) {
+Cuboid::Cuboid(const Point3f &_center, float _x, float _y, float _z, GLuint _textureID)
+: BoundingBox(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(SDL_COLOR_GRAY), originalColor(SDL_COLOR_GRAY) {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -143,10 +143,10 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 	glBindBuffer(GL_ARRAY_BUFFER, testVBO);
 
 	//float x = 0, y = 0;
-	float len = 200.0f;
-
+	float w = 800.0f, h = 600.0f;
+	float x = 800.0f - 128.0f, y = 472.0f;
 	// need to depend on screen size
-	GLfloat test[] = {
+	/*GLfloat test[] = {
 		0, 0, 0, 1,
 		0, len, 0, 0,
 		len, 0, 0.9f, 1,
@@ -155,7 +155,17 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, GLuint _textur
 		len, len, 0.9f, 0,
 		len, 0, 0.9f, 1
 	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(test), test, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(test), test, GL_STATIC_DRAW);*/
+	GLfloat textureVertexData[] = {
+		x, h - y - 128, 0, 1,
+		x, h - y, 0, 0,
+		x + 128, h - y - 128, 0.99f, 1,
+
+		x, h - y, 0, 0,
+		x + 128, h - y, 0.99f, 0,
+		x + 128, h - y - 128, 0.99f, 1
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureVertexData), textureVertexData, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -207,8 +217,8 @@ void Cuboid::draw() {
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (const GLvoid*)(2 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	}
 	else {
