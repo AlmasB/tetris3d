@@ -1,8 +1,11 @@
 #include "Primitives3d.h"
 
 // TODO: use delegating constructors
-Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _color)
-: BoundingBox(_center, x, y, z), color(_color), originalColor(_color), textureID(0), transformer(_center) {
+Cuboid::Cuboid(const Point3f & center, float x, float y, float z, SDL_Color color)
+: Cuboid(center, x, y, z, color, 0) {}
+
+Cuboid::Cuboid(const Point3f &_center, float _x, float _y, float _z, SDL_Color color, GLuint _textureID)
+: PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(color), originalColor(color) {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -13,129 +16,52 @@ Cuboid::Cuboid(const Point3f &_center, float x, float y, float z, SDL_Color _col
 		// UVs are much easier to use in this state rather than indices
 
 		// bottom
-		-_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
+		-hlX, -hlY, -hlZ, 0.0f, 0.0f,
+		hlX, -hlY, -hlZ, 1.0f, 0.0f,
+		-hlX, -hlY, hlZ, 0.0f, 1.0f,
+		hlX, -hlY, -hlZ, 1.0f, 0.0f,
+		hlX, -hlY, hlZ, 1.0f, 1.0f,
+		-hlX, -hlY, hlZ, 0.0f, 1.0f,
 
 		// top
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
+		-hlX, hlY, -hlZ, 0.0f, 1.0f,
+		-hlX, hlY, hlZ, 0.0f, 0.0f,
+		hlX, hlY, -hlZ, 1.0f, 1.0f,
+		hlX, hlY, -hlZ, 1.0f, 1.0f,
+		-hlX, hlY, hlZ, 0.0f, 0.0f,
+		hlX, hlY, hlZ, 1.0f, 0.0f,
 
 		// back
-		-_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
+		-hlX, -hlY, hlZ, 1.0f, 1.0f,
+		hlX, -hlY, hlZ, 0.0f, 1.0f,
+		-hlX, hlY, hlZ, 1.0f, 0.0f,
+		hlX, -hlY, hlZ, 0.0f, 1.0f,
+		hlX, hlY, hlZ, 0.0f, 0.0f,
+		-hlX, hlY, hlZ, 1.0f, 0.0f,
 
 		// front
-		-_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
+		-hlX, -hlY, -hlZ, 0.0f, 1.0f,
+		-hlX, hlY, -hlZ, 0.0f, 0.0f,
+		hlX, -hlY, -hlZ, 1.0f, 1.0f,
+		hlX, -hlY, -hlZ, 1.0f, 1.0f,
+		-hlX, hlY, -hlZ, 0.0f, 0.0f,
+		hlX, hlY, -hlZ, 1.0f, 0.0f,
 
 		// left
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		-_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
+		-hlX, -hlY, hlZ, 0.0f, 1.0f,
+		-hlX, hlY, -hlZ, 1.0f, 0.0f,
+		-hlX, -hlY, -hlZ, 1.0f, 1.0f,
+		-hlX, -hlY, hlZ, 0.0f, 1.0f,
+		-hlX, hlY, hlZ, 0.0f, 0.0f,
+		-hlX, hlY, -hlZ, 1.0f, 0.0f,
 
 		// right
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f
-	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
-
-	glUseProgram(shaderProgram);
-
-	mvpLocation = glGetUniformLocation(shaderProgram, "mvp");
-	colorLocation = glGetUniformLocation(shaderProgram, "color");
-	textureIDLocation = glGetUniformLocation(shaderProgram, "sampler");
-	useTextureLocation = glGetUniformLocation(shaderProgram, "useTexture");
-
-	useUI = glGetUniformLocation(shaderProgram, "useUI");
-
-	glUseProgram(0);
-}
-
-Cuboid::Cuboid(const Point3f &_center, float _x, float _y, float _z, GLuint _textureID)
-: BoundingBox(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(SDL_COLOR_GRAY), originalColor(SDL_COLOR_GRAY) {
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	GLfloat vertexData[] = {
-		//  X     Y     Z       U     V
-		// UV are remapped, so loads image texture as it is
-		// UVs are much easier to use in this state rather than indices
-
-		// bottom
-		-_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-
-		// top
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
-
-		// back
-		-_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f,
-
-		// front
-		-_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
-
-		// left
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
-		-_halfDistX, -_halfDistY, -_halfDistZ, 1.0f, 1.0f,
-		-_halfDistX, -_halfDistY, _halfDistZ, 0.0f, 1.0f,
-		-_halfDistX, _halfDistY, _halfDistZ, 0.0f, 0.0f,
-		-_halfDistX, _halfDistY, -_halfDistZ, 1.0f, 0.0f,
-
-		// right
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, -_halfDistY, -_halfDistZ, 0.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, -_halfDistY, _halfDistZ, 1.0f, 1.0f,
-		_halfDistX, _halfDistY, -_halfDistZ, 0.0f, 0.0f,
-		_halfDistX, _halfDistY, _halfDistZ, 1.0f, 0.0f
+		hlX, -hlY, hlZ, 1.0f, 1.0f,
+		hlX, -hlY, -hlZ, 0.0f, 1.0f,
+		hlX, hlY, -hlZ, 0.0f, 0.0f,
+		hlX, -hlY, hlZ, 1.0f, 1.0f,
+		hlX, hlY, -hlZ, 0.0f, 0.0f,
+		hlX, hlY, hlZ, 1.0f, 0.0f
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
@@ -213,7 +139,7 @@ void Cuboid::setTexture(GLuint texture) {
 	textureID = texture;
 }
 
-// TODO: since object size is now different we need to adapt bbox to it
+// TODO: since object size is now different we need to adapt phys obj to it
 void Cuboid::scale(float x, float y, float z) {
 	transformer.scale += Vector3f(x, y, z);
 }
@@ -252,18 +178,5 @@ void Cuboid::move(const Vector3f & v) {
 }
 
 Point3f Cuboid::getCenter() {
-	return BoundingBox::getCenter();
+	return PhysicsObject::getCenter();
 }
-
-/*bool Plane::collidesWith(const BoundingBox & box) {
-	Rect plane = { (int)(center.x - halfDistX.x), (int)(center.z - halfDistZ.z), (int)(2 * halfDistX.x), (int)(2 * halfDistZ.z) };
-	Point2 p = { (int)box.getCenter().x, (int)box.getCenter().z };*/
-
-	// further check the whole plane around center point
-
-	/*return center.y > box.getCenter().y - box.getHalfDistY() - 0.05
-	&& center.y < box.getCenter().y - box.getHalfDistY() + 0.05
-	&& plane.contains(p);*/
-	// TODO: do something else ?
-	/*return box.getCenter().y - box.getHalfDistY() >= 0 && box.getCenter().y - box.getHalfDistY() <= 0.01 && plane.contains(p);
-}*/

@@ -56,7 +56,7 @@ bool Game::init() {
 	camera->follow(player);
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
-	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, 0);
+	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0.5f, 0.5f, 0);
 	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
@@ -168,7 +168,7 @@ void Game::update() {
 		nextStep();
 	}
 
-	if (currentCutScene != CutScene::LEVEL_END && player->collidesWith(*prize)) {	// player reached prize aka end of level
+	if (currentCutScene != CutScene::LEVEL_END && player->isColliding(*prize)) {	// player reached prize aka end of level
 		player->addScore(__SCORE_PER_LEVEL);
 		currentCutScene = CutScene::LEVEL_END;
 	}
@@ -277,12 +277,12 @@ void Game::onPrimaryAction() {
 	if (nullptr != selected)
 		return;
 
-	bullet->setCenter(player->getCenter());
+	bullet->setCenter(camera->getCenter());
 
-	while (nullptr == selected && distanceBetween(player->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
+	while (nullptr == selected && distanceBetween(camera->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
 		for (auto block : extraBlocks) {
-			if (bullet->collidesWith(*block)) {
+			if (bullet->isColliding(*block)) {
 				block->setLocked(true);
 				selected = block;
 				break;

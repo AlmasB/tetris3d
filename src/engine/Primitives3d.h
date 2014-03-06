@@ -1,9 +1,7 @@
 #ifndef __PRIMITIVES_H__
 #define __PRIMITIVES_H__
 
-
-
-#include "BoundingBox.h"
+#include "PhysicsEngine.h"
 #include "Movable.h"
 #include "GraphicsEngine.h"
 
@@ -48,7 +46,7 @@ void main() {                                                                   
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
 
-class Cuboid : public BoundingBox, public Movable {
+class Cuboid : public PhysicsObject, public Movable {
 	protected:
 		GLuint shaderProgram;
 
@@ -69,7 +67,7 @@ class Cuboid : public BoundingBox, public Movable {
 		GLuint createBuffer(GLenum, const void *, GLsizei);
 	public:
 		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color);
-		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, GLuint textureID);
+		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color, GLuint textureID = 0);
 
 		void setColor(SDL_Color color);
 		void resetColor();

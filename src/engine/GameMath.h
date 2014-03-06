@@ -414,6 +414,27 @@ struct Rectangle2 {
 
 typedef Rectangle2 Rect;
 
+struct Rectangle2f {
+	float x, y, w, h;
+
+	inline bool contains(const Point2 & p) {
+		return p.x >= x && p.x <= x + w
+			&& p.y >= y && p.y <= y + h;
+	}
+
+	inline bool intersects(const Rectangle2f & other) {
+		if (x + w < other.x || x > other.x + other.w)
+			return false;
+
+		if (y + h < other.y || y > other.y + other.h)
+			return false;
+
+		return true;
+	}
+};
+
+typedef Rectangle2f Rectf;
+
 struct Dimension2i {
 	int w, h;
 
