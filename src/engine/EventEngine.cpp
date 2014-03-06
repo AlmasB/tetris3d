@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
+EventEngine::EventEngine() : running(true), androidCtrlEnabled(true) {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
@@ -78,6 +78,9 @@ void EventEngine::runConnThread() {
 				keys[Key::S] = ('S' == c && !keys[Key::S]);
 				keys[Key::A] = ('A' == c && !keys[Key::A]);
 				keys[Key::D] = ('D' == c && !keys[Key::D]);
+				keys[Key::LEFT]  = ('L' == c && !keys[Key::LEFT]);
+				keys[Key::RIGHT] = ('R' == c && !keys[Key::RIGHT]);
+
 
 				if ('N' == c) {
 					for (int i = 0; i < Key::LAST; ++i)
