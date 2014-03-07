@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true), androidCtrlEnabled(true) {
+EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
 	for (uint i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
@@ -65,7 +65,7 @@ void EventEngine::runConnThread() {
 		else {
 			remoteip = SDLNet_TCP_GetPeerAddress(client);	// TODO: do init once and redo on connection lost
 			ipaddr = SDL_SwapBE32(remoteip->host);
-			len = SDLNet_TCP_Recv(client, message, 1024);	// doesn' return until catches a tcp packet
+			len = SDLNet_TCP_Recv(client, message, 1024);	// doesn't return until catches a tcp packet
 
 #ifdef __DEBUG
 			std::cout << "Received: " << len << " bytes" << std::endl;
