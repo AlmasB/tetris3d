@@ -1,7 +1,7 @@
 #ifndef __GAME_OBJ_H__
 #define __GAME_OBJ_H__
 
-#include "engine/Primitives3d.h"
+#include "../engine/graphics/Primitives3d.h"
 
 class GameObject : public Cuboid {
 	private:

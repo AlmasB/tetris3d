@@ -6,10 +6,7 @@
 #include <utility>
 #include <memory>
 
-#include "engine/GameMath.h"
-#include "engine/Debug.h"
-
-#define _NL "\n"
+#include "../engine/core/Debug.h"
 
 #define __MAX_LEVELS 5
 #define __DEFAULT_HEIGHT 3
@@ -400,14 +397,14 @@ class Level {
 		static std::list<std::shared_ptr<Level>> levels;
 		Level(int, int, int, int, const std::string[]);
 		static void createLevels();
-		static uint numberOfLevels;
+		static int numberOfLevels;
 	public:
 		~Level();
 		int number, width, height, length;
 		bool ** data;
 
 		static std::shared_ptr<Level> getNext();
-		static uint getNumberOfLevels();
+		static int getNumberOfLevels();
 };
 
 #endif

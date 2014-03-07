@@ -5,9 +5,10 @@
 #include <vector>
 #include <memory>
 
-#include "GraphicsEngine.h"
-#include "EventEngine.h"
+#include "../graphics/GraphicsEngine.h"
+#include "../input/EventEngine.h"
 #include "ResourceManager.h"
+#include "Timer.h"
 
 #define __ENGINE_VERSION_MAJOR 0
 #define __ENGINE_VERSION_MINOR 1
@@ -31,8 +32,8 @@ class GameEngine {
 		* @post-condition it will be safe to use any lib related calls
 		*/
 		bool init(std::vector<std::string> resources);
-		std::shared_ptr<GraphicsEngine> getGraphicsEngine();
-		std::shared_ptr<EventEngine> getEventEngine();
+		std::shared_ptr<GraphicsEngine> getGraphicsEngine() { return gfxInstance; }
+		std::shared_ptr<EventEngine> getEventEngine() {	return eventInstance; }
 };
 
 

@@ -18,11 +18,8 @@ GLuint ShaderManager::createShader(const char * shaderCode, GLenum shaderType) {
 		// exit ?
 	}
 
-	const GLchar* strings[1];	// shader code strings
-	strings[0] = shaderCode;
-
-	GLint lengths[1];			// shader code lengths
-	lengths[0] = strlen(shaderCode);
+	const GLchar* strings[] = { shaderCode };	// shader code strings
+	GLint lengths[] = { strlen(shaderCode) };	// shader code string length
 
 	glShaderSource(shader, 1, strings, lengths);
 	glCompileShader(shader);
@@ -32,9 +29,7 @@ GLuint ShaderManager::createShader(const char * shaderCode, GLenum shaderType) {
 	if (!ok) {
 		GLchar infoLog[1024];
 		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-
-		std::cout << "Failed to compile shader" << std::endl;
-		std::cout << infoLog << std::endl;
+		std::cout << "Failed to compile shader: " << infoLog << std::endl;
 		getchar();
 		// exit ?
 	}
@@ -46,7 +41,6 @@ GLuint ShaderManager::createProgram(const char * vertexShaderCode, const char * 
 	std::string key = std::string(vertexShaderCode) + std::string(fragmentShaderCode);
 	if (shaderPrograms.count(key) > 0)
 		return shaderPrograms[key];
-
 
 	GLuint program = glCreateProgram();
 	if (0 == program) {

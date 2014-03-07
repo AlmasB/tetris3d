@@ -72,11 +72,3 @@ bool GameEngine::init(std::vector<std::string> resources) {
 
 	return _ENGINE_ERROR_NONE;
 }
-
-std::shared_ptr<GraphicsEngine> GameEngine::getGraphicsEngine() {
-	return gfxInstance;
-}
-
-std::shared_ptr<EventEngine> GameEngine::getEventEngine() {
-	return eventInstance;
-}

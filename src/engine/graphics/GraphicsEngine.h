@@ -11,7 +11,7 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 
-#include "EngineCommon.h"
+#include "../core/EngineCommon.h"
 #include "Movable.h"
 
 #include "ShaderManager.h"

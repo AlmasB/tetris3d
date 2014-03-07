@@ -1,7 +1,7 @@
 #include "Level.h"
 
 std::list<std::shared_ptr<Level>> Level::levels;
-uint Level::numberOfLevels;
+int Level::numberOfLevels;
 
 Level::Level(int value, int w, int h, int l, const std::string levelData[]) : number(value), width(w), height(h), length(l) {
 	data = new bool* [width];
@@ -46,7 +46,7 @@ std::shared_ptr<Level> Level::getNext() {
 }
 
 //TODO: maybe count levels, certainly don't return that
-uint Level::getNumberOfLevels() {
+int Level::getNumberOfLevels() {
 	return numberOfLevels;
 }
 

@@ -7,8 +7,8 @@
 #include <SDL.h>
 #include <SDL_net.h>
 
-#include "EngineCommon.h"
-#include "GameMath.h"
+#include "../core/EngineCommon.h"
+#include "../math/GameMath.h"
 
 enum Key {
 	W, S, A, D, ESC, SPACE, UP, DOWN, LEFT, RIGHT, LAST

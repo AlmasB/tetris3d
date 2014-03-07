@@ -4,8 +4,8 @@
 #include <string>
 #include <fstream>
 
-#include "GameMath.h"
-#include "Debug.h"
+#include "../math/GameMath.h"
+#include "../core/Debug.h"
 
 /*
  MD3 Header info from

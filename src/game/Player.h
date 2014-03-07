@@ -5,15 +5,13 @@
 
 class Player : public GameObject {
 	private:
-		uint score, lives;
+		int score, lives;
 	public:
 		Player(const Point3f & center);
-		void addScore(uint);
+		void addScore(int);
 		void addLives(int);
-		uint getScore();
-		uint getLives();
+		int getScore() { return score; }
+		int getLives() { return lives; }
 };
-
-
 
 #endif

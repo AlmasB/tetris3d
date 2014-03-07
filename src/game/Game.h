@@ -6,9 +6,8 @@
 #include <list>
 #include <memory>
 
-#include "engine/GameEngine.h"
+#include "../engine/core/GameEngine.h"
 #include "Player.h"
-#include "engine/Timer.h"
 #include "Level.h"
 
 #define _RES_TEX_BRICK "res/brick.png"

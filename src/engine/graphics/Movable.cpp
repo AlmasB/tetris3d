@@ -18,26 +18,6 @@ Movable::Movable() : sensitivity(0.05f), speed(0.15f) {
 	verAngle = -toDegree(asin(direction.y));
 }
 
-void Movable::setSensitivity(float val) {
-	sensitivity = val;
-}
-
-void Movable::setDirection(const Vector3f & dir) {
-	direction = dir;
-}
-
-void Movable::setUpVector(const Vector3f & _up) {
-	up = _up;
-}
-
-Vector3f Movable::getDirection() {
-	return direction;
-}
-
-Vector3f Movable::getUpVector() {
-	return up;
-}
-
 void Movable::adjustDirection() {
 	const Vector3f vAxis(0.0f, 1.0f, 0.0f);
 
@@ -112,14 +92,6 @@ void Movable::lookRight(float degrees) {
 
 void Movable::lookAt(const Point3f &point) {
 	direction = point - getCenter();
-}
-
-float Movable::getHorAngle() {
-	return horAngle;
-}
-
-float Movable::getVerAngle() {
-	return verAngle;
 }
 
 #ifdef __DEBUG

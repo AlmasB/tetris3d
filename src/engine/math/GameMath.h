@@ -20,6 +20,8 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
+// TODO: rewrite math lib in GLSL, for better performance?
+
 #ifndef __GAME_MATH_H__
 #define __GAME_MATH_H__
 

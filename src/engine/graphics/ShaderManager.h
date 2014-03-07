@@ -6,7 +6,7 @@
 
 #include <GL/glew.h>
 
-#include "Debug.h"
+#include "../core/Debug.h"
 
 class ShaderManager {
 	private:

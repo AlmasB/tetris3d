@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-#include "GraphicsEngine.h"
+#include "../graphics/GraphicsEngine.h"
 
 class ResourceManager {
 	private:
@@ -13,6 +13,9 @@ class ResourceManager {
 	public:
 		/**
 		* Loads all resources into several maps (cache)
+		* to make the program run smoother
+		*
+		* @param fileNames - vector containing names to resource files
 		*
 		* The resources can be retrieved with an appropriate call to get*
 		*/

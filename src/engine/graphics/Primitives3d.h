@@ -1,7 +1,7 @@
 #ifndef __PRIMITIVES_H__
 #define __PRIMITIVES_H__
 
-#include "PhysicsEngine.h"
+#include "../physics/PhysicsEngine.h"
 #include "Movable.h"
 #include "GraphicsEngine.h"
 
