@@ -40,6 +40,7 @@ class Game {
 	private:
 		/* ENGINE OBJECTS */
 		shared_ptr<GraphicsEngine> gfx;
+		shared_ptr<AudioEngine> sfx;
 		shared_ptr<EventEngine> eventSystem;
 		shared_ptr<Camera> camera;
 

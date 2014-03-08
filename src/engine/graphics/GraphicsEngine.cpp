@@ -20,9 +20,6 @@ GraphicsEngine::~GraphicsEngine() {
 }
 
 std::string GraphicsEngine::init() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return "Failed to init SDL: " + std::string(SDL_GetError());
-
 	window = SDL_CreateWindow(_ENGINE_TITLE,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
@@ -126,6 +123,7 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 	return texture;
 }
 
+// TODO: calculate higher power of two and use that instead of 128
 void GraphicsEngine::drawText(std::string text, SDL_Color color, int x, int y) {
 	// blend is supposed to be much nicer when no need for fast swapping
 	// we ARE fast swapping now, should we change to different?
@@ -180,10 +178,10 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y, int tex
 	glUniform1i(useUI, 1);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);	// x,y,z, repeat every 5 values
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);	// x,y repeat every 4 values
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (const GLvoid*)(2 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (const GLvoid*)(2 * sizeof(GLfloat)));	// u,v start at 2, repeat 4
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -215,7 +213,7 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {
 	SDL_SetWindowSize(window, w, h);
 	Camera::instance->cameraPerspective.width = w * 1.0f;
-	Camera::instance->cameraPerspective.width = h * 1.0f;
+	Camera::instance->cameraPerspective.height = h * 1.0f;
 }
 
 Dimension2i GraphicsEngine::getWindowSize() {

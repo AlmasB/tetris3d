@@ -19,7 +19,7 @@ int main(int argc, char * args[]) {
 	getchar();
 #endif
 
-	
+
 
 	/*MD3Loader loader;
 

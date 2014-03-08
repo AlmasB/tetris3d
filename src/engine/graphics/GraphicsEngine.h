@@ -85,14 +85,11 @@ class GraphicsEngine {
 
 		
 		GraphicsEngine();
-
+		void initGL();
 	public:
 		
 		~GraphicsEngine();
 		std::string init();
-		void initGL();
-
-		SDL_Surface * surfaceUI;
 
 		/**
 		* Creates a GL 2D texture from SDL_Surface* and returns its id
@@ -138,6 +135,8 @@ class GraphicsEngine {
 		Uint32 getAverageFPS();
 
 		std::shared_ptr<Camera> getCamera();
+
+		
 };
 
 typedef GraphicsEngine GFX;

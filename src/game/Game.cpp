@@ -30,6 +30,8 @@ bool Game::init() {
 	resources.push_back("res/crosshair.png");
 	resources.push_back(_RES_FONT);
 
+	resources.push_back("res/audio/clong.wav");
+
 	//resources.push_back(_RES_TEX_WALL);
 	//resources.push_back(_RES_TEX_DOORUP);
 	//resources.push_back(_RES_TEX_DOORDOWN);
@@ -39,6 +41,7 @@ bool Game::init() {
 		return false;
 
 	gfx = engine->getGraphicsEngine();
+	sfx = engine->getAudioEngine();
 	eventSystem = engine->getEventEngine();
 	camera = gfx->getCamera();
 
@@ -197,6 +200,8 @@ void Game::render() {
 	crosshair->draw();
 
 	gfx->drawText(to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);
+	gfx->drawText(to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);
+
 	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
 	gfx->drawSDLSurface(cross, 800/2 - 15, 600/2 - 15, 30, 30);
 
@@ -313,6 +318,7 @@ void Game::buildBlock() {
 			selected = nullptr;
 
 			player->addScore(__SCORE_PER_BLOCK);
+			sfx->playSound(ResourceManager::getSound("res/audio/clong.wav"));
 			return;
 		}
 		++it;

@@ -40,6 +40,15 @@ bool GameEngine::init(std::vector<std::string> resources) {
 	#endif
 #endif
 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+		std::cout << "Failed to init SDL Video/Audio: " << SDL_GetError() << std::endl;
+		return false;
+	}
+
+#ifdef __DEBUG
+	debug("SDL_Init() successful");
+#endif
+
 	std::string error;
 	gfxInstance = std::shared_ptr<GraphicsEngine>(new GraphicsEngine());
 	if ((error = gfxInstance->init()) != _ENGINE_ERROR_NONE) {
@@ -49,6 +58,16 @@ bool GameEngine::init(std::vector<std::string> resources) {
 
 #ifdef __DEBUG
 	debug("GraphicsEngine::init() successful");
+#endif
+
+	audioInstance = std::shared_ptr<AudioEngine>(new AudioEngine());
+	if ((error = audioInstance->init()) != _ENGINE_ERROR_NONE) {
+		std::cout << error << std::endl;
+		return false;
+	}
+
+#ifdef __DEBUG
+	debug("AudioEngine::init() successful");
 #endif
 
 	eventInstance = std::shared_ptr<EventEngine>(new EventEngine());

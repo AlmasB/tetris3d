@@ -2,23 +2,23 @@
 
 std::map<std::string, GLuint> ResourceManager::textures;
 std::map<std::string, TTF_Font *> ResourceManager::fonts;
-
-/**
-* @return true if param "str" contains param "sequence" chars, false otherwise 
-*/
-bool stringContains(const std::string & str, const char * sequence) {
-	return -1 != str.find(sequence);
-}
+std::map<std::string, Mix_Chunk *> ResourceManager::sounds;
 
 std::string ResourceManager::loadResources(std::vector<std::string> fileNames) {
 	for (auto file : fileNames) {
-		if (stringContains(file, ".ttf")) {
+		if (file.find(".ttf") != -1) {
 			TTF_Font * font = TTF_OpenFont(file.c_str(), 36);	// hardcode font size ?
 			if (nullptr == font)
 				return "Failed to load font: " + file + std::string(TTF_GetError());
 			fonts[file] = font;
 		}
-		else if (stringContains(file, ".png")) {
+		else if (file.find("wav") != -1) {
+			Mix_Chunk * sound = Mix_LoadWAV(file.c_str());
+			if (nullptr == sound)
+				return "Failed to load sound: " + file + " " + std::string(Mix_GetError());
+			sounds[file] = sound;
+		}
+		else if (file.find(".png") != -1) {
 			SDL_Surface * surf = IMG_Load(file.c_str());
 			if (nullptr == surf)
 				return "Failed to load image: " + file + " " + std::string(IMG_GetError());
@@ -38,11 +38,35 @@ void ResourceManager::freeResources() {
 		if (pair.second) {
 			TTF_CloseFont(pair.second);
 #ifdef __DEBUG
-			debug("Font closed:");
+			debug("Font freed:");
 			debug(pair.first.c_str());
 #endif
 		}
 	}
+
+	for (auto pair : textures) {
+		if (pair.second) {
+			glDeleteTextures(1, &pair.second);
+		}
+	}
+
+#ifdef __DEBUG
+	debug("Textures deleted");
+#endif
+
+	for (auto pair : sounds) {
+		if (pair.second) {
+			Mix_FreeChunk(pair.second);
+#ifdef __DEBUG
+			debug("Sound freed:");
+			debug(pair.first.c_str());
+#endif
+		}
+	}
+
+#ifdef __DEBUG
+	debug("ResourceManager::freeResources() finished");
+#endif
 }
 
 GLuint ResourceManager::getTextureID(std::string fileName) {
@@ -51,4 +75,8 @@ GLuint ResourceManager::getTextureID(std::string fileName) {
 
 TTF_Font * ResourceManager::getFont(std::string fileName) {
 	return fonts[fileName];
+}
+
+Mix_Chunk * ResourceManager::getSound(std::string fileName) {
+	return sounds[fileName];
 }

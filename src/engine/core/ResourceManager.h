@@ -5,10 +5,12 @@
 #include <vector>
 
 #include "../graphics/GraphicsEngine.h"
+#include "../audio/AudioEngine.h"
 
 class ResourceManager {
 	private:
 		static std::map<std::string, GLuint> textures;
+		static std::map<std::string, Mix_Chunk *> sounds;
 		static std::map<std::string, TTF_Font *> fonts;
 	public:
 		/**
@@ -25,6 +27,7 @@ class ResourceManager {
 
 		static GLuint getTextureID(std::string fileName);
 		static TTF_Font * getFont(std::string fileName);
+		static Mix_Chunk * getSound(std::string fileName);
 };
 
 #endif
