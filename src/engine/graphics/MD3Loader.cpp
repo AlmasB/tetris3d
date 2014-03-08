@@ -26,7 +26,34 @@ void MD3Loader::loadModel(std::string fileName) {
 		std::cout << header.offsetEOF << std::endl;
 		std::cout << header.flags << std::endl;
 
+
+		int offsetSurfaces = header.offsetSurfaces;
+		std::cout << "offset surf " << offsetSurfaces << std::endl;
+
+		Surface * surfaces = new Surface[header.numSurfaces];
+		for (int i = 0; i < header.numSurfaces; ++i) {
+			file.seekg(offsetSurfaces, std::ios::beg);
+			file.read((char *)&surfaces[i], sizeof(Surface));
+
+
+			offsetSurfaces += surfaces[i].offsetEnd;
+			std::cout << "offset surf " << offsetSurfaces << std::endl;
+		}
+
+
+		
+
+		for (int i = 0; i < header.numSurfaces; ++i) {
+			std::cout << surfaces[i].ident << std::endl;
+			std::cout << surfaces[i].name << std::endl;
+			std::cout << surfaces[i].numTriangles << std::endl;
+			std::cout << surfaces[i].numVertices << std::endl;
+			std::cout << "end offset: " << surfaces[i].offsetEnd << std::endl;
+		}
+
+
 		file.close();
+		delete surfaces;
 	}
 	else {
 		std::cout << "Failed to open file: " << fileName << std::endl;

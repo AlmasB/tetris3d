@@ -46,6 +46,7 @@ struct Tag {
 struct Surface {
 	int ident;
 	unsigned char name[64];
+	int flags;
 	int numFrames;
 	int numShaders;
 	int numVertices;
