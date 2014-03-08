@@ -33,7 +33,7 @@ static const uint GAME_FPS_DELAY_MSEC = __SECOND / __APP_FPS;
 static const float GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
 enum CutScene {
-	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN, GAME_LOSE
+	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN
 };
 
 class Game {
@@ -171,7 +171,6 @@ class Game {
 		void playCutSceneLevelEnd();
 		void playCutScenePlayerDeath();
 		void playCutSceneGameWin();
-		void playCutSceneGameLose();
 		void resetCutScene();
 
 		/* EVENTS & UPDATES */

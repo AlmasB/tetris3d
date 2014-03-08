@@ -89,6 +89,7 @@ void Game::runMainLoop() {
 
 		if (currentCutScene == CutScene::NONE) {
 			handleAllEvents();
+			update();
 		}
 		else {
 			if (eventSystem->isPressed(Key::ESC))	// debug escape
@@ -96,7 +97,7 @@ void Game::runMainLoop() {
 			playCutScene();
 		}
 
-		update();
+		camera->updateView();
 		render();
 
 		gfx->adjustFPSDelay(GAME_FPS_DELAY_MSEC);
@@ -145,23 +146,22 @@ void Game::update() {
 	}
 
 	// player - platform collision
-	if (CutScene::NONE == currentCutScene) {
-		bool death = true;
+	bool death = true;
 
-		for (auto plat : platforms) {
-			if (player->isColliding(*plat)) {
-				death = false;
-				break;
-			}
+	for (auto plat : platforms) {
+		if (player->isColliding(*plat)) {
+			death = false;
+			break;
 		}
-
-		if (death)
-			currentCutScene = CutScene::PLAYER_DEATH;
 	}
+
+	if (death)
+		currentCutScene = CutScene::PLAYER_DEATH;
+	
 
 	buildBlock();
 
-	if (CutScene::NONE == currentCutScene && worldTimer.getElapsed() >= 5 * __SECOND) {
+	if (worldTimer.getElapsed() >= 5 * __SECOND) {
 		killPlatforms();
 		worldTimer.measure();
 	}
@@ -171,16 +171,13 @@ void Game::update() {
 		nextStep();
 	}
 
-	if (currentCutScene != CutScene::LEVEL_END && player->isColliding(*prize)) {	// player reached prize aka end of level
+	if (player->isColliding(*prize)) {	// player reached prize aka end of level
 		player->addScore(__SCORE_PER_LEVEL);
 		currentCutScene = CutScene::LEVEL_END;
 	}
 
 	crosshair->setCenter(player->getCenter() + Vector3f(0, 1.0f, 0) + player->getDirection() * 2.0f);
 	crosshair->setRotate(player->getVerAngle(), -player->getHorAngle(), -player->getVerAngle());
-
-	// after updating positions of objects, update camera last
-	camera->updateView();
 }
 
 void Game::render() {
@@ -265,21 +262,15 @@ void Game::handlePlayerMovement() {
 void Game::handleMouseEvents() {
 	Point2 pos = eventSystem->getMouseDPos();
 
-	// TODO: values need tweaking for greater experience
 	player->lookRight((float)pos.x);
 	player->lookUp((float)-pos.y);	// invert, because UP is negative in SDL
 
-	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
-		onPrimaryAction();
-	}
-
-	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) {
-		onSecondaryAction();
-	}
+	if (eventSystem->isPressed(Mouse::BTN_LEFT)) onPrimaryAction();
+	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) onSecondaryAction();
 }
 
 void Game::onPrimaryAction() {
-	if (nullptr != selected)
+	if (selected != nullptr)
 		return;
 
 	bullet->setCenter(camera->getCenter());
@@ -454,11 +445,7 @@ void Game::playCutScenePlayerDeath() {
 }
 
 void Game::playCutSceneGameWin() {
-
-}
-
-void Game::playCutSceneGameLose() {
-
+	// TODO: do something fancy here as player won the game
 }
 
 void Game::resetCutScene() {
