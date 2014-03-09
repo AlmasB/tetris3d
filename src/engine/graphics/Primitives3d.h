@@ -40,21 +40,18 @@ void main() {                                                                   
 	gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
 }";
 
-// TODO: once there's an actual 3d model, md2, md3 or whatever
-// most of the stuff will go to a Primitive class, of which cuboid will be just a subclass
-// but for now this is my primitive
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
 
-class Cuboid : public PhysicsObject, public Movable {
+class Primitive3d : public PhysicsObject, public Movable {
 	protected:
 		GLuint shaderProgram;
-
-		GLuint vbo;	// vertex buffer object
 		CameraTransformer transformer;
 
-		SDL_Color originalColor;
-		SDL_Color color;
+		GLuint vbo, ibo;	// vertices, indices
+
+		SDL_Color originalColor;	// TODO: color/texture might not be used at this level of abstraction
+		SDL_Color color;			// besides draw() = 0
 		GLuint colorLocation;
 
 		GLuint textureID;
@@ -65,10 +62,11 @@ class Cuboid : public PhysicsObject, public Movable {
 		GLuint useUI;	// TODO: rename
 
 		GLuint createBuffer(GLenum, const void *, GLsizei);
+
 	public:
-		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color);
-		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, GLuint textureID);
-		Cuboid(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color, GLuint textureID);
+		Primitive3d(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color);
+		Primitive3d(const Point3f &center, float lengthX, float lengthY, float lengthZ, GLuint textureID);
+		Primitive3d(const Point3f &center, float lengthX, float lengthY, float lengthZ, SDL_Color color, GLuint textureID);
 
 		void setColor(SDL_Color color);
 		void resetColor();
@@ -84,7 +82,22 @@ class Cuboid : public PhysicsObject, public Movable {
 		Point3f getCenter();
 		Vector3f getScale();
 
-		void draw();
+		virtual void draw() = 0;
+};
+
+class Cuboid : public Primitive3d {
+
+	public:
+		Cuboid(const Point3f & center, float x, float y, float z, SDL_Color color);
+		Cuboid(const Point3f & center, float x, float y, float z, GLuint textureID);
+		Cuboid(const Point3f & center, float lX, float lY, float lZ, SDL_Color color, GLuint textureID);
+		virtual void draw();
+};
+
+class Cube : public Cuboid {
+	public:
+		Cube(const Point3f & center, float size, SDL_Color color);
+		Cube(const Point3f & center, float size, GLuint textureID);
 };
 
 #endif

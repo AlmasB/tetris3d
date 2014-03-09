@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true) {
 }
 
 Game::~Game() {
@@ -68,6 +68,8 @@ bool Game::init() {
 	srand(SDL_GetTicks());	// should be on engine side
 
 	cross = IMG_Load("res/crosshair.png");
+
+	dummy = new MD3Object("res/upper.md3");
 
 	nextLevel();
 
@@ -146,18 +148,19 @@ void Game::update() {
 	}
 
 	// player - platform collision
-	bool death = true;
+	if (!god) {
+		bool death = true;
 
-	for (auto plat : platforms) {
-		if (player->isColliding(*plat)) {
-			death = false;
-			break;
+		for (auto plat : platforms) {
+			if (player->isColliding(*plat)) {
+				death = false;
+				break;
+			}
 		}
-	}
 
-	if (death)
-		currentCutScene = CutScene::PLAYER_DEATH;
-	
+		if (death)
+			currentCutScene = CutScene::PLAYER_DEATH;
+	}
 
 	buildBlock();
 
@@ -202,6 +205,11 @@ void Game::render() {
 	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
 	gfx->drawSDLSurface(cross, 800/2 - 15, 600/2 - 15, 30, 30);
 
+	if (dummy)
+		dummy->draw();
+	else
+		cout << "NO DUMMY" << endl;
+
 	gfx->showScreen();
 }
 
@@ -236,25 +244,25 @@ void Game::handlePlayerMovement() {
 
 	if (eventSystem->isPressed(Key::W)) {
 		player->moveForward();
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveBackward();
 	}
 
 	if (eventSystem->isPressed(Key::S)) {
 		player->moveBackward();
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveForward();
 	}
 
 	if (eventSystem->isPressed(Key::A)) {
 		player->moveLeft(0.15f);
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveRight(0.15f);
 	}
 
 	if (eventSystem->isPressed(Key::D)) {
 		player->moveRight(0.15f);
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveLeft(0.15f);
 	}
 }

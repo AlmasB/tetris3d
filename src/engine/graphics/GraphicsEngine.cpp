@@ -255,7 +255,7 @@ Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
 	cameraPerspective.width = (float) DEFAULT_WINDOW_WIDTH;
 	cameraPerspective.height = (float) DEFAULT_WINDOW_HEIGHT;
 	cameraPerspective.zNear = 1.0f;
-	cameraPerspective.zFar = 100.0f;
+	cameraPerspective.zFar = 1000.0f;
 }
 
 void Camera::follow(std::shared_ptr<Movable> objectToFollow) {

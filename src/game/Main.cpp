@@ -19,12 +19,7 @@ int main(int argc, char * args[]) {
 	getchar();
 #endif
 
-
-
-	/*MD3Loader loader;
-
-	loader.loadModel("res/upper.md3");
-	getchar();*/
+	
 
 	return 0;
 }
