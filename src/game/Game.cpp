@@ -244,25 +244,25 @@ void Game::handlePlayerMovement() {
 
 	if (eventSystem->isPressed(Key::W)) {
 		player->moveForward();
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveBackward();
 	}
 
 	if (eventSystem->isPressed(Key::S)) {
 		player->moveBackward();
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveForward();
 	}
 
 	if (eventSystem->isPressed(Key::A)) {
 		player->moveLeft(0.15f);
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveRight(0.15f);
 	}
 
 	if (eventSystem->isPressed(Key::D)) {
 		player->moveRight(0.15f);
-		if (player->getCenter().z > zLine)
+		if (player->getCenter().z > zLine && !god)
 			player->moveLeft(0.15f);
 	}
 }

@@ -1,7 +1,7 @@
 #include "MD3Object.h"
 
 MD3Object::MD3Object(std::string fileName)
-: Cuboid(Point3f(10, 0, 0), 5, 5, 5, 0) {
+: Cuboid(Point3f(-70, 0, 0), 5, 5, 5, 0) {
 
 	
 
