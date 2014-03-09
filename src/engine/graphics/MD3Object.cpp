@@ -1,34 +1,18 @@
 #include "MD3Object.h"
 
 MD3Object::MD3Object(std::string fileName)
-: Cuboid(Point3f(-70, 0, 0), 5, 5, 5, 0) {
-
-	
+: Primitive3d(Point3f(-70, 0, 0), 5, 5, 5, 0) {
 
 	MD3Loader loader;
 	loader.loadModel(fileName, vertices, indices, numVertices, numIndices);
 
+	vbo = createBuffer(GL_ARRAY_BUFFER, vertices, numVertices*sizeof(GLfloat));
+	ibo = createBuffer(GL_ELEMENT_ARRAY_BUFFER, indices, numIndices*sizeof(GLushort));	
+}
 
-	std::cout << "VERTICES::::" << std::endl;
-	for (int i = 0; i < numVertices; ++i) {
-		std::cout << vertices[i] << std::endl;
-	}
-
-
-
-
-	glGenBuffers(1, &vbo2);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &ibo2);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo2);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLushort), indices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	std::cout << "SIZE OF: VERT " << numVertices * sizeof(GLfloat) << "  " << numIndices * sizeof(GLushort) << std::endl;
+MD3Object::~MD3Object() {
+	delete vertices;
+	delete indices;
 }
 
 void MD3Object::draw() {
@@ -48,14 +32,12 @@ void MD3Object::draw() {
 
 	glUniform1i(useUI, 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo2);
-
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 	glDrawElements(GL_TRIANGLES, numVertices, GL_UNSIGNED_SHORT, (GLvoid*)0);
 

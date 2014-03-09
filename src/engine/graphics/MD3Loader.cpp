@@ -1,8 +1,7 @@
 #include "MD3Loader.h"
 
-void MD3Loader::loadModel(std::string fileName) {
-}
-
+// TODO: a lot of cleaning
+// also we might simply return MD3Object instead of populating its data huh ?
 void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * &indices, int &numVertices, int &numIndices) {
 	debug("Loading model: ");
 	debug(fileName.c_str());

@@ -83,7 +83,6 @@ struct Vertex {
 class MD3Loader {
 	private:
 	public:
-		void loadModel(std::string fileName);
 		void loadModel(std::string fileName, GLfloat * &vertices, GLushort * &indices, int &numVertices, int &numIndices);
 };
 

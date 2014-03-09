@@ -4,9 +4,8 @@
 #include "Primitives3d.h"
 #include "MD3Loader.h"
 
-class MD3Object : public Cuboid {
+class MD3Object : public Primitive3d {
 	private:
-		GLuint vbo2, ibo2;
 		GLfloat * vertices;
 		GLushort * indices;
 
@@ -14,6 +13,7 @@ class MD3Object : public Cuboid {
 		int numIndices;
 	public:
 		MD3Object(std::string fileName);
+		~MD3Object();
 		void draw();
 };
 
