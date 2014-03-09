@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 
+#include <GL/glew.h>
+
 #include "../math/GameMath.h"
 #include "../core/Debug.h"
 
@@ -32,15 +34,15 @@ struct MD3Header {
 struct Frame {
 	Vector3f minBounds;
 	Vector3f maxBounds;
-	Vector3f localOrigin;
-	float radius;
+	Vector3f localOrigin;	// center ?
+	float radius;	// scale ?
 	unsigned char name[16];
 };
 
 struct Tag {
 	unsigned char name[64];
-	Vector3f origin;
-	Vector3f axis[3];
+	Vector3f origin;	// assume center ?
+	Vector3f axis[3];	// assume rotation ?
 };
 
 struct Surface {
@@ -54,7 +56,7 @@ struct Surface {
 	int offsetTriangles;
 	int offsetShaders;
 	int offsetST;
-	int offsetXYZ;
+	int offsetXYZ;	// Vertex
 	int offsetEnd;
 };
 
@@ -82,6 +84,7 @@ class MD3Loader {
 	private:
 	public:
 		void loadModel(std::string fileName);
+		void loadModel(std::string fileName, GLfloat * &vertices, GLushort * &indices, int &numVertices, int &numIndices);
 };
 
 #endif

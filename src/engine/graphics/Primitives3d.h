@@ -84,7 +84,7 @@ class Cuboid : public PhysicsObject, public Movable {
 		Point3f getCenter();
 		Vector3f getScale();
 
-		void draw();
+		virtual void draw();
 };
 
 #endif

@@ -8,6 +8,7 @@
 
 #include "../engine/core/GameEngine.h"
 #include "Player.h"
+#include "../engine/graphics/MD3Object.h"
 #include "Level.h"
 
 #define _RES_TEX_BRICK "res/brick.png"
@@ -106,6 +107,9 @@ class Game {
 
 		///////////////////////////////////// CLEAN //////////////////////////////////////
 		SDL_Surface * cross;
+
+		MD3Object * dummy;
+		bool god;
 
 		list<Point2> openPlatforms;
 		list<Point2> getNeighborPlatforms(Point2 current);

@@ -4,7 +4,7 @@
 
 int main(int argc, char * args[]) {
 
-	/*std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game());
+	std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game());
 	if (!game->init()) {
 		std::cout << "Game init failed. See above trace (if any). Press Enter to exit" << std::endl;
 		getchar();
@@ -19,12 +19,7 @@ int main(int argc, char * args[]) {
 	getchar();
 #endif
 
-	*/
-
-	MD3Loader loader;
-
-	loader.loadModel("res/upper.md3");
-	getchar();
+	
 
 	return 0;
 }

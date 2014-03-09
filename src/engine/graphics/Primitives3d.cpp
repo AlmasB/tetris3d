@@ -70,6 +70,8 @@ Cuboid::Cuboid(const Point3f &_center, float _x, float _y, float _z, SDL_Color c
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	//std::cout << "SIZE OF: VERT DATA " << sizeof(vertexData) << std::endl;
+
 	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
 
 	glUseProgram(shaderProgram);
