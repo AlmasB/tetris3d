@@ -14,8 +14,12 @@
 */
 #define __DEBUG
 
-inline void debug(const char * msg) {
-	std::cout << "DEBUG: " << msg << std::endl;
+inline void debug(const char * msg, const char * details = "") {
+	std::cout << "DEBUG: " << msg << " " << details << std::endl;
+}
+
+inline void debug(const char * msg, int value) {
+	std::cout << "DEBUG: " << msg << " " << value << std::endl;
 }
 
 class ErrorStack {

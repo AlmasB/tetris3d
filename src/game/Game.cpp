@@ -1,6 +1,65 @@
 #include "Game.h"
 
+const float Game::GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
+
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true) {
+
+	vector<string> resources;
+
+	// add texture images
+	resources.push_back(_RES_TEX_BRICK);
+	resources.push_back(_RES_TEX_PRIZE);
+	resources.push_back("res/crosshair.png");
+
+	// add fonts
+	resources.push_back(_RES_FONT);
+	
+	// add sound files
+	resources.push_back(_RES_SFX_CLONG);
+
+	//resources.push_back(_RES_TEX_WALL);
+	//resources.push_back(_RES_TEX_DOORUP);
+	//resources.push_back(_RES_TEX_DOORDOWN);
+
+	shared_ptr<GameEngine> engine;
+	try {
+		engine = GameEngine::getInstance();
+	}
+	catch (EngineException & e) {
+		std::cout << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
+		throw -1;							// but still nice to have what()
+	}
+
+	ResourceManager::loadResources(resources);
+
+	gfx = engine->getGraphicsEngine();
+	sfx = engine->getAudioEngine();
+	eventSystem = engine->getEventEngine();
+	camera = gfx->getCamera();
+
+	std::string title = "Tetris3D v" + to_string(__TETRIS_VERSION_MAJOR) + "." + to_string(__TETRIS_VERSION_MINOR) + " by " + __TETRIS_AUTHOR;
+	gfx->setWindowTitle(title.c_str());
+	gfx->useFont(ResourceManager::getFont(_RES_FONT));
+
+	// atm we don't care where we place them, nextLevel() takes care of everything
+	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
+	player = make_shared<Player>(Point3f(0, 0, 0));
+	player->setSensitivity(0.15f);
+	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
+	camera->follow(player);
+
+	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
+	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0.5f, 0.5f, 0);
+	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
+
+	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
+	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
+
+	cross = IMG_Load("res/crosshair.png");
+
+	dummy = new MD3Object("res/upper.md3");
+
+	nextLevel();
 }
 
 Game::~Game() {
@@ -21,63 +80,6 @@ Game::~Game() {
 #ifdef __DEBUG
 	debug("Game::~Game() finished");
 #endif
-}
-
-bool Game::init() {
-	vector<string> resources;
-	resources.push_back(_RES_TEX_BRICK);
-	resources.push_back(_RES_TEX_PRIZE);
-	resources.push_back("res/crosshair.png");
-	resources.push_back(_RES_FONT);
-
-	resources.push_back("res/audio/clong.wav");
-
-	//resources.push_back(_RES_TEX_WALL);
-	//resources.push_back(_RES_TEX_DOORUP);
-	//resources.push_back(_RES_TEX_DOORDOWN);
-
-	shared_ptr<GameEngine> engine = GameEngine::getInstance();
-	if (!engine->init(resources))
-		return false;
-
-	gfx = engine->getGraphicsEngine();
-	sfx = engine->getAudioEngine();
-	eventSystem = engine->getEventEngine();
-	camera = gfx->getCamera();
-
-	gfx->setWindowTitle("Tetris3D ~ ");
-	gfx->useFont(ResourceManager::getFont(_RES_FONT));
-
-	// where do we want to "actually" draw the ground line 0,0,0 ?
-	// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
-
-	// atm we don't care where we place them, nextLevel() takes care of everything
-	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
-	player = make_shared<Player>(Point3f(0, 0, 0));
-	player->setSensitivity(0.15f);
-	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
-	camera->follow(player);
-
-	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
-	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0.5f, 0.5f, 0);
-	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
-
-	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
-	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
-
-	srand(SDL_GetTicks());	// should be on engine side
-
-	cross = IMG_Load("res/crosshair.png");
-
-	dummy = new MD3Object("res/upper.md3");
-
-	nextLevel();
-
-#ifdef __DEBUG
-	debug("Game::init() successful");
-#endif
-
-	return true;
 }
 
 void Game::runMainLoop() {
@@ -170,12 +172,12 @@ void Game::update() {
 	}
 
 	if (mainBlocks.size() == currentLevel->width * currentLevel->height) {	// TODO: optimize
-		player->addScore(__SCORE_PER_STEP);
+		player->addScore(SCORE_PER_STEP);
 		nextStep();
 	}
 
 	if (player->isColliding(*prize)) {	// player reached prize aka end of level
-		player->addScore(__SCORE_PER_LEVEL);
+		player->addScore(SCORE_PER_LEVEL);
 		currentCutScene = CutScene::LEVEL_END;
 	}
 
@@ -205,7 +207,7 @@ void Game::render() {
 	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
 	gfx->drawSDLSurface(cross, 800/2 - 15, 600/2 - 15, 30, 30);
 
-	if (dummy)
+	if (dummy)	// MD3 Model
 		dummy->draw();
 	else
 		cout << "NO DUMMY" << endl;
@@ -283,7 +285,7 @@ void Game::onPrimaryAction() {
 
 	bullet->setCenter(camera->getCenter());
 
-	while (nullptr == selected && distanceBetween(camera->getCenter(), bullet->getCenter()) < __BULLET_DISTANCE) {
+	while (nullptr == selected && distanceBetween(camera->getCenter(), bullet->getCenter()) < BULLET_DISTANCE) {
 		bullet->move(camera->getDirection());
 		for (auto block : extraBlocks) {
 			if (bullet->isColliding(*block)) {
@@ -316,8 +318,8 @@ void Game::buildBlock() {
 			it = freeBlockSlots.erase(it);
 			selected = nullptr;
 
-			player->addScore(__SCORE_PER_BLOCK);
-			sfx->playSound(ResourceManager::getSound("res/audio/clong.wav"));
+			player->addScore(SCORE_PER_BLOCK);
+			sfx->playSound(ResourceManager::getSound(_RES_SFX_CLONG));
 			return;
 		}
 		++it;
@@ -473,7 +475,6 @@ void Game::buildPlatforms() {
 		float x = 2.0f * point.x - currentLevel->width;
 		float y = 0.0f;
 		float z = 2.0f * point.y - currentLevel->length;	// place it the way that level center is always at 0.0.0 origin
-
 
 		// y - 0.1f so that the top of the platforms represent the 0th line in Y - the ground
 		shared_ptr<GameObject> plat = make_shared<GameObject>(Point3f(x, y - 0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));

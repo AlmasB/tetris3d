@@ -1,6 +1,35 @@
 #include "GraphicsEngine.h"
 
-GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {}
+GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {
+	window = SDL_CreateWindow(_ENGINE_TITLE,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+	if (nullptr == window)
+		throw EngineException("Failed to create window", SDL_GetError());
+
+	glContext = SDL_GL_CreateContext(window);
+
+	if (nullptr == glContext)
+		throw EngineException("Failed to create OpenGL context", SDL_GetError());
+
+	// although not necessary, SDL doc says to prevent hiccups load it before using
+	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
+		throw EngineException("Failed to init SDL_image - PNG", IMG_GetError());
+
+	if (TTF_Init() < 0)
+		throw EngineException("Failed to init SDL_ttf", TTF_GetError());
+
+	if (glewInit() != GLEW_OK)
+		throw EngineException("Failed to init GLEW");
+
+	initGL();
+
+	textureBackground = IMG_Load("res/trans128.png");
+	if (nullptr == textureBackground)
+		throw EngineException("Failed to load texture background", IMG_GetError());
+}
 
 GraphicsEngine::~GraphicsEngine() {
 #ifdef __DEBUG
@@ -19,51 +48,23 @@ GraphicsEngine::~GraphicsEngine() {
 #endif
 }
 
-std::string GraphicsEngine::init() {
-	window = SDL_CreateWindow(_ENGINE_TITLE,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-
-	if (nullptr == window)
-		return "Failed to create SDL_Window: " + std::string(SDL_GetError());
-
-	glContext = SDL_GL_CreateContext(window);
-
-	if (nullptr == glContext)
-		return "Failed to init OpenGL context: " + std::string(SDL_GetError());
-
-	// although not necessary, SDL doc says to prevent hiccups load it before using
-	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
-		return "Failed to init SDL_image: " + std::string(IMG_GetError());
-	}
-
-	if (TTF_Init() < 0)
-		return "Failed to init SDL_ttf: " + std::string(TTF_GetError());
-
-	if (glewInit() != GLEW_OK)
-		return "Failed to init GLEW";
-
-	initGL();
-
-	textureBackground = IMG_Load("res/trans128.png");
-	if (nullptr == textureBackground)
-		return "Failed to load background for textures " + std::string(IMG_GetError());
-
-	return _ENGINE_ERROR_NONE;
-}
-
 void GraphicsEngine::initGL() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	SDL_GL_SetSwapInterval(0);	// on NVIDIA drivers setting to 1 causes high cpu load
+	if (SDL_GL_SetSwapInterval(0) < 0) {	// on NVIDIA drivers setting to 1 causes high cpu load
+#ifdef __DEBUG
+		debug("Warning: SDL_GL_SetSwapInterval() mode isn't supported");
+#endif
+	}
 }
 
 void GraphicsEngine::setWindowTitle(const char * title) {
-	std::string t = std::string(title) + std::string(_ENGINE_TITLE);
-	SDL_SetWindowTitle(window, t.c_str());
+	SDL_SetWindowTitle(window, title);
+#ifdef __DEBUG
+	debug("Set window title to: ", title);
+#endif
 }
 
 void GraphicsEngine::clearScreen() {
@@ -75,8 +76,12 @@ void GraphicsEngine::showScreen() {
 }
 
 void GraphicsEngine::useFont(TTF_Font * _font) {
-	if (nullptr == _font)
-		std::cout << "Font isn't usable" << std::endl;
+	if (nullptr == _font) {
+#ifdef __DEBUG
+		debug("GraphicsEngine::useFont()", "font is null");
+#endif
+		return;
+	}
 
 	if (nullptr != font) {
 		TTF_CloseFont(font);
@@ -86,7 +91,16 @@ void GraphicsEngine::useFont(TTF_Font * _font) {
 
 void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 	SDL_Surface * icon = IMG_Load(iconFileName);
+	if (nullptr == icon) {
+#ifdef __DEBUG
+		debug("GraphicsEngine::setWindowIcon()", "icon is null");
+#endif
+		return;
+	}
 	SDL_SetWindowIcon(window, icon);
+#ifdef __DEBUG
+	debug("Set Window Icon to", iconFileName);
+#endif
 	SDL_FreeSurface(icon);
 }
 
@@ -124,7 +138,7 @@ GLuint GraphicsEngine::createGLTextureFromSurface(SDL_Surface * surface) {
 }
 
 // TODO: calculate higher power of two and use that instead of 128
-void GraphicsEngine::drawText(std::string text, SDL_Color color, int x, int y) {
+void GraphicsEngine::drawText(std::string text, SDL_Color color, float x, float y) {
 	// blend is supposed to be much nicer when no need for fast swapping
 	// we ARE fast swapping now, should we change to different?
 	SDL_Surface * textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
@@ -138,7 +152,7 @@ void GraphicsEngine::drawText(std::string text, SDL_Color color, int x, int y) {
 	SDL_FreeSurface(background);
 }
 
-void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y, int textureW, int textureH) {
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y, int textureW, int textureH) {
 	if (nullptr == surface)
 		return;
 
@@ -155,13 +169,14 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y, int tex
 	GLuint textureID = createGLTextureFromSurface(surface);
 
 	GLfloat textureVertexData[] = {
-		x, h - y - textureH, 0, 1,
-		x, h - y, 0, 0,
-		x + textureW, h - y - textureH, 0.99f, 1,
+		// X Y							U    V
+		x, h - y - textureH,			0, 1.0f,
+		x, h - y,						0, 0,
+		x + textureW, h - y - textureH, 0.99f, 1.0f,
 
-		x, h - y, 0, 0,
-		x + textureW, h - y, 0.99f, 0,
-		x + textureW, h - y - textureW, 0.99f, 1
+		x, h - y,						0, 0,
+		x + textureW, h - y,			0.99f, 0,
+		x + textureW, h - y - textureW, 0.99f, 1.0f
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(textureVertexData), textureVertexData, GL_STATIC_DRAW);
 
@@ -203,7 +218,7 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y, int tex
 	glDeleteTextures(1, &textureID);
 }
 
-void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y) {
 	if (nullptr == surface)
 		return;
 
@@ -212,8 +227,8 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, int x, int y) {
 
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {
 	SDL_SetWindowSize(window, w, h);
-	Camera::instance->cameraPerspective.width = w * 1.0f;
-	Camera::instance->cameraPerspective.height = h * 1.0f;
+	Camera::instance->cameraPerspective.width = (float)w;
+	Camera::instance->cameraPerspective.height = (float)h;
 }
 
 Dimension2i GraphicsEngine::getWindowSize() {

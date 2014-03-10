@@ -12,7 +12,6 @@ class AudioEngine {
 		bool soundOn;
 	public:
 		~AudioEngine();
-		std::string init();
 		void toggleSound();
 		void playSound(Mix_Chunk * sound);
 };

@@ -7,6 +7,28 @@ EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
 
 	buttons[Mouse::BTN_LEFT] = false;
 	buttons[Mouse::BTN_RIGHT] = false;
+
+	if (SDL_SetRelativeMouseMode(SDL_TRUE) < 0) {	// trap mouse inside for fps mode
+#ifdef __DEBUG
+		debug("Warning: SDL_SetRelativeMouseMode() isn't supported");
+#endif
+	}
+
+	if (SDLNet_Init() < 0)
+		throw EngineException("Failed to init SDL_net", SDLNet_GetError());
+
+	if (androidCtrlEnabled) {
+
+		port = (Uint16)strtol("55555", NULL, 0);	// TODO: replace with int value
+		if (SDLNet_ResolveHost(&ip, NULL, port) < 0)	// TODO: if we can't use android as controller 
+			throw EngineException("Failed to resolve host at port 55555", SDLNet_GetError());	// no reason to throw exceptions to leave the game
+
+		server = SDLNet_TCP_Open(&ip);
+		if (nullptr == server)
+			throw EngineException("Failed to create local server", SDLNet_GetError());
+
+		connThread = new std::thread(&EventEngine::runConnThread, this);
+	}
 }
 
 EventEngine::~EventEngine() {
@@ -29,28 +51,6 @@ EventEngine::~EventEngine() {
 #ifdef __DEBUG
 	debug("EventEngine::~EventEngine() finished");
 #endif
-}
-
-std::string EventEngine::init() {
-	SDL_SetRelativeMouseMode(SDL_TRUE);	// trap mouse inside for fps mode
-
-	if (SDLNet_Init() < 0)
-		return "Failed to init SDL_Net: " + std::string(SDLNet_GetError());
-
-	if (androidCtrlEnabled) {
-
-		port = (Uint16)strtol("55555", NULL, 0);	// replace with int value
-		if (-1 == SDLNet_ResolveHost(&ip, NULL, port))
-			return "Failed to resolve host at port: " + std::to_string(port) + std::string(SDLNet_GetError());
-
-		server = SDLNet_TCP_Open(&ip);
-		if (nullptr == server)
-			return "Failed to create local server " + std::string(SDLNet_GetError());
-
-		connThread = new std::thread(&EventEngine::runConnThread, this);
-	}
-
-	return _ENGINE_ERROR_NONE;
 }
 
 void EventEngine::runConnThread() {

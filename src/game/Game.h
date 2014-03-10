@@ -11,27 +11,27 @@
 #include "../engine/graphics/MD3Object.h"
 #include "Level.h"
 
+
+// TODO: choose one style and make consistent
+#define __TETRIS_VERSION_MAJOR 0
+#define __TETRIS_VERSION_MINOR 2
+#define __TETRIS_AUTHOR "Almas"
+
+/**
+ * RESOURCE FILES
+ * To avoid typos/renames and other issues in the code
+ */
 #define _RES_TEX_BRICK "res/brick.png"
 #define _RES_TEX_PRIZE "res/prize.png"
 #define _RES_TEX_WALL "res/wall.png"
 #define _RES_TEX_DOORUP "res/doorup.png"
 #define _RES_TEX_DOORDOWN "res/doordown.png"
+
+#define _RES_SFX_CLONG "res/audio/clong.wav"
+
 #define _RES_FONT "res/tetris.ttf"
 
-
-#define __FONT_SIZE 18
-
-#define __APP_FPS 60
-#define __BULLET_DISTANCE 20
-
-#define __SCORE_PER_BLOCK 200
-#define __SCORE_PER_STEP 1000
-#define __SCORE_PER_LEVEL 5000
-
 using namespace std;	// for debugging
-
-static const uint GAME_FPS_DELAY_MSEC = __SECOND / __APP_FPS; 
-static const float GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN
@@ -39,6 +39,20 @@ enum CutScene {
 
 class Game {
 	private:
+		/** 
+		 * GAME CONSTANTS
+		 * Adjust as needed
+		 */
+		static const int SCORE_PER_BLOCK = 200;
+		static const int SCORE_PER_STEP = 1000;
+		static const int SCORE_PER_LEVEL = 5000;
+
+		static const int BULLET_DISTANCE = 20;
+
+		static const int GAME_FPS = 60;
+		static const int GAME_FPS_DELAY_MSEC = __SECOND / GAME_FPS;
+		static const float GAME_FPS_DELAY_SEC;	// must be inited in .cpp
+
 		/* ENGINE OBJECTS */
 		shared_ptr<GraphicsEngine> gfx;
 		shared_ptr<AudioEngine> sfx;
@@ -161,7 +175,7 @@ class Game {
 		/**
 		* These can control flow of the cutscene,
 		* its onStart() and its onFinish()
-		* Both can be used simultaneously
+		* Both timer and frame can be used simultaneously
 		*/
 		uint cutSceneFrame;		// records how much frames passed since FIRST call to this cutscene
 		Timer cutSceneTimer;	// records how much time passed since LAST call to this cutscene
@@ -201,7 +215,6 @@ class Game {
 		Game();
 		~Game();
 
-		bool init();
 		void runMainLoop();
 };
 

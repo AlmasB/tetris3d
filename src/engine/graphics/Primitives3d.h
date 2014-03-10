@@ -42,6 +42,8 @@ void main() {                                                                   
 
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
+// where do we want to "actually" draw the ground line 0,0,0 ?
+// then change values there GameObject 0,1,0 and 2.0f makes sense a bit more then 0,0,0, 2.0f
 
 class Primitive3d : public PhysicsObject, public Movable {
 	protected:

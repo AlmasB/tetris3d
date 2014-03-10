@@ -3,8 +3,9 @@
 // TODO: a lot of cleaning
 // also we might simply return MD3Object instead of populating its data huh ?
 void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * &indices, int &numVertices, int &numIndices) {
-	debug("Loading model: ");
-	debug(fileName.c_str());
+#ifdef __DEBUG
+	debug("Loading model:", fileName.c_str());
+#endif
 
 	std::ifstream file;
 	file.open(fileName, std::ios::in | std::ios::binary);
@@ -14,7 +15,9 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 		int size = (int)file.tellg();
 		file.seekg(0, file.beg);
 
-		std::cout << "file size: " << size << std::endl;
+#ifdef __DEBUG
+		debug("Size:", size);
+#endif
 
 		MD3Header header;
 		file.read((char *)&header, sizeof(MD3Header));

@@ -1,23 +1,22 @@
 #include "GameObject.h"
 
-GameObject::GameObject(const Point3f &_center, float x, float y, float z, SDL_Color _color)
-: Cuboid(_center, x, y, z, _color), locked(false) {
+GameObject::GameObject(const Point3f & center, float x, float y, float z, SDL_Color color)
+: Cuboid(center, x, y, z, color), locked(false) {}
 
-}
+GameObject::GameObject(const Point3f & center, float x, float y, float z, GLuint textureID)
+: Cuboid(center, x, y, z, textureID), locked(false) {}
 
-GameObject::GameObject(const Point3f &_center, float x, float y, float z, GLuint _textureID)
-: Cuboid(_center, x, y, z, _textureID), locked(false) {
+GameObject::GameObject(const Point3f & center, float size, SDL_Color color)
+: GameObject(center, size, size, size, color) {}
 
-}
+GameObject::GameObject(const Point3f & center, float size, GLuint textureID)
+: GameObject(center, size, size, size, textureID) {}
 
 void GameObject::setLocked(bool b) {
-	locked = b;
-	if (locked) {
+	if (locked = b)	// NOT typo! (locked = b)
 		setColor(SDL_COLOR_YELLOW);
-	}
-	else {
+	else
 		resetColor();
-	}
 }
 
 

@@ -20,20 +20,17 @@ class GameEngine {
 		std::shared_ptr<GraphicsEngine> gfxInstance;
 		std::shared_ptr<AudioEngine> audioInstance;
 		std::shared_ptr<EventEngine> eventInstance;
+
+		GameEngine();
 	public:
+		/**
+		* @return the instance of game engine
+		* @exception throws EngineException if init of any submodules failed
+		*/
 		static std::shared_ptr<GameEngine> getInstance();
 		~GameEngine();
 		static void quit();
 
-		/**
-		* After acquiring an instance of game engine
-		* you have explicitly call this function to initialise
-		* the engine and all other subsystems
-		*
-		* @return true if all subsystems inited correctly, false otherwise
-		* @post-condition it will be safe to use any lib related calls
-		*/
-		bool init(std::vector<std::string> resources);
 		std::shared_ptr<GraphicsEngine> getGraphicsEngine() { return gfxInstance; }
 		std::shared_ptr<AudioEngine> getAudioEngine() { return audioInstance; }
 		std::shared_ptr<EventEngine> getEventEngine() {	return eventInstance; }

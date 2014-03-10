@@ -83,13 +83,11 @@ class GraphicsEngine {
 
 		Uint32 fpsAverage, fpsPrevious, fpsStart, fpsEnd;
 
-		
 		GraphicsEngine();
 		void initGL();
-	public:
-		
+
+	public:	
 		~GraphicsEngine();
-		std::string init();
 
 		/**
 		* Creates a GL 2D texture from SDL_Surface* and returns its id
@@ -111,7 +109,7 @@ class GraphicsEngine {
 		*/
 		void showScreen();
 
-		void drawText(std::string text, SDL_Color color, int x, int y);
+		void drawText(std::string text, SDL_Color color, float x, float y);
 		
 		/**
 		* Draws SDL_Surface on screen starting at x, y (NOT FINISHED)
@@ -121,8 +119,8 @@ class GraphicsEngine {
 		*
 		* @pre-condition: surface must be valid, i.e. != nullptr
 		*/
-		void drawSDLSurface(SDL_Surface * surf, int x, int y);
-		void drawSDLSurface(SDL_Surface * surf, int x, int y, int w, int h);
+		void drawSDLSurface(SDL_Surface * surf, float x, float y);
+		void drawSDLSurface(SDL_Surface * surf, float x, float y, int w, int h);
 
 		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);

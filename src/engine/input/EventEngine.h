@@ -44,8 +44,6 @@ class EventEngine {
 	public:
 		~EventEngine();
 
-		std::string init();
-
 		bool isRunning();
 
 		/**

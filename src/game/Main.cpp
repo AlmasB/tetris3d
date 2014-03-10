@@ -1,14 +1,16 @@
 #include "Game.h"
 
-#include "../engine/graphics/MD3Loader.h"
-
 int main(int argc, char * args[]) {
 
-	std::shared_ptr<Game> game = std::shared_ptr<Game>(new Game());
-	if (!game->init()) {
+	std::unique_ptr<Game> game;
+	
+	try {
+		game = std::unique_ptr<Game>(new Game());
+	}
+	catch (int exit) {
 		std::cout << "Game init failed. See above trace (if any). Press Enter to exit" << std::endl;
 		getchar();
-		return -1;
+		return exit;
 	}
 
 	game->runMainLoop();
@@ -18,8 +20,6 @@ int main(int argc, char * args[]) {
 	debug("The game finished and cleaned up successfully. Press Enter to exit");
 	getchar();
 #endif
-
-	
 
 	return 0;
 }

@@ -369,7 +369,4 @@ inline int getRandom(int min, int max) {
 	return (int)(rand() % (max - min)) + min;
 }
 
-
-
-
 #endif

@@ -1,17 +1,11 @@
 #include "AudioEngine.h"
 
-AudioEngine::AudioEngine() : soundOn(true) {}
-
-AudioEngine::~AudioEngine() {
-
-}
-
-std::string AudioEngine::init() {
+AudioEngine::AudioEngine() : soundOn(true) {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) < 0)
-		return "Failed to init SDL_mixer: " + std::string(Mix_GetError());
-
-	return _ENGINE_ERROR_NONE;
+		throw EngineException("Failed to init SDL_mixer:", Mix_GetError());
 }
+
+AudioEngine::~AudioEngine() {}
 
 void AudioEngine::toggleSound() {
 	soundOn = !soundOn;
