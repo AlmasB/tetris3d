@@ -24,13 +24,12 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	shared_ptr<GameEngine> engine;
 	try {
 		engine = GameEngine::getInstance();
+		ResourceManager::loadResources(resources);
 	}
 	catch (EngineException & e) {
 		std::cout << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
 		throw -1;							// but still nice to have what()
 	}
-
-	ResourceManager::loadResources(resources);
 
 	gfx = engine->getGraphicsEngine();
 	sfx = engine->getAudioEngine();

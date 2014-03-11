@@ -63,16 +63,15 @@ void GraphicsEngine::initGL() {
 void GraphicsEngine::setWindowTitle(const char * title) {
 	SDL_SetWindowTitle(window, title);
 #ifdef __DEBUG
-	debug("Set window title to: ", title);
+	debug("Set window title to:", title);
 #endif
 }
 
 void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 	SDL_Surface * icon = IMG_Load(iconFileName);
 	if (nullptr == icon) {
-#ifdef __DEBUG
-		debug("GraphicsEngine::setWindowIcon()", "icon is null");
-#endif
+		std::cout << "Failed to load icon: " << iconFileName << std::endl;
+		std::cout << "Aborting: GraphicsEngine::setWindowIcon()" << std::endl;
 		return;
 	}
 	SDL_SetWindowIcon(window, icon);
@@ -88,6 +87,7 @@ void GraphicsEngine::setFullscreen(bool b) {
 
 void GraphicsEngine::setWindowSize(const int &w, const int &h) {
 	SDL_SetWindowSize(window, w, h);
+	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 #ifdef __DEBUG
 	debug("Set Window W", w);
 	debug("Set Window H", h);

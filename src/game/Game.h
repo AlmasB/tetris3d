@@ -21,20 +21,20 @@
  * RESOURCE FILES
  * To avoid typos/renames and other issues in the code
  */
-#define _RES_TEX_BRICK "res/brick.png"
-#define _RES_TEX_PRIZE "res/prize.png"
-#define _RES_TEX_WALL "res/wall.png"
-#define _RES_TEX_DOORUP "res/doorup.png"
-#define _RES_TEX_DOORDOWN "res/doordown.png"
+#define _RES_TEX_BRICK		"res/brick.png"
+#define _RES_TEX_PRIZE		"res/prize.png"
+#define _RES_TEX_WALL		"res/wall.png"
+#define _RES_TEX_DOORUP		"res/doorup.png"
+#define _RES_TEX_DOORDOWN	"res/doordown.png"
 
-#define _RES_SFX_CLONG "res/audio/clong.wav"
+#define _RES_SFX_CLONG		"res/audio/clong.wav"
 
-#define _RES_FONT "res/tetris.ttf"
+#define _RES_FONT			"res/tetris.ttf"
 
 using namespace std;	// for debugging
 
-static const int GAME_W = 1280;
-static const int GAME_H = 720;
+static const int GAME_W = 800;
+static const int GAME_H = 600;
 
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN
@@ -181,8 +181,8 @@ class Game {
 		* its onStart() and its onFinish()
 		* Both timer and frame can be used simultaneously
 		*/
-		uint cutSceneFrame;		// records how much frames passed since FIRST call to this cutscene
-		Timer cutSceneTimer;	// records how much time passed since LAST call to this cutscene
+		uint cutSceneFrame;		// records how much FRAMES passed since FIRST call to this cutscene
+		Timer cutSceneTimer;	// records how much TIME passed since LAST call to this cutscene
 
 		/**
 		* Each cut scene ideally should have onStart() and onFinish() 

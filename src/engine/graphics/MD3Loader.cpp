@@ -21,19 +21,22 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 
 		MD3Header header;
 		file.read((char *)&header, sizeof(MD3Header));
-		std::cout << "ident: " << header.ident << " version: " << header.version << std::endl;
-		// 860898377 and 15 or bad file
+		if (header.ident != 860898377 /*IDP3*/ || header.version != 15) {
+			std::cout << fileName << " MD3 file wrong ID or version" << std::endl;
+			file.close();
+			return;
+		}
 
-		std::cout << header.name << std::endl;
+		/*std::cout << header.name << std::endl;
 		std::cout << header.numFrames << std::endl;
 		std::cout << header.numTags << std::endl;
 		std::cout << header.numSurfaces << std::endl;
 		std::cout << header.offsetEOF << std::endl;
-		std::cout << header.flags << std::endl;
+		std::cout << header.flags << std::endl;*/
 
 
 		int offsetSurfaces = header.offsetSurfaces;
-		std::cout << "offset surf " << offsetSurfaces << std::endl;
+		//std::cout << "offset surf " << offsetSurfaces << std::endl;
 
 		Surface * surfaces = new Surface[header.numSurfaces];
 		for (int i = 0; i < header.numSurfaces; ++i) {	
@@ -46,7 +49,7 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 			file.seekg(offsetSurfaces + surfaces[i].offsetTriangles, std::ios::beg);
 			file.read((char*)tris, sizeof(Triangle)* surfaces[i].numTriangles);
 
-			std::cout << " TRIANGLES: " << std::endl;
+			//std::cout << " TRIANGLES: " << std::endl;
 
 			numIndices = surfaces[i].numTriangles * 3;
 			indices = new GLushort[surfaces[i].numTriangles * 3];
@@ -61,7 +64,7 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 			file.seekg(offsetSurfaces + surfaces[i].offsetXYZ, std::ios::beg);
 			file.read((char*)verticesLocal, sizeof(Vertex)* surfaces[i].numVertices);
 
-			std::cout << " VERTICES: " << std::endl;
+			//std::cout << " VERTICES: " << std::endl;
 
 			numVertices = surfaces[i].numVertices * 3;
 			vertices = new GLfloat[surfaces[i].numVertices * 3];
@@ -73,16 +76,14 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 
 
 			offsetSurfaces += surfaces[i].offsetEnd;
-			std::cout << "offset surf " << offsetSurfaces << std::endl;
+			//std::cout << "offset surf " << offsetSurfaces << std::endl;
 
 			delete tris;
 		}
 
-
-		std::cout << " END OF SURFACE DATA KIND OF" << std::endl;
-
-
-
+#ifdef __DEBUG
+		debug("Finished reading:", fileName.c_str());
+#endif
 
 		file.close();
 		delete surfaces;

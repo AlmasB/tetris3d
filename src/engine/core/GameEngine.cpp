@@ -3,7 +3,7 @@
 std::shared_ptr<GameEngine> GameEngine::instance = nullptr;
 
 GameEngine::GameEngine() {
-	std::cout << "Initializing the game engine v." << __ENGINE_VERSION_MAJOR
+	std::cout << "Initializing The Cube Game Engine v." << __ENGINE_VERSION_MAJOR
 		<< "." << __ENGINE_VERSION_MINOR << std::endl;
 
 #ifdef __DEBUG

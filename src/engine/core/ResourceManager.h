@@ -21,7 +21,7 @@ class ResourceManager {
 		*
 		* The resources can be retrieved with an appropriate call to get*
 		*/
-		static std::string loadResources(std::vector<std::string> fileNames);
+		static void loadResources(std::vector<std::string> fileNames);
 		static void freeResources();
 
 

@@ -6,16 +6,13 @@ Player::Player(const Point3f & center)
 void Player::addScore(int value) {
 	score += value;
 #ifdef __DEBUG
-	std::cout << "Score: " << score << std::endl;
+	debug("Score:", score);
 #endif
 }
 
 void Player::addLives(int value) {
 	lives += value;
 #ifdef __DEBUG
-	std::cout << "Lives: ";
-	for (int i = 0; i < lives; ++i)
-		std::cout << "* ";
-	std::cout << std::endl;
+	debug("Lives:", lives);
 #endif
 }

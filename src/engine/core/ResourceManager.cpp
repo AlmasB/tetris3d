@@ -4,33 +4,31 @@ std::map<std::string, GLuint> ResourceManager::textures;
 std::map<std::string, TTF_Font *> ResourceManager::fonts;
 std::map<std::string, Mix_Chunk *> ResourceManager::sounds;
 
-std::string ResourceManager::loadResources(std::vector<std::string> fileNames) {
+void ResourceManager::loadResources(std::vector<std::string> fileNames) {
 	for (auto file : fileNames) {
 		if (file.find(".ttf") != -1) {
 			TTF_Font * font = TTF_OpenFont(file.c_str(), 36);	// hardcode font size ?
 			if (nullptr == font)
-				return "Failed to load font: " + file + std::string(TTF_GetError());
+				throw EngineException(TTF_GetError(), file);
 			fonts[file] = font;
 		}
 		else if (file.find("wav") != -1) {
 			Mix_Chunk * sound = Mix_LoadWAV(file.c_str());
 			if (nullptr == sound)
-				return "Failed to load sound: " + file + " " + std::string(Mix_GetError());
+				throw EngineException(Mix_GetError(), file);
 			sounds[file] = sound;
 		}
 		else if (file.find(".png") != -1) {
 			SDL_Surface * surf = IMG_Load(file.c_str());
 			if (nullptr == surf)
-				return "Failed to load image: " + file + " " + std::string(IMG_GetError());
+				throw EngineException(IMG_GetError(), file);
 
 			textures[file] = GFX::createGLTextureFromSurface(surf);
 			SDL_FreeSurface(surf);
 			if (0 == textures[file])
-				return "Failed to create GL Texture from surface file: " + file;
+				throw EngineException("Failed to create GL texture from surface:", file);
 		}
 	}
-
-	return _ENGINE_ERROR_NONE;
 }
 
 void ResourceManager::freeResources() {
