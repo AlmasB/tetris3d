@@ -39,18 +39,19 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 
 	std::string title = "Tetris3D v" + to_string(__TETRIS_VERSION_MAJOR) + "." + to_string(__TETRIS_VERSION_MINOR) + " by " + __TETRIS_AUTHOR;
 	gfx->setWindowTitle(title.c_str());
+	gfx->setWindowSize(GAME_W, GAME_H);
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 
 	// atm we don't care where we place them, nextLevel() takes care of everything
-	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, 2.0f, 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
+	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
 	player->setSensitivity(0.15f);
-	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, 0.05f, 0.05f, SDL_COLOR_GREEN);
+	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, SDL_COLOR_GREEN);
 	camera->follow(player);
 
-	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 2.0f, 2.0f, 0);
-	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0.5f, 0.5f, 0);
-	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_RED);
+	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 0);
+	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0);
+	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, SDL_COLOR_RED);
 
 	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
 	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
@@ -205,7 +206,7 @@ void Game::render() {
 	gfx->drawText(to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);
 
 	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
-	gfx->drawSDLSurface(cross, 800/2 - 15, 600/2 - 15, 30, 30);
+	gfx->drawSDLSurface(cross, GAME_W/2 - 15, GAME_H/2 - 15, 30, 30);
 
 	if (dummy)	// MD3 Model
 		dummy->draw();

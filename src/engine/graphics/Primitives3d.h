@@ -14,6 +14,7 @@ attribute vec3 position;                                                        
 attribute vec2 UV;                                                                  \n\
 uniform mat4 mvp;                                                                   \n\
 varying vec2 outUV;                                                                 \n\
+uniform vec2 windowSize;														    \n\
 																				    \n\
 uniform int useUI;																	\n\
 																					\n\
@@ -21,8 +22,8 @@ void main() {                                                                   
 	if (useUI == 0) {																\n\
 		gl_Position = mvp * vec4(position, 1.0);                                    \n\
 	}else{																			\n\
-		vec2 size = position.xy - vec2(400, 300);									\n\
-		size /= vec2(400, 300);														\n\
+		vec2 size = position.xy - windowSize;										\n\
+		size /= windowSize;															\n\
 		gl_Position = vec4(size, 0, 1);												\n\
 	}																				\n\
 																					\n\

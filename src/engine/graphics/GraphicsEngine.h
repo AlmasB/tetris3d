@@ -125,6 +125,7 @@ class GraphicsEngine {
 		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);
 		void setWindowTitle(const char *title);
+		void setFullscreen(bool);
 
 		Dimension2i getWindowSize();
 

@@ -40,7 +40,7 @@ enum CutScene {
 class Game {
 	private:
 		/** 
-		 * GAME CONSTANTS
+		 * GAMEPLAY CONSTANTS
 		 * Adjust as needed
 		 */
 		static const int SCORE_PER_BLOCK = 200;
@@ -49,6 +49,9 @@ class Game {
 
 		static const int BULLET_DISTANCE = 20;
 
+		/* TECHNICAL CONSTANTS */
+		static const int GAME_W = 1280;
+		static const int GAME_H = 720;
 		static const int GAME_FPS = 60;
 		static const int GAME_FPS_DELAY_MSEC = __SECOND / GAME_FPS;
 		static const float GAME_FPS_DELAY_SEC;	// must be inited in .cpp
