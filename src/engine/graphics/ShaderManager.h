@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <string.h> // strlen()
 
 #include <GL/glew.h>
 
