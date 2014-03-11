@@ -29,8 +29,18 @@ class GameEngine {
 		*/
 		static std::shared_ptr<GameEngine> getInstance();
 		~GameEngine();
+        
+		/**
+		 * Quits the engine, closes all the subsystems
+		 * 
+		 * All subsequent calls to any of subsystems will have undefined behaviour
+		 */
 		static void quit();
-
+		
+		/**
+		 * Subsystems can only be accessed via the following accessors  
+		 * @return approriate subsystem of the engine
+		 */
 		std::shared_ptr<GraphicsEngine> getGraphicsEngine() { return gfxInstance; }
 		std::shared_ptr<AudioEngine> getAudioEngine() { return audioInstance; }
 		std::shared_ptr<EventEngine> getEventEngine() {	return eventInstance; }
