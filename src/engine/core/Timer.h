@@ -1,7 +1,7 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define __SECOND 1000
 #define __MINUTE (60*__SECOND)

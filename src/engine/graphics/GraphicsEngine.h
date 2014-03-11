@@ -5,15 +5,20 @@
 #include <memory>
 #include <iostream>
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+#ifdef _WIN32
+	#include <SDL2/SDL_ttf.h>
+#else
+	#include <SDL/SDL_ttf.h>
+#endif
+
 #include <GL/glew.h>
 #include <GL/glu.h>
 
 #include "../core/EngineCommon.h"
 #include "Movable.h"
-
 #include "ShaderManager.h"
 
 /* ENGINE DEFAULT SETTINGS */

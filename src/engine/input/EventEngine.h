@@ -4,8 +4,12 @@
 #include <string>
 #include <thread>
 
-#include <SDL.h>
-#include <SDL/SDL_net.h>
+#include <SDL2/SDL.h>
+#ifdef _WIN32
+	#include <SDL2/SDL_net.h>
+#else
+	#include <SDL/SDL_net.h>
+#endif
 
 #include "../core/EngineCommon.h"
 #include "../math/GameMath.h"
