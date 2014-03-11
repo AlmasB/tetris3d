@@ -5,7 +5,7 @@
 #include <thread>
 
 #include <SDL.h>
-#include <SDL_net.h>
+#include <SDL/SDL_net.h>
 
 #include "../core/EngineCommon.h"
 #include "../math/GameMath.h"

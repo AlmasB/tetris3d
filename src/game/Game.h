@@ -33,6 +33,9 @@
 
 using namespace std;	// for debugging
 
+static const int GAME_W = 1280;
+static const int GAME_H = 720;
+
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN
 };
@@ -50,8 +53,6 @@ class Game {
 		static const int BULLET_DISTANCE = 20;
 
 		/* TECHNICAL CONSTANTS */
-		static const int GAME_W = 1280;
-		static const int GAME_H = 720;
 		static const int GAME_FPS = 60;
 		static const int GAME_FPS_DELAY_MSEC = __SECOND / GAME_FPS;
 		static const float GAME_FPS_DELAY_SEC;	// must be inited in .cpp
