@@ -24,9 +24,9 @@ class GameEngine {
 		GameEngine();
 	public:
 		/**
-		* @return the instance of game engine
-		* @exception throws EngineException if init of any submodules failed
-		*/
+		 * @return the instance of game engine
+		 * @exception throws EngineException if init of any submodules failed
+		 */
 		static std::shared_ptr<GameEngine> getInstance();
 		~GameEngine();
         

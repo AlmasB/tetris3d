@@ -14,16 +14,20 @@ class ResourceManager {
 		static std::map<std::string, TTF_Font *> fonts;
 	public:
 		/**
-		* Loads all resources into several maps (cache)
-		* to make the program run smoother
-		*
-		* @param fileNames - vector containing names to resource files
-		*
-		* The resources can be retrieved with an appropriate call to get*
-		*/
+		 * Loads all resources into several maps (cache)
+		 * to make the program run smoother
+		 *
+		 * @param fileNames - vector containing names to resource files
+		 *
+		 * The resources can be retrieved with an appropriate call to get*
+		 */
 		static void loadResources(std::vector<std::string> fileNames);
-		static void freeResources();
 
+		/**
+		* Call to free all resource files
+		* All subsequent calls to get* will return nullptr or cause undefined behaviour
+		*/
+		static void freeResources();
 
 		static GLuint getTextureID(std::string fileName);
 		static TTF_Font * getFont(std::string fileName);

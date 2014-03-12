@@ -15,8 +15,8 @@ class EngineException : public std::exception {
 
 	public:
 		/**
-		* @param arg0, arg1 - exception details
-		*/
+		 * @param arg0, arg1 - exception details
+		 */
 		EngineException(std::string arg0, std::string arg1 = "") : message("EngineException: " + arg0 + " - " + arg1) {
 			std::cout << "\t" << message << std::endl;
 		}
