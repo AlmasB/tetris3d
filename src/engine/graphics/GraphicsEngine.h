@@ -23,7 +23,7 @@
 
 /* ENGINE DEFAULT SETTINGS */
 
-#define _ENGINE_TITLE     "Powered by T.W.O. Game Engine, by Almas"
+#define _ENGINE_TITLE     "Powered by The Cube Game Engine, by Almas"
 
 static const int DEFAULT_WINDOW_WIDTH = 800;
 static const int DEFAULT_WINDOW_HEIGHT = 600;
@@ -114,10 +114,15 @@ class GraphicsEngine {
 		*/
 		void showScreen();
 
+		/**
+		 * Draws a GL Texture in a 2D screen space
+		 */
+		void drawGLTexture(GLuint textureID, float x, float y, int w, int h);
+
 		void drawText(std::string text, SDL_Color color, float x, float y);
 		
 		/**
-		* Draws SDL_Surface on screen starting at x, y (NOT FINISHED)
+		* Draws SDL_Surface on screen starting at x, y
 		*
 		* Provides similar functionality to <em>deprecated</em> glOrtho in that
 		* it draws in a 2D screen space

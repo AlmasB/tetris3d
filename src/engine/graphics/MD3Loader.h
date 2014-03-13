@@ -85,7 +85,7 @@ class MD3Loader {
 	private:
 	public:
 		void loadModel(std::string fileName, GLfloat * &vertices, GLushort * &indices, int &numVertices, int &numIndices);
-		MD3Object loadModel(const std::string & fileName);
+		//MD3Object loadModel(const std::string & fileName);
 };
 
 #endif

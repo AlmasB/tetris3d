@@ -182,7 +182,7 @@ void Cuboid::draw() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));	// u,v start at 3, repeat 5
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);	/// Primitive3d 12*3
+	glDrawArrays(GL_TRIANGLES, 0, 36);	// Cuboid 12*3
 
 	// unbind everything
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

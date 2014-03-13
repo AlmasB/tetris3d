@@ -177,6 +177,23 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y, int
 	if (nullptr == surface)
 		return;
 
+	GLuint textureID = createGLTextureFromSurface(surface);
+	drawGLTexture(textureID, x, y, textureW, textureH);
+
+	glDeleteTextures(1, &textureID);
+}
+
+void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y) {
+	if (nullptr == surface)
+		return;
+
+	drawSDLSurface(surface, x, y, surface->w, surface->h);
+}
+
+void GraphicsEngine::drawGLTexture(GLuint textureID, float x, float y, int textureW, int textureH) {
+	if (0 == textureID)
+		return;
+
 	Dimension2i size = getWindowSize();
 	float w = (float)size.w, h = (float)size.h;
 
@@ -187,16 +204,14 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y, int
 	glGenBuffers(1, &textureVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, textureVBO);
 
-	GLuint textureID = createGLTextureFromSurface(surface);
-
 	GLfloat textureVertexData[] = {
 		// X Y							U    V
-		x, h - y - textureH,			0, 1.0f,
-		x, h - y,						0, 0,
+		x, h - y - textureH, 0, 1.0f,
+		x, h - y, 0, 0,
 		x + textureW, h - y - textureH, 0.99f, 1.0f,
 
-		x, h - y,						0, 0,
-		x + textureW, h - y,			0.99f, 0,
+		x, h - y, 0, 0,
+		x + textureW, h - y, 0.99f, 0,
 		x + textureW, h - y - textureW, 0.99f, 1.0f
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(textureVertexData), textureVertexData, GL_STATIC_DRAW);
@@ -241,14 +256,6 @@ void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y, int
 	glUseProgram(0);
 
 	glDeleteBuffers(1, &textureVBO);
-	glDeleteTextures(1, &textureID);
-}
-
-void GraphicsEngine::drawSDLSurface(SDL_Surface * surface, float x, float y) {
-	if (nullptr == surface)
-		return;
-
-	drawSDLSurface(surface, x, y, surface->w, surface->h);
 }
 
 void GraphicsEngine::setFrameStart() {

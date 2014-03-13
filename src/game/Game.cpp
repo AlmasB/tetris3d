@@ -2,14 +2,14 @@
 
 const float Game::GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true), currentLevel(Level::getNext()) {
 
 	vector<string> resources;
 
 	// add texture images
 	resources.push_back(_RES_TEX_BRICK);
 	resources.push_back(_RES_TEX_PRIZE);
-	resources.push_back("res/crosshair.png");
+	resources.push_back(_RES_TEX_CROSSHAIR);
 
 	// add fonts
 	resources.push_back(_RES_FONT);
@@ -17,30 +17,30 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	// add sound files
 	resources.push_back(_RES_SFX_CLONG);
 
-	//resources.push_back(_RES_TEX_WALL);
-	//resources.push_back(_RES_TEX_DOORUP);
-	//resources.push_back(_RES_TEX_DOORDOWN);
-
+	// init engine
 	shared_ptr<GameEngine> engine;
 	try {
 		engine = GameEngine::getInstance();
 		ResourceManager::loadResources(resources);
 	}
 	catch (EngineException & e) {
-		std::cout << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
+		std::cout << "Game::Game()" << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
 		throw -1;							// but still nice to have what()
 	}
 
+	// engine ready, get subsystems
 	gfx = engine->getGraphicsEngine();
 	sfx = engine->getAudioEngine();
 	eventSystem = engine->getEventEngine();
 	camera = gfx->getCamera();
 
-	std::string title = "Tetris3D v" + to_string(__TETRIS_VERSION_MAJOR) + "." + to_string(__TETRIS_VERSION_MINOR) + " by " + __TETRIS_AUTHOR;
+	// adjust settings
+	std::string title = "Tetris3D v" + to_string(_TETRIS_VERSION_MAJOR) + "." + to_string(_TETRIS_VERSION_MINOR) + " by " + _TETRIS_AUTHOR;
 	gfx->setWindowTitle(title.c_str());
 	gfx->setWindowSize(GAME_W, GAME_H);
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 
+	// init world
 	// atm we don't care where we place them, nextLevel() takes care of everything
 	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
 	player = make_shared<Player>(Point3f(0, 0, 0));
@@ -50,16 +50,9 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 
 	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 0);
 	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0);
-	testObj = make_shared<GameObject>(Point3f(1.0f, 1.0f, -25.0f), 2.0f, SDL_COLOR_RED);
-
-	scoreboard = make_shared<GameObject>(Point3f(55.0f, 0, 0), 1.0f, 10.0f, 20.0f, 0);
-	//scoreboard->setTexture(gfx->createGLTextureFromText(to_string(player->getScore()), SDL_COLOR_YELLOW));
-
-	cross = IMG_Load("res/crosshair.png");
-
 	dummy = new MD3Object("res/upper.md3");
 
-	nextLevel();
+	initLevel();
 }
 
 Game::~Game() {
@@ -166,8 +159,9 @@ void Game::update() {
 
 	buildBlock();
 
+	// every five seconds destroy a platform
 	if (worldTimer.getElapsed() >= 5 * __SECOND) {
-		killPlatforms();
+		killPlatform();
 		worldTimer.measure();
 	}
 
@@ -197,15 +191,13 @@ void Game::render() {
 	for (auto object : platforms)
 		object->draw();
 
-	scoreboard->draw();
 	prize->draw();
-	crosshair->draw();
 
-	gfx->drawText(to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);
-	gfx->drawText(to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);
+	crosshair->draw();	// tiny spinning cube
+	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
 
-	//gfx->drawText(to_string(player->getLives()), SDL_COLOR_GREEN, 50, 50);
-	gfx->drawSDLSurface(cross, GAME_W/2 - 15, GAME_H/2 - 15, 30, 30);
+	gfx->drawText(to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
+	gfx->drawText(to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);	// FPS
 
 	if (dummy)	// MD3 Model
 		dummy->draw();
@@ -242,7 +234,7 @@ void Game::handleKeyEvents() {
 }
 
 void Game::handlePlayerMovement() {
-	float zLine = -currentLevel->length / 2.0f + 3 * 2.0f + 4.0f + 4 * currentStep - 1.0f;
+	float zLine = -currentLevel->length + 15.0f + 6 * currentStep - 1.0f;
 
 	if (eventSystem->isPressed(Key::W)) {
 		player->moveForward();
@@ -327,8 +319,7 @@ void Game::buildBlock() {
 }
 
 void Game::spawnAllBlocks() {
-	// where player starts count as level start
-	float z = -currentLevel->length / 2.0f + 3 * 2.0f + 4.0f + 4 * currentStep + 1.0f;
+	float z = -currentLevel->length + 15.0f + 6 * currentStep;
 
 	for (int i = 0; i < currentLevel->height; ++i) {
 		for (int j = 0; j < currentLevel->width; ++j) {
@@ -336,7 +327,7 @@ void Game::spawnAllBlocks() {
 			float y = i*2.0f + 1.0f;
 
 			if (1 == rand() % 2) {
-				mainBlocks.push_back(make_shared<GameObject>(Point3f(x, y, z), 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE));
+				mainBlocks.push_back(make_shared<GameObject>(Point3f(x, y, z), 2.0f, SDL_COLOR_BLUE));
 			}
 			else {
 				freeBlockSlots.push_back(Point3f(x, y, z));
@@ -347,28 +338,28 @@ void Game::spawnAllBlocks() {
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
 	for (int i = 0; i < blocksNeeded; ++i) {
-		Point3f p(getRandom(-currentLevel->width, currentLevel->width)*1.0f, 4 + i*2.0f, player->getCenter().z + getRandom(-5, 5));
-		//Point3f p(i*2.0f, 4 + i*4.0f, -25.0f);
-		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, 2.0f, 2.0f, getRandomColor(50, 200)));
+		Point3f p((float)getRandom(-currentLevel->width, currentLevel->width), 4 + i*2.0f, player->getCenter().z + getRandom(-5, 5));
+		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, getRandomColor(50, 200)));
 	}
 }
 
 void Game::playCutScene() {
 	switch (currentCutScene) {
-		case LEVEL_BEGINNING:
-			playCutSceneLevelBeginning();
-			break;
-		case LEVEL_END:
-			playCutSceneLevelEnd();
-			break;
-		case PLAYER_DEATH:
-			playCutScenePlayerDeath();
+		case LEVEL_BEGINNING:	playCutSceneLevelBeginning(); break;
+		case LEVEL_END:			playCutSceneLevelEnd();		  break;
+		case PLAYER_DEATH:		playCutScenePlayerDeath();	  break;
+		case GAME_WIN:			playCutSceneGameWin();		  break;
+		default:
+#ifdef __DEBUG
+			debug("Warning:Game::playCutScene", "Unknown CutScene");
+#endif
 			break;
 	}
 }
 
 void Game::playCutSceneLevelBeginning() {
 	if (cutSceneTimer.getTime() == 0) {	// means running for 1st time
+		// move to level beginning -20 units, so player can see how platforms are being built
 		dummyCameraObject->moveTo(Point3f(1.0f, 45.0f, -currentLevel->length*1.0f - 20.0f));
 		dummyCameraObject->lookAt(prize->getCenter());
 		camera->follow(dummyCameraObject);
@@ -443,7 +434,7 @@ void Game::playCutSceneLevelEnd() {
 void Game::playCutScenePlayerDeath() {
 	if (cutSceneTimer.getElapsed() >= 0.025 * __SECOND) {
 		player->move(Vector3f(0, -0.25, 0));
-		player->lookAt(prize->getCenter());
+		player->lookAt(prize->getCenter());	// make player look at the prize while falling ;)
 
 		cutSceneTimer.measure();
 	}
@@ -455,21 +446,21 @@ void Game::playCutScenePlayerDeath() {
 }
 
 void Game::playCutSceneGameWin() {
-  player->lookAt(Point3f(0, 0, 0));
-  if (cutSceneTimer.getElapsed() >= 0.075 * __SECOND) {
-    killPlatforms();
-    player->addScore(SCORE_PER_BLOCK);
-  }
+	player->lookAt(Point3f(0, 0, 0));
+	if (cutSceneTimer.getElapsed() >= 0.075 * __SECOND) {
+		killPlatform();
+		player->addScore(SCORE_PER_BLOCK);
+	}
 
-  if (eventSystem->isPressed(Key::SPACE) || platforms.empty()) {
-    while (!platforms.empty()) {
-      killPlatforms();
-      player->addScore(SCORE_PER_BLOCK);
-    }
+	if (eventSystem->isPressed(Key::SPACE) || platforms.empty()) {
+		while (!platforms.empty()) {
+			killPlatform();
+			player->addScore(SCORE_PER_BLOCK);
+		}
 
-    resetCutScene();
-    running = false;
-  }
+		resetCutScene();
+		running = false;
+	}
 }
 
 void Game::resetCutScene() {
@@ -487,18 +478,17 @@ void Game::buildPlatforms() {
 			neighbors.push_back(p);
 
 		float x = 2.0f * point.x - currentLevel->width;
-		float y = 0.0f;
 		float z = 2.0f * point.y - currentLevel->length;	// place it the way that level center is always at 0.0.0 origin
 
-		// y - 0.1f so that the top of the platforms represent the 0th line in Y - the ground
-		shared_ptr<GameObject> plat = make_shared<GameObject>(Point3f(x, y - 0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));
+		// y = -0.1f so that the top of the platforms represent the 0th line in Y - the ground
+		shared_ptr<GameObject> plat = make_shared<GameObject>(Point3f(x, -0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));
 		platforms.push_back(plat);
 	}
 
 	openPlatforms = neighbors;
 }
 
-void Game::killPlatforms() {
+void Game::killPlatform() {
 	if (!platforms.empty()) {
 		platforms.pop_front();
 	}
@@ -554,7 +544,7 @@ bool Game::isLevelBuilt() {
 	return true;
 }
 
-void Game::resetLevel() {
+void Game::initLevel() {
 	// clear everything associated with level
 	mainBlocks.clear();
 	extraBlocks.clear();
@@ -562,12 +552,14 @@ void Game::resetLevel() {
 	platforms.clear();
 	openPlatforms.clear();
 
-	openPlatforms.push_back(Point2(currentLevel->width / 2, 0));
-	currentLevel->data[currentLevel->width / 2][0] = true;
+	// tell the "platform builder" where to start
+	Point2 firstPlatform(currentLevel->width / 2, 0);
+	openPlatforms.push_back(firstPlatform);
+	currentLevel->data[firstPlatform.x][firstPlatform.y] = true;
 
 	// return objects to initial state
-	player->setCenter(Point3f(0 - 1.0f, 1.0f, -currentLevel->length + 3 * 2.0f));
-	prize->setCenter(Point3f(0 - 1.0f, 0.0f + 1.0f, currentLevel->length - 2.0f));
+	player->setCenter(Point3f(-1.0f, 1.0f, -currentLevel->length + 6.0f));	// set player at the beginning + 6 blocks for some margin 
+	prize->setCenter(Point3f(-1.0f, 1.0f, currentLevel->length - 2.0f));	// set prize right at the end
 	prize->setRotate(0, 0, 0);
 	prize->setScale(1, 1, 1);
 	currentStep = 0;
@@ -578,14 +570,13 @@ void Game::resetLevel() {
 }
 
 void Game::nextLevel() {
-	if (Level::getNumberOfLevels() == __MAX_LEVELS) {
+	if (MAX_LEVELS == currentLevel->number) {
 		currentCutScene = CutScene::GAME_WIN;
 		return;
 	}
 
-	// init the level
 	currentLevel = Level::getNext();
-	resetLevel();
+	initLevel();
 }
 
 void Game::nextStep() {

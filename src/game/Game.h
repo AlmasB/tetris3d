@@ -11,11 +11,9 @@
 #include "../engine/graphics/MD3Object.h"
 #include "Level.h"
 
-
-// TODO: choose one style and make consistent
-#define __TETRIS_VERSION_MAJOR 0
-#define __TETRIS_VERSION_MINOR 2
-#define __TETRIS_AUTHOR "Almas"
+#define _TETRIS_VERSION_MAJOR 0
+#define _TETRIS_VERSION_MINOR 2
+#define _TETRIS_AUTHOR "Almas"
 
 /**
  * RESOURCE FILES
@@ -23,9 +21,7 @@
  */
 #define _RES_TEX_BRICK		"res/brick.png"
 #define _RES_TEX_PRIZE		"res/prize.png"
-#define _RES_TEX_WALL		"res/wall.png"
-#define _RES_TEX_DOORUP		"res/doorup.png"
-#define _RES_TEX_DOORDOWN	"res/doordown.png"
+#define _RES_TEX_CROSSHAIR	"res/crosshair.png"
 
 #define _RES_SFX_CLONG		"res/audio/clong.wav"
 
@@ -90,11 +86,6 @@ class Game {
 		shared_ptr<GameObject> prize;
 
 		/**
-		* UI
-		*/
-		shared_ptr<GameObject> scoreboard;
-
-		/**
 		* ground platforms
 		*/
 		list<shared_ptr<GameObject>> platforms;
@@ -117,7 +108,6 @@ class Game {
 		* This object isn't meant to be drawn
 		*/
 		shared_ptr<Movable> dummyCameraObject;
-		shared_ptr<GameObject> testObj;
 
 		/**
 		* Contains x,y values of the obstacle's blocks
@@ -126,7 +116,6 @@ class Game {
 		list<Point3f> freeBlockSlots;
 
 		///////////////////////////////////// CLEAN //////////////////////////////////////
-		SDL_Surface * cross;
 
 		MD3Object * dummy;
 
@@ -138,7 +127,7 @@ class Game {
 		* until there are no more platforms
 		*/
 		void buildPlatforms();
-		void killPlatforms();
+		void killPlatform();
 		
 		void buildBlock();
 
@@ -148,7 +137,7 @@ class Game {
 		bool running;	// main loop control
 		bool god;       // god mode for easy debug (can't die, no player collision)
 		Timer worldTimer;
-		void resetLevel();
+		void initLevel();
 		void nextLevel();
 		bool isLevelBuilt();
 		shared_ptr<Level> currentLevel;
@@ -158,7 +147,7 @@ class Game {
 		* Pushes (new) obstacles towards the treasure
 		*/
 		void nextStep();
-		uint currentStep;
+		int currentStep;
 
 		/**
 		* Recreates obstacles and extra blocks

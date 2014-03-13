@@ -20,10 +20,6 @@ Level::~Level() {
 	for (int i = 0; i < width; ++i)
 		delete[] data[i];
 	delete[] data;
-
-#ifdef __DEBUG
-	debug("Level::~Level() finished");
-#endif
 }
 
 void Level::createLevels() {

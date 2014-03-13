@@ -6,8 +6,6 @@
 #include <utility>
 #include <memory>
 
-#include "../engine/core/Debug.h"
-
 #define __MAX_LEVELS 5
 #define __DEFAULT_HEIGHT 3
 
@@ -25,6 +23,8 @@
 
 #define __LEVEL5_WIDTH 19
 #define __LEVEL5_LENGTH 100
+
+static const int MAX_LEVELS = 1;
 
 static const int LEVEL_WIDTHS[] = {
 	0, 5, 9, 13, 15, 19
