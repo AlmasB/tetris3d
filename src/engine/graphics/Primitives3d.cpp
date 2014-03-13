@@ -7,7 +7,7 @@ Primitive3d::Primitive3d(const Point3f & center, float x, float y, float z, GLui
 : Primitive3d(center, x, y, z, SDL_COLOR_GRAY, textureID) {}
 
 Primitive3d::Primitive3d(const Point3f &_center, float _x, float _y, float _z, SDL_Color color, GLuint _textureID)
-: PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(color), originalColor(color) {
+: PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(toSDLColorf(color)), originalColor(toSDLColorf(color)) {
 
 	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
 
@@ -33,7 +33,7 @@ GLuint Primitive3d::createBuffer(GLenum bufferType, const void *bufferData, GLsi
 }
 
 void Primitive3d::setColor(SDL_Color _color) {
-	color = _color;
+	color = toSDLColorf(_color);
 }
 
 void Primitive3d::resetColor() {
@@ -161,7 +161,7 @@ void Cuboid::draw() {
 	glUseProgram(shaderProgram);
 
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
-	glUniform4f(colorLocation, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// TODO: pre-calculate float values
+	glUniform4f(colorLocation, color.r, color.g, color.b, 1.0f);
 
 	if (0 != textureID) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);

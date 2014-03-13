@@ -2,7 +2,7 @@
 
 const float Game::GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
-Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true), currentLevel(Level::getNext()) {
+Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(false), currentLevel(Level::getNext()) {
 
 	std::vector<std::string> resources;
 
@@ -235,7 +235,7 @@ void Game::handleKeyEvents() {
 }
 
 void Game::handlePlayerMovement() {
-	float zLine = -currentLevel->length + 15.0f + 6 * currentStep - 1.0f;
+	float zLine = -currentLevel->length + 16.0f + 6 * currentStep - 1.0f;
 
 	if (eventSystem->isPressed(Key::W)) {
 		player->moveForward();
@@ -320,7 +320,7 @@ void Game::buildBlock() {
 }
 
 void Game::spawnAllBlocks() {
-	float z = -currentLevel->length + 15.0f + 6 * currentStep;
+	float z = -currentLevel->length + 16.0f + 6 * currentStep;
 
 	for (int i = 0; i < currentLevel->height; ++i) {
 		for (int j = 0; j < currentLevel->width; ++j) {

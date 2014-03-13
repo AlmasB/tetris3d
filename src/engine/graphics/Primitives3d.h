@@ -53,8 +53,8 @@ class Primitive3d : public PhysicsObject, public Movable {
 
 		GLuint vbo, ibo;	// vertices, indices
 
-		SDL_Color originalColor;	// TODO: color/texture might not be used at this level of abstraction
-		SDL_Color color;			// besides draw() = 0
+		SDL_Colorf originalColor;	// TODO: color/texture might not be used at this level of abstraction
+		SDL_Colorf color;			// besides draw() = 0
 		GLuint colorLocation;
 
 		GLuint textureID;

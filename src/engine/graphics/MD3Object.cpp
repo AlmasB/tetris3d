@@ -1,8 +1,7 @@
 #include "MD3Object.h"
 
 MD3Object::MD3Object()
-: Primitive3d(Point3f(0, 0, 0), 5, 5, 5, 0) {
-}
+: Primitive3d(Point3f(0, 0, 0), 5, 5, 5, 0) {}
 
 MD3Object::~MD3Object() {
 	delete vertices;
@@ -13,7 +12,7 @@ void MD3Object::draw() {
 	glUseProgram(shaderProgram);
 
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
-	glUniform4f(colorLocation, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);	// TODO: pre-calculate float values
+	glUniform4f(colorLocation, color.r, color.g, color.b, 1.0f);
 
 	if (textureID != 0) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);

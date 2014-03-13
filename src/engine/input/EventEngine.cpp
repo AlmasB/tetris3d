@@ -90,7 +90,7 @@ void EventEngine::runConnThread() {
 				std::cout << c << std::endl;
 			}
 		}
-		SDL_Delay(16);	// TODO: too specific, design flaw, need to isolate the engine side
+		SDL_Delay(16);
 	}
 
 #ifdef __DEBUG
@@ -108,8 +108,8 @@ void EventEngine::pollEvents() {
 			updateKeys(event.key.keysym.sym, event.type == SDL_KEYDOWN);
 		}
 
-		buttons[Mouse::BTN_LEFT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) == 0);
-		buttons[Mouse::BTN_RIGHT] = !((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) == 0);
+		buttons[Mouse::BTN_LEFT]  = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
+		buttons[Mouse::BTN_RIGHT] = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
 	}
 }
 

@@ -37,6 +37,16 @@ inline SDL_Color getRandomColor(int minRGB, int maxRGB) {
 	return color;
 }
 
+// float pre-calculated values for GL drawing
+struct SDL_Colorf {
+	float r, g, b, a;
+};
+
+inline SDL_Colorf toSDLColorf(SDL_Color color) {
+	SDL_Colorf colorf = { color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f };
+	return colorf;
+}
+
 struct Perspective {
 	float fov;	// field of view
 	float width;
