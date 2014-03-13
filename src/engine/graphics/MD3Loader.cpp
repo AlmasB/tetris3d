@@ -92,3 +92,7 @@ void MD3Loader::loadModel(std::string fileName, GLfloat * &vertices, GLushort * 
 		std::cout << "Failed to open file: " << fileName << std::endl;
 	}
 }
+
+/*MD3Object MD3Loader::loadModel(const std::string & fileName) {
+  
+  }*/

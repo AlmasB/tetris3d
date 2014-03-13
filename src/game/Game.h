@@ -36,6 +36,8 @@ using namespace std;	// for debugging
 static const int GAME_W = 800;
 static const int GAME_H = 600;
 
+static const Point3f WORLD_ORIGIN = Point3f(0, 0, 0);
+
 enum CutScene {
 	NONE, LEVEL_BEGINNING, LEVEL_END, PLAYER_DEATH, GAME_WIN
 };
@@ -127,7 +129,6 @@ class Game {
 		SDL_Surface * cross;
 
 		MD3Object * dummy;
-		bool god;
 
 		list<Point2> openPlatforms;
 		list<Point2> getNeighborPlatforms(Point2 current);
@@ -145,6 +146,7 @@ class Game {
 
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
+		bool god;       // god mode for easy debug (can't die, no player collision)
 		Timer worldTimer;
 		void resetLevel();
 		void nextLevel();
