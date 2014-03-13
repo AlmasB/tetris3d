@@ -1,7 +1,7 @@
 #include "GraphicsEngine.h"
 
 GraphicsEngine::GraphicsEngine() : fpsAverage(0), fpsPrevious(0), fpsStart(0), fpsEnd(0) {
-	window = SDL_CreateWindow(_ENGINE_TITLE,
+	window = SDL_CreateWindow(DEFAULT_WINDOW_TITLE.c_str(),
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);

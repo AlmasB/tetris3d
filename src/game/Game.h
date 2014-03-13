@@ -27,8 +27,6 @@
 
 #define _RES_FONT			"res/tetris.ttf"
 
-using namespace std;	// for debugging
-
 static const int GAME_W = 800;
 static const int GAME_H = 600;
 
@@ -56,14 +54,16 @@ class Game {
 		static const float GAME_FPS_DELAY_SEC;	// must be inited in .cpp
 
 		/* ENGINE OBJECTS */
-		shared_ptr<GraphicsEngine> gfx;
-		shared_ptr<AudioEngine> sfx;
-		shared_ptr<EventEngine> eventSystem;
-		shared_ptr<Camera> camera;
+		std::shared_ptr<GraphicsEngine> gfx;
+		std::shared_ptr<AudioEngine> sfx;
+		std::shared_ptr<EventEngine> eventSystem;
+		std::shared_ptr<Camera> camera;
 
 		/* GAME OBJECTS */
-		shared_ptr<Player> player;
-		shared_ptr<GameObject> crosshair;
+		std::shared_ptr<Player> player;
+		std::shared_ptr<GameObject> crosshair;
+
+		std::shared_ptr<MD3Object> dummy;	// TODO: remove after tests
 
 		/**
 		* Invisible entity used to "shoot"
@@ -72,33 +72,33 @@ class Game {
 		*
 		* This object isn't meant to be drawn
 		*/
-		shared_ptr<GameObject> bullet;
+		std::shared_ptr<GameObject> bullet;
 
 		/**
 		* Currently selected ("grabbed by player") object
 		*/
-		shared_ptr<GameObject> selected;
+		std::shared_ptr<GameObject> selected;
 
 		/**
 		* The treasure, the level is won
 		* when player gets it ("collides with it") 
 		*/
-		shared_ptr<GameObject> prize;
+		std::shared_ptr<GameObject> prize;
 
 		/**
 		* ground platforms
 		*/
-		list<shared_ptr<GameObject>> platforms;
+		std::list<std::shared_ptr<GameObject>> platforms;
 
 		/**
 		* Obstacles
 		*/
-		list<shared_ptr<GameObject>> mainBlocks;
+		std::list<std::shared_ptr<GameObject>> mainBlocks;
 
 		/**
 		* Additional block pieces
 		*/
-		list<shared_ptr<GameObject>> extraBlocks;
+		std::list<std::shared_ptr<GameObject>> extraBlocks;
 
 		/**
 		* This can be used when creating cut scenes
@@ -107,31 +107,19 @@ class Game {
 		*
 		* This object isn't meant to be drawn
 		*/
-		shared_ptr<Movable> dummyCameraObject;
+		std::shared_ptr<Movable> dummyCameraObject;
 
 		/**
 		* Contains x,y values of the obstacle's blocks
 		* which are missing
 		*/
-		list<Point3f> freeBlockSlots;
-
-		///////////////////////////////////// CLEAN //////////////////////////////////////
-
-		MD3Object * dummy;
-
-		list<Point2> openPlatforms;
-		list<Point2> getNeighborPlatforms(Point2 current);
+		std::list<Point3f> freeBlockSlots;
 
 		/**
-		* Builds/destroy a certain amount of platforms at a time
-		* until there are no more platforms
+		* Used to build platforms underneath the player
 		*/
-		void buildPlatforms();
-		void killPlatform();
-		
-		void buildBlock();
-
-		//////////////////////////////////////////////////////////////////////////////////
+		std::list<Point2> openPlatforms;
+		std::list<Point2> getNeighborPlatforms(Point2 current);
 
 		/* GAMEPLAY STUFF */
 		bool running;	// main loop control
@@ -140,7 +128,7 @@ class Game {
 		void initLevel();
 		void nextLevel();
 		bool isLevelBuilt();
-		shared_ptr<Level> currentLevel;
+		std::shared_ptr<Level> currentLevel;
 		
 		/**
 		* Level consists of several steps
@@ -148,6 +136,19 @@ class Game {
 		*/
 		void nextStep();
 		int currentStep;
+
+		/**
+		* Builds/destroy a certain amount of platforms at a time
+		* until there are no more platforms
+		*/
+		void buildPlatforms();
+		void killPlatform();
+
+		/**
+		* Snap the block player grabbed to the obstace
+		* if it's near the structure
+		*/
+		void buildBlock();
 
 		/**
 		* Recreates obstacles and extra blocks
@@ -172,7 +173,7 @@ class Game {
 		* its onStart() and its onFinish()
 		* Both timer and frame can be used simultaneously
 		*/
-		uint cutSceneFrame;		// records how much FRAMES passed since FIRST call to this cutscene
+		int cutSceneFrame;		// records how much FRAMES passed since FIRST call to this cutscene
 		Timer cutSceneTimer;	// records how much TIME passed since LAST call to this cutscene
 
 		/**

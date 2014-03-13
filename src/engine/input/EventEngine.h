@@ -39,7 +39,7 @@ class EventEngine {
 
 		IPaddress ip, *remoteip;
 		TCPsocket server, client;
-		char message[1024];	// we're only expecting commands, make buf smaller
+		char message[1024];	// TODO: we're only expecting commands, make buf smaller
 		int len;
 		Uint32 ipaddr;
 		Uint16 port;

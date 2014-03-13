@@ -4,7 +4,7 @@ const float Game::GAME_FPS_DELAY_SEC = (float)GAME_FPS_DELAY_MSEC / __SECOND;
 
 Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), cutSceneFrame(0), god(true), currentLevel(Level::getNext()) {
 
-	vector<string> resources;
+	std::vector<std::string> resources;
 
 	// add texture images
 	resources.push_back(_RES_TEX_BRICK);
@@ -18,10 +18,13 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	resources.push_back(_RES_SFX_CLONG);
 
 	// init engine
-	shared_ptr<GameEngine> engine;
+	std::shared_ptr<GameEngine> engine;
 	try {
 		engine = GameEngine::getInstance();
 		ResourceManager::loadResources(resources);
+
+		dummy = MD3Object::load("res/upper.md3");	// TODO: remove after tests;
+		dummy->setCenter(Point3f(-80, 0, 0));
 	}
 	catch (EngineException & e) {
 		std::cout << "Game::Game()" << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
@@ -35,22 +38,21 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	camera = gfx->getCamera();
 
 	// adjust settings
-	std::string title = "Tetris3D v" + to_string(_TETRIS_VERSION_MAJOR) + "." + to_string(_TETRIS_VERSION_MINOR) + " by " + _TETRIS_AUTHOR;
+	std::string title = "Tetris3D v" + std::to_string(_TETRIS_VERSION_MAJOR) + "." + std::to_string(_TETRIS_VERSION_MINOR) + " by " + _TETRIS_AUTHOR;
 	gfx->setWindowTitle(title.c_str());
 	gfx->setWindowSize(GAME_W, GAME_H);
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 
 	// init world
 	// atm we don't care where we place them, nextLevel() takes care of everything
-	prize = make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
-	player = make_shared<Player>(Point3f(0, 0, 0));
+	prize = std::make_shared<GameObject>(Point3f(0, 0, 0), 2.0f, ResourceManager::getTextureID(_RES_TEX_PRIZE));
+	player = std::make_shared<Player>(Point3f(0, 0, 0));
 	player->setSensitivity(0.15f);
-	crosshair = make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, SDL_COLOR_GREEN);
+	crosshair = std::make_shared<GameObject>(Point3f(0, 0, 1), 0.05f, SDL_COLOR_GREEN);
 	camera->follow(player);
 
-	dummyCameraObject = make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 0);
-	bullet = make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0);
-	dummy = new MD3Object("res/upper.md3");
+	dummyCameraObject = std::make_shared<GameObject>(Point3f(0, 0.0f, 0.0f), 2.0f, 0);
+	bullet = std::make_shared<GameObject>(Point3f(0, 0, 0), 0.5f, 0);
 
 	initLevel();
 }
@@ -126,12 +128,12 @@ void Game::update() {
 	}
 
 	// block - block collision
-	list<shared_ptr<GameObject>> tmp;
+	std::list<std::shared_ptr<GameObject>> tmp;
 	for (auto obj : extraBlocks)
 		tmp.push_back(obj);
 
 	while (!tmp.empty()) {
-		shared_ptr<GameObject> tmpObj = tmp.front();
+		std::shared_ptr<GameObject> tmpObj = tmp.front();
 		tmp.pop_front();
 
 		for (auto obj : tmp) {
@@ -193,16 +195,16 @@ void Game::render() {
 
 	prize->draw();
 
-	crosshair->draw();	// tiny spinning cube
+	crosshair->draw();	// fancy tiny spinning cube
 	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
 
-	gfx->drawText(to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
-	gfx->drawText(to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);	// FPS
+	gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
+	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);	// FPS
 
 	if (dummy)	// MD3 Model
 		dummy->draw();
 	else
-		cout << "NO DUMMY" << endl;
+		std::cout << "NO DUMMY" << std::endl;
 
 	gfx->showScreen();
 }
@@ -223,7 +225,6 @@ void Game::handleKeyEvents() {
 		if (eventSystem->isPressed(Key::D)) selected->move(Vector3f(player->getDirection().z, 0, -player->getDirection().x));
 	}
 
-	// TODO: values need tweaking for greater experience
 	if (eventSystem->isPressed(Key::UP)) player->lookUp(20);
 	if (eventSystem->isPressed(Key::DOWN)) player->lookUp(-20);
 	if (eventSystem->isPressed(Key::LEFT)) player->lookRight(-20);
@@ -327,7 +328,7 @@ void Game::spawnAllBlocks() {
 			float y = i*2.0f + 1.0f;
 
 			if (1 == rand() % 2) {
-				mainBlocks.push_back(make_shared<GameObject>(Point3f(x, y, z), 2.0f, SDL_COLOR_BLUE));
+				mainBlocks.push_back(std::make_shared<GameObject>(Point3f(x, y, z), 2.0f, SDL_COLOR_BLUE));
 			}
 			else {
 				freeBlockSlots.push_back(Point3f(x, y, z));
@@ -339,7 +340,7 @@ void Game::spawnAllBlocks() {
 
 	for (int i = 0; i < blocksNeeded; ++i) {
 		Point3f p((float)getRandom(-currentLevel->width, currentLevel->width), 4 + i*2.0f, player->getCenter().z + getRandom(-5, 5));
-		extraBlocks.push_back(make_shared<GameObject>(p, 2.0f, getRandomColor(50, 200)));
+		extraBlocks.push_back(std::make_shared<GameObject>(p, 2.0f, getRandomColor(50, 200)));
 	}
 }
 
@@ -470,10 +471,10 @@ void Game::resetCutScene() {
 }
 
 void Game::buildPlatforms() {
-	list<Point2> neighbors;
+	std::list<Point2> neighbors;
 
 	for (auto point : openPlatforms) {
-		list<Point2> tmp = getNeighborPlatforms(point);
+		std::list<Point2> tmp = getNeighborPlatforms(point);
 		for (auto p : tmp)
 			neighbors.push_back(p);
 
@@ -481,7 +482,7 @@ void Game::buildPlatforms() {
 		float z = 2.0f * point.y - currentLevel->length;	// place it the way that level center is always at 0.0.0 origin
 
 		// y = -0.1f so that the top of the platforms represent the 0th line in Y - the ground
-		shared_ptr<GameObject> plat = make_shared<GameObject>(Point3f(x, -0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));
+		std::shared_ptr<GameObject> plat = std::make_shared<GameObject>(Point3f(x, -0.1f, z), 2.0f, 0.2f, 2.0f, ResourceManager::getTextureID(_RES_TEX_BRICK));
 		platforms.push_back(plat);
 	}
 
@@ -494,8 +495,8 @@ void Game::killPlatform() {
 	}
 }
 
-list<Point2> Game::getNeighborPlatforms(Point2 currentNode) {
-	list<Point2> openNodes;
+std::list<Point2> Game::getNeighborPlatforms(Point2 currentNode) {
+	std::list<Point2> openNodes;
 
 	int x1 = currentNode.x - 1;
 	int x2 = currentNode.x + 1;

@@ -11,8 +11,8 @@
 #include "ResourceManager.h"
 #include "Timer.h"
 
-#define __ENGINE_VERSION_MAJOR 0
-#define __ENGINE_VERSION_MINOR 1
+#define _ENGINE_VERSION_MAJOR 0
+#define _ENGINE_VERSION_MINOR 1
 
 class GameEngine {
 	private:
@@ -45,6 +45,5 @@ class GameEngine {
 		std::shared_ptr<AudioEngine> getAudioEngine() { return audioInstance; }
 		std::shared_ptr<EventEngine> getEventEngine() {	return eventInstance; }
 };
-
 
 #endif

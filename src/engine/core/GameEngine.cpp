@@ -3,8 +3,8 @@
 std::shared_ptr<GameEngine> GameEngine::instance = nullptr;
 
 GameEngine::GameEngine() {
-	std::cout << "Initializing The Cube Game Engine v." << __ENGINE_VERSION_MAJOR
-		<< "." << __ENGINE_VERSION_MINOR << std::endl;
+	std::cout << "Initializing " << DEFAULT_WINDOW_TITLE << " v" << _ENGINE_VERSION_MAJOR
+		<< "." << _ENGINE_VERSION_MINOR << " by Almas" << std::endl;
 
 #ifdef __DEBUG
 	#if defined(_WIN32)

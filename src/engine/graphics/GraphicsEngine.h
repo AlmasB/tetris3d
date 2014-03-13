@@ -22,17 +22,15 @@
 #include "ShaderManager.h"
 
 /* ENGINE DEFAULT SETTINGS */
-
-#define _ENGINE_TITLE     "Powered by The Cube Game Engine, by Almas"
-
+static const std::string DEFAULT_WINDOW_TITLE = "The X-CUBE Game Engine";
 static const int DEFAULT_WINDOW_WIDTH = 800;
 static const int DEFAULT_WINDOW_HEIGHT = 600;
 
-static const SDL_Color SDL_COLOR_GRAY = { 0x80, 0x80, 0x80 };
-static const SDL_Color SDL_COLOR_YELLOW = {0xFF, 0xFF, 0};
-static const SDL_Color SDL_COLOR_RED = { 0xFF, 0, 0 };
-static const SDL_Color SDL_COLOR_GREEN = { 0, 0xFF, 0 };
-static const SDL_Color SDL_COLOR_BLUE = { 0, 0, 0xFF };
+static const SDL_Color SDL_COLOR_GRAY	= { 0x80, 0x80, 0x80 };
+static const SDL_Color SDL_COLOR_YELLOW = { 0xFF, 0xFF, 0 };
+static const SDL_Color SDL_COLOR_RED	= { 0xFF, 0, 0 };
+static const SDL_Color SDL_COLOR_GREEN	= { 0, 0xFF, 0 };
+static const SDL_Color SDL_COLOR_BLUE	= { 0, 0, 0xFF };
 
 inline SDL_Color getRandomColor(int minRGB, int maxRGB) {
 	SDL_Color color = { (Uint8)getRandom(minRGB, maxRGB), (Uint8)getRandom(minRGB, maxRGB), (Uint8)getRandom(minRGB, maxRGB) };
@@ -143,9 +141,7 @@ class GraphicsEngine {
 		void adjustFPSDelay(const Uint32 &);
 		Uint32 getAverageFPS();
 
-		std::shared_ptr<Camera> getCamera();
-
-		
+		std::shared_ptr<Camera> getCamera();	
 };
 
 typedef GraphicsEngine GFX;

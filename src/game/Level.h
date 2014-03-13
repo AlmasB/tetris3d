@@ -24,8 +24,9 @@
 #define __LEVEL5_WIDTH 19
 #define __LEVEL5_LENGTH 100
 
-static const int MAX_LEVELS = 1;
+static const int MAX_LEVELS = 5;
 
+/*
 static const int LEVEL_WIDTHS[] = {
 	0, 5, 9, 13, 15, 19
 };
@@ -33,7 +34,7 @@ static const int LEVEL_WIDTHS[] = {
 static const int LEVEL_LENGTHS[] = {
 	0, 30, 40, 50, 70, 100
 };
-
+*/
 static const std::string LEVEL1_DATA[__LEVEL1_LENGTH] = {
 	"00000",
 	"00000",
@@ -397,14 +398,12 @@ class Level {
 		static std::list<std::shared_ptr<Level>> levels;
 		Level(int, int, int, int, const std::string[]);
 		static void createLevels();
-		static int numberOfLevels;
 	public:
 		~Level();
 		int number, width, height, length;
 		bool ** data;
 
 		static std::shared_ptr<Level> getNext();
-		static int getNumberOfLevels();
 };
 
 #endif

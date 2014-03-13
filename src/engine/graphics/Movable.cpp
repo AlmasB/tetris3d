@@ -95,7 +95,7 @@ void Movable::lookAt(const Point3f &point) {
 }
 
 #ifdef __DEBUG
-void Movable::printDebug(uint infoFlag) {
+void Movable::printDebug(int infoFlag) {
 	if (__CENTER & infoFlag) {
 		Point3f p = getCenter();
 		std::cout << "DEBUG: CENTER(" << p.x << "," << p.y << "," << p.z << ")" << std::endl;

@@ -1,7 +1,6 @@
 #include "Level.h"
 
 std::list<std::shared_ptr<Level>> Level::levels;
-int Level::numberOfLevels;
 
 Level::Level(int value, int w, int h, int l, const std::string levelData[]) : number(value), width(w), height(h), length(l) {
 	data = new bool* [width];
@@ -27,9 +26,7 @@ void Level::createLevels() {
 	levels.push_back(std::shared_ptr<Level>(new Level(2, __LEVEL2_WIDTH, __DEFAULT_HEIGHT, __LEVEL2_LENGTH, LEVEL2_DATA)));
 	levels.push_back(std::shared_ptr<Level>(new Level(3, __LEVEL3_WIDTH, __DEFAULT_HEIGHT, __LEVEL3_LENGTH, LEVEL3_DATA)));
 	levels.push_back(std::shared_ptr<Level>(new Level(4, __LEVEL4_WIDTH, __DEFAULT_HEIGHT, __LEVEL4_LENGTH, LEVEL4_DATA)));
-	//levels.push_back(std::shared_ptr<Level>(new Level(5, __LEVEL5_WIDTH, __DEFAULT_HEIGHT, __LEVEL5_LENGTH, LEVEL5_DATA)));
-
-	numberOfLevels = levels.size();
+	levels.push_back(std::shared_ptr<Level>(new Level(5, __LEVEL5_WIDTH, __DEFAULT_HEIGHT, __LEVEL5_LENGTH, LEVEL5_DATA)));
 }
 
 std::shared_ptr<Level> Level::getNext() {
@@ -39,10 +36,5 @@ std::shared_ptr<Level> Level::getNext() {
 	std::shared_ptr<Level> level = levels.front();
 	levels.erase(levels.begin());
 	return level;
-}
-
-//TODO: maybe count levels, certainly don't return that
-int Level::getNumberOfLevels() {
-	return numberOfLevels;
 }
 

@@ -58,7 +58,7 @@ class Movable {
 		float getVerAngle() { return verAngle; }
 
 #ifdef __DEBUG
-		void printDebug(uint infoFlag);
+		void printDebug(int infoFlag);
 #endif
 };
 
