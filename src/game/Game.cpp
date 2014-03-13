@@ -455,7 +455,21 @@ void Game::playCutScenePlayerDeath() {
 }
 
 void Game::playCutSceneGameWin() {
-	// TODO: do something fancy here as player won the game
+  player->lookAt(Point3f(0, 0, 0));
+  if (cutSceneTimer.getElapsed() >= 0.075 * __SECOND) {
+    killPlatforms();
+    player->addScore(SCORE_PER_BLOCK);
+  }
+
+  if (eventSystem->isPressed(Key::SPACE) || platforms.empty()) {
+    while (!platforms.empty()) {
+      killPlatforms();
+      player->addScore(SCORE_PER_BLOCK);
+    }
+
+    resetCutScene();
+    running = false;
+  }
 }
 
 void Game::resetCutScene() {
