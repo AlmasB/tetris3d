@@ -77,10 +77,12 @@ Game::~Game() {
 
 #ifdef __DEBUG
 	debug("Game::~Game() finished");
+	debug("The game finished and cleaned up successfully. Press Enter to exit");
+	getchar();
 #endif
 }
 
-void Game::runMainLoop() {
+int Game::runMainLoop() {
 #ifdef __DEBUG
 	debug("Entered Main Loop");
 #endif
@@ -108,6 +110,7 @@ void Game::runMainLoop() {
 #ifdef __DEBUG
 	debug("Exited Main Loop");
 #endif
+	return 0;
 }
 
 void Game::update() {
@@ -159,6 +162,7 @@ void Game::update() {
 			currentCutScene = CutScene::PLAYER_DEATH;
 	}
 
+	// handle player's grabbed cube
 	buildBlock();
 
 	// every five seconds destroy a platform

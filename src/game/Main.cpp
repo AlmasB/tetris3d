@@ -1,25 +1,17 @@
 #include "Game.h"
 
-int main(int argc, char * args[]) {
-
-	std::unique_ptr<Game> game;
-	
+int mainImpl() {
 	try {
-		game = std::unique_ptr<Game>(new Game());
+		Game game;
+		return game.runMainLoop();
 	}
-	catch (int exit) {
-		std::cout << "Game init failed. See above trace (if any). Press Enter to exit" << std::endl;
+	catch (int code) {
+		std::cout << "Game launch failed. See above trace (if any). Press Enter to exit" << std::endl;
 		getchar();
-		return exit;
+		return code;
 	}
+}
 
-	game->runMainLoop();
-	game.reset();
-
-#ifdef __DEBUG
-	debug("The game finished and cleaned up successfully. Press Enter to exit");
-	getchar();
-#endif
-
-	return 0;
+int main(int argc, char * args[]) {
+	return mainImpl();
 }

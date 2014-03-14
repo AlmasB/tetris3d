@@ -212,7 +212,7 @@ class Game {
 		Game();
 		~Game();
 
-		void runMainLoop();
+		int runMainLoop();
 };
 
 #endif
