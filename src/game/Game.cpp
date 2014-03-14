@@ -35,6 +35,7 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	gfx = engine->getGraphicsEngine();
 	sfx = engine->getAudioEngine();
 	eventSystem = engine->getEventEngine();
+	physics = engine->getPhysicsEngine();
 	camera = gfx->getCamera();
 
 	// adjust settings
@@ -42,6 +43,8 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	gfx->setWindowTitle(title.c_str());
 	gfx->setWindowSize(GAME_W, GAME_H);
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
+	eventSystem->setMouseRelative(true);	// trap mouse for FPS
+	physics->setGravity(-1.0f, GAME_FPS_DELAY_SEC);
 
 	// init world
 	// atm we don't care where we place them, nextLevel() takes care of everything
@@ -108,12 +111,9 @@ void Game::runMainLoop() {
 }
 
 void Game::update() {
-	// gravity value 1.0f, set gravity and update time to phys engine
-	Vector3f gravity(0, -GAME_FPS_DELAY_SEC * 1.0f, 0);
-
 	for (auto block : extraBlocks) {
 		if (selected != block) {
-			block->move(gravity);
+			block->applyGravity(*physics);
 		}
 	}
 
@@ -121,7 +121,7 @@ void Game::update() {
 	for (auto block : extraBlocks) {
 		for (auto platform : platforms) {
 			if (platform->isColliding(*block)) {
-				block->move(gravity * -1.0f);
+				block->applyAntiGravity(*physics);
 				break;
 			}
 		}
@@ -138,7 +138,7 @@ void Game::update() {
 
 		for (auto obj : tmp) {
 			if (obj->isColliding(*tmpObj)) {
-				tmpObj->move(gravity * -1.0f);
+				tmpObj->applyAntiGravity(*physics);
 				break;
 			}
 		}
@@ -199,7 +199,7 @@ void Game::render() {
 	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
 
 	gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
-	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, 600, 50);	// FPS
+	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, GAME_W - 200, 50);	// FPS
 
 	if (dummy)	// MD3 Model
 		dummy->draw();

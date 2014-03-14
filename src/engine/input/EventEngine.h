@@ -22,6 +22,8 @@ enum Mouse {
 	BTN_LEFT, BTN_RIGHT, BTN_LAST
 };
 
+static const Uint16 PORT = 55555;	// should be safe
+
 class EventEngine {
 	friend class GameEngine;
 	private:
@@ -33,13 +35,12 @@ class EventEngine {
 
 		void updateKeys(const SDL_Keycode &, bool);
 
-
-		bool androidCtrlEnabled;
+		bool remoteEventEnabled;
 		std::thread * connThread;
 
 		IPaddress ip, *remoteip;
 		TCPsocket server, client;
-		char message[1024];	// TODO: we're only expecting commands, make buf smaller
+		char message[8];	// recv buffer;
 		int len;
 		Uint32 ipaddr;
 		Uint16 port;
@@ -47,8 +48,6 @@ class EventEngine {
 		EventEngine();
 	public:
 		~EventEngine();
-
-		bool isRunning();
 
 		/**
 		* Equivalent to calling SDL_PollEvent()
@@ -58,6 +57,8 @@ class EventEngine {
 		bool isPressed(Key);
 		bool isPressed(Mouse);
 		
+		void setMouseRelative(bool);
+
 		/**
 		* Returns mouse's delta position
 		* It's the difference between current and

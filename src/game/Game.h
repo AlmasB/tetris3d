@@ -57,6 +57,7 @@ class Game {
 		std::shared_ptr<GraphicsEngine> gfx;
 		std::shared_ptr<AudioEngine> sfx;
 		std::shared_ptr<EventEngine> eventSystem;
+		std::shared_ptr<PhysicsEngine> physics;
 		std::shared_ptr<Camera> camera;
 
 		/* GAME OBJECTS */

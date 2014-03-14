@@ -59,7 +59,6 @@ Vector3f Primitive3d::getScale() {
 
 void Primitive3d::rotate(float x, float y, float z) {
 	transformer.rotate += Vector3f(x, y, z);
-	// not changing bbox here
 }
 
 void Primitive3d::setRotate(float x, float y, float z) {
@@ -69,16 +68,24 @@ void Primitive3d::setRotate(float x, float y, float z) {
 void Primitive3d::setCenter(float x, float y, float z) {
 	center = Point3f(x, y, z);
 	transformer.center = Vector3f(x, y, z);
-	// only changed center point no need to change bbox
 }
 
-// or the other way around
 void Primitive3d::setCenter(const Point3f & _center) {
 	setCenter(_center.x, _center.y, _center.z);
 }
 
 void Primitive3d::move(const Vector3f & v) {
 	center += v;
+	transformer.center = Vector3f(center.x, center.y, center.z);
+}
+
+void Primitive3d::applyGravity(const PhysicsEngine & engine) {
+	PhysicsObject::applyGravity(engine);
+	transformer.center = Vector3f(center.x, center.y, center.z);
+}
+
+void Primitive3d::applyAntiGravity(const PhysicsEngine & engine) {
+	PhysicsObject::applyAntiGravity(engine);
 	transformer.center = Vector3f(center.x, center.y, center.z);
 }
 

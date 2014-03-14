@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
+EventEngine::EventEngine() : running(true), remoteEventEnabled(true) {
 	for (int i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}
@@ -8,26 +8,36 @@ EventEngine::EventEngine() : running(true), androidCtrlEnabled(false) {
 	buttons[Mouse::BTN_LEFT] = false;
 	buttons[Mouse::BTN_RIGHT] = false;
 
-	if (SDL_SetRelativeMouseMode(SDL_TRUE) < 0) {	// trap mouse inside for fps mode
+	if (remoteEventEnabled) {
+		bool netOK = true, ipOK = true, serverOK = true;
+
+		if (SDLNet_Init() < 0) {
+			netOK = false;
 #ifdef __DEBUG
-		debug("Warning: SDL_SetRelativeMouseMode() isn't supported");
+			debug("Failed to init SDL_net", SDLNet_GetError());
 #endif
-	}
+		}
 
-	if (SDLNet_Init() < 0)
-		throw EngineException("Failed to init SDL_net", SDLNet_GetError());
+		if (!netOK || SDLNet_ResolveHost(&ip, NULL, PORT) < 0) {
+			ipOK = false;
+#ifdef __DEBUG
+			debug("Failed to resolve host", SDLNet_GetError());
+			debug("Port:", PORT);
+#endif
+		}
 
-	if (androidCtrlEnabled) {
-
-		port = (Uint16)strtol("55555", NULL, 0);	// TODO: replace with int value
-		if (SDLNet_ResolveHost(&ip, NULL, port) < 0)	// TODO: if we can't use android as controller 
-			throw EngineException("Failed to resolve host at port 55555", SDLNet_GetError());	// no reason to throw exceptions to leave the game
-
-		server = SDLNet_TCP_Open(&ip);
-		if (nullptr == server)
-			throw EngineException("Failed to create local server", SDLNet_GetError());
-
-		connThread = new std::thread(&EventEngine::runConnThread, this);
+		if (netOK && ipOK) {
+			server = SDLNet_TCP_Open(&ip);
+			if (server != nullptr) {
+				connThread = new std::thread(&EventEngine::runConnThread, this);
+#ifdef __DEBUG
+				debug("EventEngine::remoteEventEnabled successful");
+#endif
+			}
+			else {
+				debug("Failed to create local server", SDLNet_GetError());
+			}
+		}
 	}
 }
 
@@ -41,9 +51,10 @@ EventEngine::~EventEngine() {
 	if (connThread)
 		connThread->join();	// wait till it finishes
 
-	if (nullptr != client)
+	if (client != nullptr)
 		SDLNet_TCP_Close(client);
-	//SDLNet_TCP_Close(server);
+	if (server != nullptr)
+		SDLNet_TCP_Close(server);
 
 	safeDelete(connThread);
 	SDLNet_Quit();
@@ -65,11 +76,7 @@ void EventEngine::runConnThread() {
 		else {
 			remoteip = SDLNet_TCP_GetPeerAddress(client);	// TODO: do init once and redo on connection lost
 			ipaddr = SDL_SwapBE32(remoteip->host);
-			len = SDLNet_TCP_Recv(client, message, 1024);	// doesn't return until catches a tcp packet
-
-#ifdef __DEBUG
-			std::cout << "Received: " << len << " bytes" << std::endl;
-#endif
+			len = SDLNet_TCP_Recv(client, message, 8);	// doesn't return until catches a tcp packet
 
 			for (int i = 0; i < len; ++i) {
 				char c = (int)message[i];
@@ -86,8 +93,6 @@ void EventEngine::runConnThread() {
 					for (int i = 0; i < Key::LAST; ++i)
 						keys[i] = false;
 				}
-
-				std::cout << c << std::endl;
 			}
 		}
 		SDL_Delay(16);
@@ -96,10 +101,6 @@ void EventEngine::runConnThread() {
 #ifdef __DEBUG
 	debug("EventEngine::runConnThread() finished on a separate thread");
 #endif
-}
-
-bool EventEngine::isRunning() {
-	return running;
 }
 
 void EventEngine::pollEvents() {
@@ -140,6 +141,14 @@ bool EventEngine::isPressed(Key key) {
 
 bool EventEngine::isPressed(Mouse btn) {
 	return buttons[btn];
+}
+
+void EventEngine::setMouseRelative(bool b) {
+	if (SDL_SetRelativeMouseMode(b ? SDL_TRUE : SDL_FALSE) < 0) {
+#ifdef __DEBUG
+		debug("Warning: SDL_SetRelativeMouseMode() isn't supported");
+#endif
+	}
 }
 
 Point2 EventEngine::getMouseDPos() {

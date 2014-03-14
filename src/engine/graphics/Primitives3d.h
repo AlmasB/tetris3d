@@ -85,6 +85,9 @@ class Primitive3d : public PhysicsObject, public Movable {
 		Point3f getCenter();
 		Vector3f getScale();
 
+		virtual void applyGravity(const PhysicsEngine & engine);
+		virtual void applyAntiGravity(const PhysicsEngine & engine);
+
 		virtual void draw() = 0;
 };
 

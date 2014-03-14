@@ -46,6 +46,8 @@ GameEngine::GameEngine() {
 #ifdef __DEBUG
 		debug("EventEngine() successful");
 #endif
+
+		physicsInstance = std::shared_ptr<PhysicsEngine>(new PhysicsEngine());
 	}
 	catch (EngineException & e) {
 		throw e;

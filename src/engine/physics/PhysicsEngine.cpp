@@ -13,3 +13,19 @@ bool PhysicsObject::isColliding(const PhysicsObject & other) {
 
 	return r1.intersects(r2);
 }
+
+void PhysicsObject::applyGravity(const PhysicsEngine & engine) {
+	center += engine.gravity;
+}
+
+void PhysicsObject::applyAntiGravity(const PhysicsEngine & engine) {
+	center -= engine.gravity;
+}
+
+/* PHYSICS ENGINE */
+
+PhysicsEngine::PhysicsEngine() : gravity(Vector3f(0, DEFAULT_GRAVITY, 0)) {}
+
+void PhysicsEngine::setGravity(float val, float interval) {
+	gravity = Vector3f(0, val * interval, 0);
+}

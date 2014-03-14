@@ -8,6 +8,7 @@
 #include "../graphics/GraphicsEngine.h"
 #include "../audio/AudioEngine.h"
 #include "../input/EventEngine.h"
+#include "../physics/PhysicsEngine.h"
 #include "ResourceManager.h"
 #include "Timer.h"
 
@@ -20,6 +21,7 @@ class GameEngine {
 		std::shared_ptr<GraphicsEngine> gfxInstance;
 		std::shared_ptr<AudioEngine> audioInstance;
 		std::shared_ptr<EventEngine> eventInstance;
+		std::shared_ptr<PhysicsEngine> physicsInstance;
 
 		GameEngine();
 	public:
@@ -44,6 +46,7 @@ class GameEngine {
 		std::shared_ptr<GraphicsEngine> getGraphicsEngine() { return gfxInstance; }
 		std::shared_ptr<AudioEngine> getAudioEngine() { return audioInstance; }
 		std::shared_ptr<EventEngine> getEventEngine() {	return eventInstance; }
+		std::shared_ptr<PhysicsEngine> getPhysicsEngine() { return physicsInstance; }
 };
 
 #endif

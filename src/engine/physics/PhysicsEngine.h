@@ -3,6 +3,22 @@
 
 #include "../math/GameMath.h"
 
+static const float DEFAULT_GRAVITY = -1.0f;
+
+class PhysicsEngine {
+	friend class GameEngine;
+	friend class PhysicsObject;
+private:
+	Vector3f gravity;
+	PhysicsEngine();
+public:
+	/**
+	* Note that gravity is naturally a negative value
+	* update interval in seconds
+	*/
+	void setGravity(float gravityValue, float worldUpdateInterval);
+};
+
 class PhysicsObject {
 	protected:
 		Point3f center;
@@ -19,12 +35,12 @@ class PhysicsObject {
 		float getHalfLengthZ() { return hlZ; }
 
 		bool isColliding(const PhysicsObject & other);
-};
-
-class PhysicsEngine {
-
-
-	// setGravity();
+		/**
+		* If we have different implementations of engines/gravity
+		* this can be very useful
+		*/
+		virtual void applyGravity(const PhysicsEngine & engine);
+		virtual void applyAntiGravity(const PhysicsEngine & engine);
 };
 
 #endif
