@@ -28,6 +28,13 @@ For Linux:
 For Windows:
 
 Use cmake 2.6+, CMakeLists.txt included
+Use MS Visual Studio 2013+, as versions below don't support some c++ features used in Tetris3d
+
+## Debug ##
+
+In the file src/engine/core/Debug.h
+
+uncomment #define __DEBUG to see hopefully useful debug info on terminal
     
 ## Extra: ##
 
