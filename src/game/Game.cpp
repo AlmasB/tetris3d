@@ -42,7 +42,7 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 	std::string title = "Tetris3D v" + std::to_string(_TETRIS_VERSION_MAJOR) + "." + std::to_string(_TETRIS_VERSION_MINOR) + " by " + _TETRIS_AUTHOR;
 	gfx->setWindowTitle(title.c_str());
 	gfx->setWindowSize(GAME_W, GAME_H);
-	gfx->useFont(ResourceManager::getFont(_RES_FONT));
+	//gfx->useFont(ResourceManager::getFont(_RES_FONT));
 	eventSystem->setMouseRelative(true);	// trap mouse for FPS
 	physics->setGravity(-1.0f, GAME_FPS_DELAY_SEC);
 
@@ -200,10 +200,10 @@ void Game::render() {
 	prize->draw();
 
 	crosshair->draw();	// fancy tiny spinning cube
-	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
+	//gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
 
-	gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
-	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, GAME_W - 200, 50);	// FPS
+	//gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
+	//gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, GAME_W - 200, 50);	// FPS
 
 	if (dummy)	// MD3 Model
 		dummy->draw();

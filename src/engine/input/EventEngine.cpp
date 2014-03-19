@@ -1,6 +1,6 @@
 #include "EventEngine.h"
 
-EventEngine::EventEngine() : running(true), remoteEventEnabled(true) {
+EventEngine::EventEngine() : running(true), remoteEventEnabled(false) {
 	for (int i = 0; i < Key::LAST; ++i) {
 		keys[i] = false;
 	}

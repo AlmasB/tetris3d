@@ -10,7 +10,7 @@
 static const char* vertexShaderCode = "                                             \n\
 #version 120                                                                        \n\
 																					\n\
-attribute vec3 position;                                                            \n\
+attribute vec3 Position;                                                            \n\
 attribute vec2 UV;                                                                  \n\
 uniform mat4 mvp;                                                                   \n\
 varying vec2 outUV;                                                                 \n\
@@ -20,9 +20,9 @@ uniform int useUI;																	\n\
 																					\n\
 void main() {                                                                       \n\
 	if (useUI == 0) {																\n\
-		gl_Position = mvp * vec4(position, 1.0);                                    \n\
+		gl_Position = mvp * vec4(Position, 1.0);                                    \n\
 	}else{																			\n\
-		vec2 size = position.xy - windowSize;										\n\
+		vec2 size = Position.xy - windowSize;										\n\
 		size /= windowSize;															\n\
 		gl_Position = vec4(size, 0, 1);												\n\
 	}																				\n\
