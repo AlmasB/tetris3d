@@ -5,11 +5,7 @@
 #include <thread>
 
 #include <SDL2/SDL.h>
-#ifdef _WIN32
-	#include <SDL2/SDL_net.h>
-#else
-	#include <SDL/SDL_net.h>
-#endif
+#include <SDL2/SDL_net.h>
 
 #include "../core/EngineCommon.h"
 #include "../math/GameMath.h"

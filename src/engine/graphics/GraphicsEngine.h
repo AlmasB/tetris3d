@@ -8,11 +8,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#ifdef _WIN32
-	#include <SDL2/SDL_ttf.h>
-#else
-	#include <SDL/SDL_ttf.h>
-#endif
+#include <SDL2/SDL_ttf.h>
 
 #include <GL/glew.h>
 #include <GL/glu.h>
