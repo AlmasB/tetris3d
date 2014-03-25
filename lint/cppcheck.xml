@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="1.63.1"/>
+    <errors>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Matrix4f::m&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Matrix4f::m&amp;#039; is not initialized in the constructor.">
+            <location file="engine\math\GameMath.h" line="171"/>
+        </error>
+        <error id="exceptRethrowCopy" severity="style" msg="Throwing a copy of the caught exception instead of rethrowing the original exception." verbose="Rethrowing an exception with &amp;#039;throw e;&amp;#039; creates an unnecessary copy of &amp;#039;e&amp;#039;. To rethrow the caught exception without unnecessary copying or slicing, use a bare &amp;#039;throw;&amp;#039;.">
+            <location file="engine\core\GameEngine.cpp" line="53"/>
+        </error>
+        <error id="useInitializationList" severity="performance" msg="Variable &amp;#039;assigned&amp;#039; is assigned in constructor body. Consider performing initialization in initialization list." verbose="When an object of a class is created, the constructors of all member variables are called consecutively in the order the variables are declared, even if you don&amp;#039;t explicitly write them to the initialization list. You could avoid assigning &amp;#039;assigned&amp;#039; a value by passing the value to the constructor in the initialization list.">
+            <location file="engine\graphics\GraphicsEngine.cpp" line="289"/>
+        </error>
+        <error id="exceptRethrowCopy" severity="style" msg="Throwing a copy of the caught exception instead of rethrowing the original exception." verbose="Rethrowing an exception with &amp;#039;throw e;&amp;#039; creates an unnecessary copy of &amp;#039;e&amp;#039;. To rethrow the caught exception without unnecessary copying or slicing, use a bare &amp;#039;throw;&amp;#039;.">
+            <location file="engine\graphics\MD3Object.cpp" line="147"/>
+        </error>
+        <error id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: surfaces" verbose="Mismatching allocation and deallocation: surfaces">
+            <location file="engine\graphics\MD3Object.cpp" line="129"/>
+        </error>
+        <error id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: tris" verbose="Mismatching allocation and deallocation: tris">
+            <location file="engine\graphics\MD3Object.cpp" line="121"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: verticesLocal" verbose="Memory leak: verticesLocal">
+            <location file="engine\graphics\MD3Object.cpp" line="122"/>
+        </error>
+        <error id="useInitializationList" severity="performance" msg="Variable &amp;#039;direction&amp;#039; is assigned in constructor body. Consider performing initialization in initialization list." verbose="When an object of a class is created, the constructors of all member variables are called consecutively in the order the variables are declared, even if you don&amp;#039;t explicitly write them to the initialization list. You could avoid assigning &amp;#039;direction&amp;#039; a value by passing the value to the constructor in the initialization list.">
+            <location file="engine\graphics\Movable.cpp" line="4"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;serverOK&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;serverOK&amp;#039; is assigned a value that is never used.">
+            <location file="engine\input\EventEngine.cpp" line="12"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&amp;#039;class EventEngine&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&amp;#039;class EventEngine&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="engine\input\EventEngine.h" line="23"/>
+        </error>
+        <error id="unusedPrivateFunction" severity="style" msg="Unused private function: &amp;#039;Game::isLevelBuilt&amp;#039;" verbose="Unused private function: &amp;#039;Game::isLevelBuilt&amp;#039;">
+            <location file="game\Game.h" line="131"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&amp;#039;class Level&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&amp;#039;class Level&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="game\Level.h" line="397"/>
+        </error>
+    </errors>
+</results>
