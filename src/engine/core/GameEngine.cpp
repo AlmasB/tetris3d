@@ -50,7 +50,7 @@ GameEngine::GameEngine() {
 		physicsInstance = std::shared_ptr<PhysicsEngine>(new PhysicsEngine());
 	}
 	catch (EngineException & e) {
-		throw e;
+		throw;
 	}
 }
 

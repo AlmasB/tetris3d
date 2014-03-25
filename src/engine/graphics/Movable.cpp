@@ -1,9 +1,7 @@
 #include "Movable.h"
 
-Movable::Movable() : sensitivity(0.05f), speed(0.15f) {
-	direction = Vector3f(0.0f, 0.0f, 1.0f);
+Movable::Movable() : sensitivity(0.05f), speed(0.15f), direction(Vector3f(0, 0, 1.0f)), up(Vector3f(0, 1.0f, 0)) {
 	direction.normalize();
-	up = Vector3f(0.0f, 1.0f, 0.0f);
 
 	Vector3f horDirection(direction.x, 0.0, direction.z);
 	horDirection.normalize();

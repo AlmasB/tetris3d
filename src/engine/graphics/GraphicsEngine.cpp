@@ -119,9 +119,6 @@ void GraphicsEngine::useFont(TTF_Font * _font) {
 		return;
 	}
 
-	if (nullptr != font) {
-		TTF_CloseFont(font);
-	}
 	font = _font;
 }
 
