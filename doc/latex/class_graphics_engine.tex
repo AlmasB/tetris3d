@@ -1,0 +1,123 @@
+\hypertarget{class_graphics_engine}{\section{Graphics\-Engine Class Reference}
+\label{class_graphics_engine}\index{Graphics\-Engine@{Graphics\-Engine}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_graphics_engine_a3c762f654289926d1d37fc11b8451b7b}{void {\bfseries use\-Font} (T\-T\-F\-\_\-\-Font $\ast$font)}\label{class_graphics_engine_a3c762f654289926d1d37fc11b8451b7b}
+
+\item 
+\hypertarget{class_graphics_engine_a5e0bf4588307cf39d9a8b4fc77e660b7}{G\-Luint {\bfseries create\-G\-L\-Texture\-From\-Text} (std\-::string text, S\-D\-L\-\_\-\-Color text\-Color)}\label{class_graphics_engine_a5e0bf4588307cf39d9a8b4fc77e660b7}
+
+\item 
+\hypertarget{class_graphics_engine_a6fe76ac830cd99796fe7e55501fc7393}{void {\bfseries clear\-Screen} ()}\label{class_graphics_engine_a6fe76ac830cd99796fe7e55501fc7393}
+
+\item 
+void \hyperlink{class_graphics_engine_a809086544539f7951ff16b1fb5a21783}{show\-Screen} ()
+\item 
+void \hyperlink{class_graphics_engine_a6280649bcac200adbec6288461de5290}{draw\-G\-L\-Texture} (G\-Luint texture\-I\-D, float x, float y, int w, int h)
+\item 
+\hypertarget{class_graphics_engine_aeccb5f9c32d24d6dda5376046432be76}{void {\bfseries draw\-Text} (std\-::string text, S\-D\-L\-\_\-\-Color color, float x, float y)}\label{class_graphics_engine_aeccb5f9c32d24d6dda5376046432be76}
+
+\item 
+void \hyperlink{class_graphics_engine_aa25554f00d58f56e9e7ef7cafa599939}{draw\-S\-D\-L\-Surface} (S\-D\-L\-\_\-\-Surface $\ast$surf, float x, float y)
+\item 
+\hypertarget{class_graphics_engine_afa53cf997eeefcfc51436d181bbaf01e}{void {\bfseries draw\-S\-D\-L\-Surface} (S\-D\-L\-\_\-\-Surface $\ast$surf, float x, float y, int w, int h)}\label{class_graphics_engine_afa53cf997eeefcfc51436d181bbaf01e}
+
+\item 
+\hypertarget{class_graphics_engine_a260a209aa43ba6c8ee8f02b7f538be5e}{void {\bfseries set\-Window\-Icon} (const char $\ast$)}\label{class_graphics_engine_a260a209aa43ba6c8ee8f02b7f538be5e}
+
+\item 
+\hypertarget{class_graphics_engine_a2abe6055f012508eb0a53c7e36c8812a}{void {\bfseries set\-Window\-Size} (const int \&, const int \&)}\label{class_graphics_engine_a2abe6055f012508eb0a53c7e36c8812a}
+
+\item 
+\hypertarget{class_graphics_engine_a74652c52a142be2a11ddcb11c7b91125}{void {\bfseries set\-Window\-Title} (const char $\ast$title)}\label{class_graphics_engine_a74652c52a142be2a11ddcb11c7b91125}
+
+\item 
+\hypertarget{class_graphics_engine_a6ab877f0503878145ee323f474dd3eee}{void {\bfseries set\-Fullscreen} (bool)}\label{class_graphics_engine_a6ab877f0503878145ee323f474dd3eee}
+
+\item 
+\hypertarget{class_graphics_engine_aed11f2a7d7a4fb586ad9479ab08ef0a5}{\hyperlink{struct_dimension2i}{Dimension2i} {\bfseries get\-Window\-Size} ()}\label{class_graphics_engine_aed11f2a7d7a4fb586ad9479ab08ef0a5}
+
+\item 
+\hypertarget{class_graphics_engine_a2d160c2a4718a515a1ca8ca34498f734}{void {\bfseries set\-Frame\-Start} ()}\label{class_graphics_engine_a2d160c2a4718a515a1ca8ca34498f734}
+
+\item 
+\hypertarget{class_graphics_engine_a4cbfb1a2f553dd1b96a31708c64cd6f1}{void {\bfseries adjust\-F\-P\-S\-Delay} (const Uint32 \&)}\label{class_graphics_engine_a4cbfb1a2f553dd1b96a31708c64cd6f1}
+
+\item 
+\hypertarget{class_graphics_engine_a6a90f05f94279dc75c8e1f195ff21be1}{Uint32 {\bfseries get\-Average\-F\-P\-S} ()}\label{class_graphics_engine_a6a90f05f94279dc75c8e1f195ff21be1}
+
+\item 
+\hypertarget{class_graphics_engine_a8f51bc3bd10dfab7d2cab98270b11714}{std\-::shared\-\_\-ptr$<$ \hyperlink{class_camera}{Camera} $>$ {\bfseries get\-Camera} ()}\label{class_graphics_engine_a8f51bc3bd10dfab7d2cab98270b11714}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static G\-Luint \hyperlink{class_graphics_engine_ac82600445faa86d292e346b7ee72a528}{create\-G\-L\-Texture\-From\-Surface} (S\-D\-L\-\_\-\-Surface $\ast$surf)
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_graphics_engine_a9ca20b077852bfc7b050d3a6a32d1a40}{class {\bfseries Game\-Engine}}\label{class_graphics_engine_a9ca20b077852bfc7b050d3a6a32d1a40}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_graphics_engine_ac82600445faa86d292e346b7ee72a528}{\index{Graphics\-Engine@{Graphics\-Engine}!create\-G\-L\-Texture\-From\-Surface@{create\-G\-L\-Texture\-From\-Surface}}
+\index{create\-G\-L\-Texture\-From\-Surface@{create\-G\-L\-Texture\-From\-Surface}!GraphicsEngine@{Graphics\-Engine}}
+\subsubsection[{create\-G\-L\-Texture\-From\-Surface}]{\setlength{\rightskip}{0pt plus 5cm}G\-Luint Graphics\-Engine\-::create\-G\-L\-Texture\-From\-Surface (
+\begin{DoxyParamCaption}
+\item[{S\-D\-L\-\_\-\-Surface $\ast$}]{surf}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_graphics_engine_ac82600445faa86d292e346b7ee72a528}
+Creates a G\-L 2\-D texture from S\-D\-L\-\_\-\-Surface$\ast$ and returns its id This function does N\-O\-T free the surface passed in
+
+\begin{DoxyPrecond}{Precondition}
+-\/condition\-: surface must be valid, i.\-e. != nullptr
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+created texture id, if errors occurred or surf is invalid -\/ 0 
+\end{DoxyReturn}
+\hypertarget{class_graphics_engine_a6280649bcac200adbec6288461de5290}{\index{Graphics\-Engine@{Graphics\-Engine}!draw\-G\-L\-Texture@{draw\-G\-L\-Texture}}
+\index{draw\-G\-L\-Texture@{draw\-G\-L\-Texture}!GraphicsEngine@{Graphics\-Engine}}
+\subsubsection[{draw\-G\-L\-Texture}]{\setlength{\rightskip}{0pt plus 5cm}void Graphics\-Engine\-::draw\-G\-L\-Texture (
+\begin{DoxyParamCaption}
+\item[{G\-Luint}]{texture\-I\-D, }
+\item[{float}]{x, }
+\item[{float}]{y, }
+\item[{int}]{w, }
+\item[{int}]{h}
+\end{DoxyParamCaption}
+)}}\label{class_graphics_engine_a6280649bcac200adbec6288461de5290}
+Draws a G\-L Texture in a 2\-D screen space \hypertarget{class_graphics_engine_aa25554f00d58f56e9e7ef7cafa599939}{\index{Graphics\-Engine@{Graphics\-Engine}!draw\-S\-D\-L\-Surface@{draw\-S\-D\-L\-Surface}}
+\index{draw\-S\-D\-L\-Surface@{draw\-S\-D\-L\-Surface}!GraphicsEngine@{Graphics\-Engine}}
+\subsubsection[{draw\-S\-D\-L\-Surface}]{\setlength{\rightskip}{0pt plus 5cm}void Graphics\-Engine\-::draw\-S\-D\-L\-Surface (
+\begin{DoxyParamCaption}
+\item[{S\-D\-L\-\_\-\-Surface $\ast$}]{surf, }
+\item[{float}]{x, }
+\item[{float}]{y}
+\end{DoxyParamCaption}
+)}}\label{class_graphics_engine_aa25554f00d58f56e9e7ef7cafa599939}
+Draws S\-D\-L\-\_\-\-Surface on screen starting at x, y
+
+Provides similar functionality to {\itshape deprecated} gl\-Ortho in that it draws in a 2\-D screen space
+
+\begin{DoxyPrecond}{Precondition}
+-\/condition\-: surface must be valid, i.\-e. != nullptr 
+\end{DoxyPrecond}
+\hypertarget{class_graphics_engine_a809086544539f7951ff16b1fb5a21783}{\index{Graphics\-Engine@{Graphics\-Engine}!show\-Screen@{show\-Screen}}
+\index{show\-Screen@{show\-Screen}!GraphicsEngine@{Graphics\-Engine}}
+\subsubsection[{show\-Screen}]{\setlength{\rightskip}{0pt plus 5cm}void Graphics\-Engine\-::show\-Screen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_graphics_engine_a809086544539f7951ff16b1fb5a21783}
+Call this method after you have finished drawing 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Graphics\-Engine.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Graphics\-Engine.\-cpp\end{DoxyCompactItemize}

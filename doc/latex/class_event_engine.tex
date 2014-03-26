@@ -1,0 +1,57 @@
+\hypertarget{class_event_engine}{\section{Event\-Engine Class Reference}
+\label{class_event_engine}\index{Event\-Engine@{Event\-Engine}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_event_engine_ad8ffc6a8f6e6d06ebe53be68b7aab65d}{poll\-Events} ()
+\item 
+\hypertarget{class_event_engine_a5dbe37ca811a03ac3e711b89ab654ce7}{bool {\bfseries is\-Pressed} (Key)}\label{class_event_engine_a5dbe37ca811a03ac3e711b89ab654ce7}
+
+\item 
+\hypertarget{class_event_engine_a9da275853dba48e03421efc7316809b6}{bool {\bfseries is\-Pressed} (Mouse)}\label{class_event_engine_a9da275853dba48e03421efc7316809b6}
+
+\item 
+\hypertarget{class_event_engine_aeab62c65bfe7b3fb4dae4668db7781d6}{void {\bfseries set\-Mouse\-Relative} (bool)}\label{class_event_engine_aeab62c65bfe7b3fb4dae4668db7781d6}
+
+\item 
+\hyperlink{struct_point2}{Point2} \hyperlink{class_event_engine_adb76bce05a76383698445bb52d309d86}{get\-Mouse\-D\-Pos} ()
+\item 
+void \hyperlink{class_event_engine_a85ccc82bb8928b096e257ca1a7b70303}{run\-Conn\-Thread} ()
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_event_engine_a9ca20b077852bfc7b050d3a6a32d1a40}{class {\bfseries Game\-Engine}}\label{class_event_engine_a9ca20b077852bfc7b050d3a6a32d1a40}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_event_engine_adb76bce05a76383698445bb52d309d86}{\index{Event\-Engine@{Event\-Engine}!get\-Mouse\-D\-Pos@{get\-Mouse\-D\-Pos}}
+\index{get\-Mouse\-D\-Pos@{get\-Mouse\-D\-Pos}!EventEngine@{Event\-Engine}}
+\subsubsection[{get\-Mouse\-D\-Pos}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Point2} Event\-Engine\-::get\-Mouse\-D\-Pos (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_event_engine_adb76bce05a76383698445bb52d309d86}
+Returns mouse's delta position It's the difference between current and previous mouse positions \hypertarget{class_event_engine_ad8ffc6a8f6e6d06ebe53be68b7aab65d}{\index{Event\-Engine@{Event\-Engine}!poll\-Events@{poll\-Events}}
+\index{poll\-Events@{poll\-Events}!EventEngine@{Event\-Engine}}
+\subsubsection[{poll\-Events}]{\setlength{\rightskip}{0pt plus 5cm}void Event\-Engine\-::poll\-Events (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_event_engine_ad8ffc6a8f6e6d06ebe53be68b7aab65d}
+Equivalent to calling S\-D\-L\-\_\-\-Poll\-Event() \hypertarget{class_event_engine_a85ccc82bb8928b096e257ca1a7b70303}{\index{Event\-Engine@{Event\-Engine}!run\-Conn\-Thread@{run\-Conn\-Thread}}
+\index{run\-Conn\-Thread@{run\-Conn\-Thread}!EventEngine@{Event\-Engine}}
+\subsubsection[{run\-Conn\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}void Event\-Engine\-::run\-Conn\-Thread (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_event_engine_a85ccc82bb8928b096e257ca1a7b70303}
+Starts executing android \char`\"{}joystick\char`\"{} listener on a separate thread 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/input/Event\-Engine.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/input/Event\-Engine.\-cpp\end{DoxyCompactItemize}

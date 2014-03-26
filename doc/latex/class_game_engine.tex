@@ -1,0 +1,68 @@
+\hypertarget{class_game_engine}{\section{Game\-Engine Class Reference}
+\label{class_game_engine}\index{Game\-Engine@{Game\-Engine}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\-::shared\-\_\-ptr$<$ \hyperlink{class_graphics_engine}{Graphics\-Engine} $>$ \hyperlink{class_game_engine_a10c91cd56528ce209be73a3615344162}{get\-Graphics\-Engine} ()
+\item 
+\hypertarget{class_game_engine_a16079637ac6cec6858363df6ed0839e0}{std\-::shared\-\_\-ptr$<$ \hyperlink{class_audio_engine}{Audio\-Engine} $>$ {\bfseries get\-Audio\-Engine} ()}\label{class_game_engine_a16079637ac6cec6858363df6ed0839e0}
+
+\item 
+\hypertarget{class_game_engine_ab98de0442f4e10c949af471dad58e4ec}{std\-::shared\-\_\-ptr$<$ \hyperlink{class_event_engine}{Event\-Engine} $>$ {\bfseries get\-Event\-Engine} ()}\label{class_game_engine_ab98de0442f4e10c949af471dad58e4ec}
+
+\item 
+\hypertarget{class_game_engine_ae797dc87781387dcefb5774694b6f381}{std\-::shared\-\_\-ptr$<$ \hyperlink{class_physics_engine}{Physics\-Engine} $>$ {\bfseries get\-Physics\-Engine} ()}\label{class_game_engine_ae797dc87781387dcefb5774694b6f381}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\-::shared\-\_\-ptr\\*
+$<$ \hyperlink{class_game_engine}{Game\-Engine} $>$ \hyperlink{class_game_engine_a807d71baeaa130372e16f708b77ecf9d}{get\-Instance} ()
+\item 
+static void \hyperlink{class_game_engine_ad82b626def2e52b28f0d6c2d167589f6}{quit} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_game_engine_a10c91cd56528ce209be73a3615344162}{\index{Game\-Engine@{Game\-Engine}!get\-Graphics\-Engine@{get\-Graphics\-Engine}}
+\index{get\-Graphics\-Engine@{get\-Graphics\-Engine}!GameEngine@{Game\-Engine}}
+\subsubsection[{get\-Graphics\-Engine}]{\setlength{\rightskip}{0pt plus 5cm}std\-::shared\-\_\-ptr$<${\bf Graphics\-Engine}$>$ Game\-Engine\-::get\-Graphics\-Engine (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_game_engine_a10c91cd56528ce209be73a3615344162}
+Subsystems can only be accessed via the following accessors \begin{DoxyReturn}{Returns}
+approriate subsystem of the engine 
+\end{DoxyReturn}
+\hypertarget{class_game_engine_a807d71baeaa130372e16f708b77ecf9d}{\index{Game\-Engine@{Game\-Engine}!get\-Instance@{get\-Instance}}
+\index{get\-Instance@{get\-Instance}!GameEngine@{Game\-Engine}}
+\subsubsection[{get\-Instance}]{\setlength{\rightskip}{0pt plus 5cm}std\-::shared\-\_\-ptr$<$ {\bf Game\-Engine} $>$ Game\-Engine\-::get\-Instance (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_game_engine_a807d71baeaa130372e16f708b77ecf9d}
+\begin{DoxyReturn}{Returns}
+the instance of game engine 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em throws} & \hyperlink{class_engine_exception}{Engine\-Exception} if init of any submodules failed \\
+\hline
+\end{DoxyExceptions}
+\hypertarget{class_game_engine_ad82b626def2e52b28f0d6c2d167589f6}{\index{Game\-Engine@{Game\-Engine}!quit@{quit}}
+\index{quit@{quit}!GameEngine@{Game\-Engine}}
+\subsubsection[{quit}]{\setlength{\rightskip}{0pt plus 5cm}void Game\-Engine\-::quit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_game_engine_ad82b626def2e52b28f0d6c2d167589f6}
+Quits the engine, closes all the subsystems
+
+All subsequent calls to any of subsystems will have undefined behaviour 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/core/Game\-Engine.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/core/Game\-Engine.\-cpp\end{DoxyCompactItemize}

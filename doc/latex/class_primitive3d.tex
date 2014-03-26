@@ -1,0 +1,132 @@
+\hypertarget{class_primitive3d}{\section{Primitive3d Class Reference}
+\label{class_primitive3d}\index{Primitive3d@{Primitive3d}}
+}
+
+
+Inherits \hyperlink{class_physics_object}{Physics\-Object}, and \hyperlink{class_movable}{Movable}.
+
+
+
+Inherited by \hyperlink{class_cuboid}{Cuboid}, and \hyperlink{class_m_d3_object}{M\-D3\-Object}.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_primitive3d_aa7f4f810090e38a446777621d1dd957d}{{\bfseries Primitive3d} (const \hyperlink{struct_point3f}{Point3f} \&center, float length\-X, float length\-Y, float length\-Z, S\-D\-L\-\_\-\-Color color)}\label{class_primitive3d_aa7f4f810090e38a446777621d1dd957d}
+
+\item 
+\hypertarget{class_primitive3d_af6c2aa4960338c608b25e41292ce6dd4}{{\bfseries Primitive3d} (const \hyperlink{struct_point3f}{Point3f} \&center, float length\-X, float length\-Y, float length\-Z, G\-Luint texture\-I\-D)}\label{class_primitive3d_af6c2aa4960338c608b25e41292ce6dd4}
+
+\item 
+\hypertarget{class_primitive3d_a0968e18617523fbb194de632c2fc8a3b}{{\bfseries Primitive3d} (const \hyperlink{struct_point3f}{Point3f} \&center, float length\-X, float length\-Y, float length\-Z, S\-D\-L\-\_\-\-Color color, G\-Luint texture\-I\-D)}\label{class_primitive3d_a0968e18617523fbb194de632c2fc8a3b}
+
+\item 
+\hypertarget{class_primitive3d_a4f1861797a6fb8dc7b3479bc7f7df80f}{void {\bfseries set\-Color} (S\-D\-L\-\_\-\-Color color)}\label{class_primitive3d_a4f1861797a6fb8dc7b3479bc7f7df80f}
+
+\item 
+\hypertarget{class_primitive3d_ad76294a2b5a5648135b62fe8ebb7d1b4}{void {\bfseries reset\-Color} ()}\label{class_primitive3d_ad76294a2b5a5648135b62fe8ebb7d1b4}
+
+\item 
+\hypertarget{class_primitive3d_a5872ebbfceded408cb77706fd5f9d565}{void {\bfseries set\-Texture} (G\-Luint texture)}\label{class_primitive3d_a5872ebbfceded408cb77706fd5f9d565}
+
+\item 
+\hypertarget{class_primitive3d_ae8cfaaca6314ea28d051f47d2346ca88}{void {\bfseries move} (const \hyperlink{struct_vector3f}{Vector3f} \&)}\label{class_primitive3d_ae8cfaaca6314ea28d051f47d2346ca88}
+
+\item 
+\hypertarget{class_primitive3d_aa6ab662a5b876b415b234be4ca434328}{void {\bfseries scale} (float, float, float)}\label{class_primitive3d_aa6ab662a5b876b415b234be4ca434328}
+
+\item 
+\hypertarget{class_primitive3d_acdad88c8f481a91566fd9beba73bbc9c}{void {\bfseries set\-Scale} (float, float, float)}\label{class_primitive3d_acdad88c8f481a91566fd9beba73bbc9c}
+
+\item 
+\hypertarget{class_primitive3d_a586c36e8730cfb935a0265f744b92f9f}{void {\bfseries set\-Center} (float, float, float)}\label{class_primitive3d_a586c36e8730cfb935a0265f744b92f9f}
+
+\item 
+\hypertarget{class_primitive3d_afc724c7d754bc8a40562dae7c4f8c98a}{void {\bfseries set\-Center} (const \hyperlink{struct_point3f}{Point3f} \&center)}\label{class_primitive3d_afc724c7d754bc8a40562dae7c4f8c98a}
+
+\item 
+\hypertarget{class_primitive3d_a5c4d615c1dee7e35b716bf0962732bd7}{void {\bfseries rotate} (float, float, float)}\label{class_primitive3d_a5c4d615c1dee7e35b716bf0962732bd7}
+
+\item 
+\hypertarget{class_primitive3d_a2f7451f0fc688cee319e4199e234ca5e}{void {\bfseries set\-Rotate} (float, float, float)}\label{class_primitive3d_a2f7451f0fc688cee319e4199e234ca5e}
+
+\item 
+\hypertarget{class_primitive3d_a83404d019bdd8bbfe3f65dae07d90643}{\hyperlink{struct_point3f}{Point3f} {\bfseries get\-Center} ()}\label{class_primitive3d_a83404d019bdd8bbfe3f65dae07d90643}
+
+\item 
+\hypertarget{class_primitive3d_a6a0d367a58deb11124973f5cec8c5b0a}{\hyperlink{struct_vector3f}{Vector3f} {\bfseries get\-Scale} ()}\label{class_primitive3d_a6a0d367a58deb11124973f5cec8c5b0a}
+
+\item 
+virtual void \hyperlink{class_primitive3d_a554abe0f207ee27040e8800e56a18f5b}{apply\-Gravity} (const \hyperlink{class_physics_engine}{Physics\-Engine} \&engine)
+\item 
+\hypertarget{class_primitive3d_a7c8ecb08991274e884e54ff476a0abbc}{virtual void {\bfseries apply\-Anti\-Gravity} (const \hyperlink{class_physics_engine}{Physics\-Engine} \&engine)}\label{class_primitive3d_a7c8ecb08991274e884e54ff476a0abbc}
+
+\item 
+\hypertarget{class_primitive3d_abe806fcebb63a274f62a45fb50a17aed}{virtual void {\bfseries draw} ()=0}\label{class_primitive3d_abe806fcebb63a274f62a45fb50a17aed}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_primitive3d_a1be91e8b49bdfbb9699568eb4a923018}{G\-Luint {\bfseries create\-Buffer} (G\-Lenum, const void $\ast$, G\-Lsizei)}\label{class_primitive3d_a1be91e8b49bdfbb9699568eb4a923018}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_primitive3d_a1cca9d57e9f85da2a5fb3ba6bc64f966}{G\-Luint {\bfseries shader\-Program}}\label{class_primitive3d_a1cca9d57e9f85da2a5fb3ba6bc64f966}
+
+\item 
+\hypertarget{class_primitive3d_a2cc28cb51b24713f4113aee253d72dd8}{\hyperlink{class_camera_transformer}{Camera\-Transformer} {\bfseries transformer}}\label{class_primitive3d_a2cc28cb51b24713f4113aee253d72dd8}
+
+\item 
+\hypertarget{class_primitive3d_ae323060c671b872896598cfc50170f03}{G\-Luint {\bfseries vbo}}\label{class_primitive3d_ae323060c671b872896598cfc50170f03}
+
+\item 
+\hypertarget{class_primitive3d_ad60f54ea5730cb3fb5fe01d3d21811c5}{G\-Luint {\bfseries ibo}}\label{class_primitive3d_ad60f54ea5730cb3fb5fe01d3d21811c5}
+
+\item 
+\hypertarget{class_primitive3d_aecf62c645d724d8d1d4d368cf0aba47b}{\hyperlink{struct_s_d_l___colorf}{S\-D\-L\-\_\-\-Colorf} {\bfseries original\-Color}}\label{class_primitive3d_aecf62c645d724d8d1d4d368cf0aba47b}
+
+\item 
+\hypertarget{class_primitive3d_a2bbf241e8bf06981b1e0b12d11841295}{\hyperlink{struct_s_d_l___colorf}{S\-D\-L\-\_\-\-Colorf} {\bfseries color}}\label{class_primitive3d_a2bbf241e8bf06981b1e0b12d11841295}
+
+\item 
+\hypertarget{class_primitive3d_a0201c258060263069ebe8561408100d0}{G\-Luint {\bfseries color\-Location}}\label{class_primitive3d_a0201c258060263069ebe8561408100d0}
+
+\item 
+\hypertarget{class_primitive3d_a72961e221dbc353bda8ef3a3da428449}{G\-Luint {\bfseries texture\-I\-D}}\label{class_primitive3d_a72961e221dbc353bda8ef3a3da428449}
+
+\item 
+\hypertarget{class_primitive3d_ac8ca41eeb300f4077246751a567ae86e}{G\-Luint {\bfseries texture\-I\-D\-Location}}\label{class_primitive3d_ac8ca41eeb300f4077246751a567ae86e}
+
+\item 
+\hypertarget{class_primitive3d_a30132558e7fee6ebdcf0c35a908ef041}{G\-Luint {\bfseries use\-Texture\-Location}}\label{class_primitive3d_a30132558e7fee6ebdcf0c35a908ef041}
+
+\item 
+\hypertarget{class_primitive3d_ae60e7f7e7ea90bd98a2abe6cbed85254}{G\-Luint {\bfseries mvp\-Location}}\label{class_primitive3d_ae60e7f7e7ea90bd98a2abe6cbed85254}
+
+\item 
+\hypertarget{class_primitive3d_ae7a9264af513f2f2a6ede7790f1f55c6}{G\-Luint {\bfseries use\-U\-I}}\label{class_primitive3d_ae7a9264af513f2f2a6ede7790f1f55c6}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_primitive3d_a554abe0f207ee27040e8800e56a18f5b}{\index{Primitive3d@{Primitive3d}!apply\-Gravity@{apply\-Gravity}}
+\index{apply\-Gravity@{apply\-Gravity}!Primitive3d@{Primitive3d}}
+\subsubsection[{apply\-Gravity}]{\setlength{\rightskip}{0pt plus 5cm}void Primitive3d\-::apply\-Gravity (
+\begin{DoxyParamCaption}
+\item[{const {\bf Physics\-Engine} \&}]{engine}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{class_primitive3d_a554abe0f207ee27040e8800e56a18f5b}
+If we have different implementations of engines/gravity this can be very useful 
+
+Reimplemented from \hyperlink{class_physics_object_a7c1b644650bc303c43c872490e8c2b4e}{Physics\-Object}.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Primitives3d.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Primitives3d.\-cpp\end{DoxyCompactItemize}

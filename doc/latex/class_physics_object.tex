@@ -1,0 +1,86 @@
+\hypertarget{class_physics_object}{\section{Physics\-Object Class Reference}
+\label{class_physics_object}\index{Physics\-Object@{Physics\-Object}}
+}
+
+
+Inherited by \hyperlink{class_primitive3d}{Primitive3d}.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_physics_object_a2eb26709a112c2cde307a533359464fe}{{\bfseries Physics\-Object} (const \hyperlink{struct_point3f}{Point3f} \&center, float x, float y, float z)}\label{class_physics_object_a2eb26709a112c2cde307a533359464fe}
+
+\item 
+\hypertarget{class_physics_object_a518b9fb4a3db4c93361470882a92bdcf}{\hyperlink{struct_point3f}{Point3f} {\bfseries get\-Center} ()}\label{class_physics_object_a518b9fb4a3db4c93361470882a92bdcf}
+
+\item 
+\hypertarget{class_physics_object_a2e8498a00b8b00926799618c55389ba2}{float {\bfseries get\-Length\-X} ()}\label{class_physics_object_a2e8498a00b8b00926799618c55389ba2}
+
+\item 
+\hypertarget{class_physics_object_aa957a7b01b46d848eefcbe73d398427c}{float {\bfseries get\-Length\-Y} ()}\label{class_physics_object_aa957a7b01b46d848eefcbe73d398427c}
+
+\item 
+\hypertarget{class_physics_object_a15b61bf834cef49b5d9dc0019ced2ed7}{float {\bfseries get\-Length\-Z} ()}\label{class_physics_object_a15b61bf834cef49b5d9dc0019ced2ed7}
+
+\item 
+\hypertarget{class_physics_object_ab8bca32287f7b0f09f0b45f15364ffc0}{float {\bfseries get\-Half\-Length\-X} ()}\label{class_physics_object_ab8bca32287f7b0f09f0b45f15364ffc0}
+
+\item 
+\hypertarget{class_physics_object_ae25b36e015889532f8916a4ad4f1c361}{float {\bfseries get\-Half\-Length\-Y} ()}\label{class_physics_object_ae25b36e015889532f8916a4ad4f1c361}
+
+\item 
+\hypertarget{class_physics_object_a15a8eacb2bb44101d82a90ff735e89d5}{float {\bfseries get\-Half\-Length\-Z} ()}\label{class_physics_object_a15a8eacb2bb44101d82a90ff735e89d5}
+
+\item 
+\hypertarget{class_physics_object_a851765b25b581e1ecab8b969d1bd42f0}{bool {\bfseries is\-Colliding} (const \hyperlink{class_physics_object}{Physics\-Object} \&other)}\label{class_physics_object_a851765b25b581e1ecab8b969d1bd42f0}
+
+\item 
+virtual void \hyperlink{class_physics_object_a7c1b644650bc303c43c872490e8c2b4e}{apply\-Gravity} (const \hyperlink{class_physics_engine}{Physics\-Engine} \&engine)
+\item 
+\hypertarget{class_physics_object_ae7b9430967f48709b64db2b4ab633164}{virtual void {\bfseries apply\-Anti\-Gravity} (const \hyperlink{class_physics_engine}{Physics\-Engine} \&engine)}\label{class_physics_object_ae7b9430967f48709b64db2b4ab633164}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_physics_object_ab0ce60cbb061db16da9e0fd868a51586}{\hyperlink{struct_point3f}{Point3f} {\bfseries center}}\label{class_physics_object_ab0ce60cbb061db16da9e0fd868a51586}
+
+\item 
+\hypertarget{class_physics_object_a9f9ef4229208ec5efbba6df67a02cee8}{float {\bfseries l\-X}}\label{class_physics_object_a9f9ef4229208ec5efbba6df67a02cee8}
+
+\item 
+\hypertarget{class_physics_object_ab425e7036aecd5c71e3404c25dda03c5}{float {\bfseries l\-Y}}\label{class_physics_object_ab425e7036aecd5c71e3404c25dda03c5}
+
+\item 
+\hypertarget{class_physics_object_a21fc35c7a916ca93c631fdfb321f7a58}{float {\bfseries l\-Z}}\label{class_physics_object_a21fc35c7a916ca93c631fdfb321f7a58}
+
+\item 
+\hypertarget{class_physics_object_afa34667751c71648d96d027fd3750a15}{float {\bfseries hl\-X}}\label{class_physics_object_afa34667751c71648d96d027fd3750a15}
+
+\item 
+\hypertarget{class_physics_object_a78f6bd33e51cf5af175a04db9099f60e}{float {\bfseries hl\-Y}}\label{class_physics_object_a78f6bd33e51cf5af175a04db9099f60e}
+
+\item 
+\hypertarget{class_physics_object_a792f1222d549a6a2971faf94a3afb1ff}{float {\bfseries hl\-Z}}\label{class_physics_object_a792f1222d549a6a2971faf94a3afb1ff}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_physics_object_a7c1b644650bc303c43c872490e8c2b4e}{\index{Physics\-Object@{Physics\-Object}!apply\-Gravity@{apply\-Gravity}}
+\index{apply\-Gravity@{apply\-Gravity}!PhysicsObject@{Physics\-Object}}
+\subsubsection[{apply\-Gravity}]{\setlength{\rightskip}{0pt plus 5cm}void Physics\-Object\-::apply\-Gravity (
+\begin{DoxyParamCaption}
+\item[{const {\bf Physics\-Engine} \&}]{engine}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{class_physics_object_a7c1b644650bc303c43c872490e8c2b4e}
+If we have different implementations of engines/gravity this can be very useful 
+
+Reimplemented in \hyperlink{class_primitive3d_a554abe0f207ee27040e8800e56a18f5b}{Primitive3d}.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/physics/Physics\-Engine.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/physics/Physics\-Engine.\-cpp\end{DoxyCompactItemize}

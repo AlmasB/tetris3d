@@ -1,0 +1,115 @@
+\hypertarget{class_movable}{\section{Movable Class Reference}
+\label{class_movable}\index{Movable@{Movable}}
+}
+
+
+Inherited by \hyperlink{class_camera}{Camera}, and \hyperlink{class_primitive3d}{Primitive3d}.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_movable_a7e6b5f12e0434f6eddb015f7cf0b4984}{virtual void {\bfseries move} (const \hyperlink{struct_vector3f}{Vector3f} \&v)=0}\label{class_movable_a7e6b5f12e0434f6eddb015f7cf0b4984}
+
+\item 
+\hypertarget{class_movable_a5de86eed18b504299551ab318b8d602a}{void {\bfseries move} (float, float, float)}\label{class_movable_a5de86eed18b504299551ab318b8d602a}
+
+\item 
+\hypertarget{class_movable_a2cd85c3f9b53c505432fcb03d0738289}{void {\bfseries move\-To} (const \hyperlink{struct_point3f}{Point3f} \&point)}\label{class_movable_a2cd85c3f9b53c505432fcb03d0738289}
+
+\item 
+void \hyperlink{class_movable_a180504b38f6ac2bc8569a3836ceb2518}{move\-Forward} ()
+\item 
+\hypertarget{class_movable_a5cb4fff63d0f9976a6a36d45264558d2}{void {\bfseries move\-Backward} ()}\label{class_movable_a5cb4fff63d0f9976a6a36d45264558d2}
+
+\item 
+\hypertarget{class_movable_a4ba840c0682c8e1a9199f9ebbb8b7d31}{void {\bfseries move\-Right} (float speed)}\label{class_movable_a4ba840c0682c8e1a9199f9ebbb8b7d31}
+
+\item 
+\hypertarget{class_movable_a25b3edfbc5d1e4f9fce57cd6180fb04d}{void {\bfseries move\-Left} (float speed)}\label{class_movable_a25b3edfbc5d1e4f9fce57cd6180fb04d}
+
+\item 
+void \hyperlink{class_movable_af0fab32ae172e52ab9cded5e43fde054}{look\-Up} (float degrees)
+\item 
+\hypertarget{class_movable_a2c004d01486a124c1cd4c24de71ec9fc}{void {\bfseries look\-Right} (float degrees)}\label{class_movable_a2c004d01486a124c1cd4c24de71ec9fc}
+
+\item 
+\hypertarget{class_movable_a00ff501e6ee6cf56f901d2b5fde88089}{void {\bfseries look\-At} (const \hyperlink{struct_point3f}{Point3f} \&point)}\label{class_movable_a00ff501e6ee6cf56f901d2b5fde88089}
+
+\item 
+\hypertarget{class_movable_a306c3ad33776907bce67e5b45dd1231a}{void {\bfseries set\-Sensitivity} (float val)}\label{class_movable_a306c3ad33776907bce67e5b45dd1231a}
+
+\item 
+\hypertarget{class_movable_a68817fb10935bc88e0648cddcb5929cd}{void {\bfseries set\-Direction} (const \hyperlink{struct_vector3f}{Vector3f} \&dir)}\label{class_movable_a68817fb10935bc88e0648cddcb5929cd}
+
+\item 
+\hypertarget{class_movable_a8deb4d6efac9f5f687371f753a4c1a7b}{void {\bfseries set\-Up\-Vector} (const \hyperlink{struct_vector3f}{Vector3f} \&\-\_\-up)}\label{class_movable_a8deb4d6efac9f5f687371f753a4c1a7b}
+
+\item 
+\hypertarget{class_movable_a3c95d0459d29b61fb7df18c4c3f755e7}{\hyperlink{struct_vector3f}{Vector3f} {\bfseries get\-Direction} ()}\label{class_movable_a3c95d0459d29b61fb7df18c4c3f755e7}
+
+\item 
+\hypertarget{class_movable_a5e46e4c01d01874485716a47024aa566}{\hyperlink{struct_vector3f}{Vector3f} {\bfseries get\-Up\-Vector} ()}\label{class_movable_a5e46e4c01d01874485716a47024aa566}
+
+\item 
+\hypertarget{class_movable_a25fe8383bfdc607680bace38702a0366}{virtual \hyperlink{struct_point3f}{Point3f} {\bfseries get\-Center} ()=0}\label{class_movable_a25fe8383bfdc607680bace38702a0366}
+
+\item 
+\hypertarget{class_movable_a1625bfd464ef8ec343a5c11faa5a0127}{float {\bfseries get\-Hor\-Angle} ()}\label{class_movable_a1625bfd464ef8ec343a5c11faa5a0127}
+
+\item 
+\hypertarget{class_movable_adb16b44885ab66be22faf6b61b6c5237}{float {\bfseries get\-Ver\-Angle} ()}\label{class_movable_adb16b44885ab66be22faf6b61b6c5237}
+
+\item 
+\hypertarget{class_movable_a079d42b3d1ddabfcaf2bbc4cec496bf7}{void {\bfseries print\-Debug} (int info\-Flag)}\label{class_movable_a079d42b3d1ddabfcaf2bbc4cec496bf7}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_movable_a8dac940ac238b478d016b6227044d2c5}{void {\bfseries adjust\-Direction} ()}\label{class_movable_a8dac940ac238b478d016b6227044d2c5}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_movable_aeae0d062d09b8659182f9be8f004963f}{\hyperlink{struct_vector3f}{Vector3f} {\bfseries direction}}\label{class_movable_aeae0d062d09b8659182f9be8f004963f}
+
+\item 
+\hypertarget{class_movable_ac05c8403c3e9337f6e00181f6ae424e2}{\hyperlink{struct_vector3f}{Vector3f} {\bfseries up}}\label{class_movable_ac05c8403c3e9337f6e00181f6ae424e2}
+
+\item 
+\hypertarget{class_movable_a95df818eb0776079c7274c0e5b74ce0a}{float {\bfseries hor\-Angle}}\label{class_movable_a95df818eb0776079c7274c0e5b74ce0a}
+
+\item 
+\hypertarget{class_movable_a19dcbc2a57c5b8c8513eac318950f3f4}{float {\bfseries ver\-Angle}}\label{class_movable_a19dcbc2a57c5b8c8513eac318950f3f4}
+
+\item 
+\hypertarget{class_movable_a9baa39cc91e57f058ca9d7d073229f37}{float {\bfseries speed}}\label{class_movable_a9baa39cc91e57f058ca9d7d073229f37}
+
+\item 
+\hypertarget{class_movable_a2fa2a054852ed47f6dd3346641c902e7}{float {\bfseries sensitivity}}\label{class_movable_a2fa2a054852ed47f6dd3346641c902e7}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_movable_af0fab32ae172e52ab9cded5e43fde054}{\index{Movable@{Movable}!look\-Up@{look\-Up}}
+\index{look\-Up@{look\-Up}!Movable@{Movable}}
+\subsubsection[{look\-Up}]{\setlength{\rightskip}{0pt plus 5cm}void Movable\-::look\-Up (
+\begin{DoxyParamCaption}
+\item[{float}]{degrees}
+\end{DoxyParamCaption}
+)}}\label{class_movable_af0fab32ae172e52ab9cded5e43fde054}
+Allows you to rotate object's view like in F\-P\-S For cut scenes use look\-At instead \hypertarget{class_movable_a180504b38f6ac2bc8569a3836ceb2518}{\index{Movable@{Movable}!move\-Forward@{move\-Forward}}
+\index{move\-Forward@{move\-Forward}!Movable@{Movable}}
+\subsubsection[{move\-Forward}]{\setlength{\rightskip}{0pt plus 5cm}void Movable\-::move\-Forward (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_movable_a180504b38f6ac2bc8569a3836ceb2518}
+Allows you to move as if you were looking thru the object's eyes Standard F\-P\-S mode 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Movable.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/graphics/Movable.\-cpp\end{DoxyCompactItemize}

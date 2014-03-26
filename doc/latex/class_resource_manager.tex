@@ -1,0 +1,49 @@
+\hypertarget{class_resource_manager}{\section{Resource\-Manager Class Reference}
+\label{class_resource_manager}\index{Resource\-Manager@{Resource\-Manager}}
+}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{class_resource_manager_ab5a7ff1c8569def2d72f8ad345f39acf}{load\-Resources} (std\-::vector$<$ std\-::string $>$ file\-Names)
+\item 
+static void \hyperlink{class_resource_manager_ac3c00f46cc2cb9362433f80b356e7255}{free\-Resources} ()
+\item 
+\hypertarget{class_resource_manager_a0122e77beb55dd09615ea8ab143637f7}{static G\-Luint {\bfseries get\-Texture\-I\-D} (std\-::string file\-Name)}\label{class_resource_manager_a0122e77beb55dd09615ea8ab143637f7}
+
+\item 
+\hypertarget{class_resource_manager_a5ab373ff971ce36085fff283d5f0a21b}{static T\-T\-F\-\_\-\-Font $\ast$ {\bfseries get\-Font} (std\-::string file\-Name)}\label{class_resource_manager_a5ab373ff971ce36085fff283d5f0a21b}
+
+\item 
+\hypertarget{class_resource_manager_abf4f14a00b590ef80019590ebad17a6c}{static Mix\-\_\-\-Chunk $\ast$ {\bfseries get\-Sound} (std\-::string file\-Name)}\label{class_resource_manager_abf4f14a00b590ef80019590ebad17a6c}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_resource_manager_ac3c00f46cc2cb9362433f80b356e7255}{\index{Resource\-Manager@{Resource\-Manager}!free\-Resources@{free\-Resources}}
+\index{free\-Resources@{free\-Resources}!ResourceManager@{Resource\-Manager}}
+\subsubsection[{free\-Resources}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\-Manager\-::free\-Resources (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_resource_manager_ac3c00f46cc2cb9362433f80b356e7255}
+Call to free all resource files All subsequent calls to get$\ast$ will return nullptr or cause undefined behaviour \hypertarget{class_resource_manager_ab5a7ff1c8569def2d72f8ad345f39acf}{\index{Resource\-Manager@{Resource\-Manager}!load\-Resources@{load\-Resources}}
+\index{load\-Resources@{load\-Resources}!ResourceManager@{Resource\-Manager}}
+\subsubsection[{load\-Resources}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\-Manager\-::load\-Resources (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ std\-::string $>$}]{file\-Names}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_resource_manager_ab5a7ff1c8569def2d72f8ad345f39acf}
+Loads all resources into several maps (cache) to make the program run smoother
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\-Names} & -\/ vector containing names to resource files\\
+\hline
+\end{DoxyParams}
+The resources can be retrieved with an appropriate call to get$\ast$ 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/core/Resource\-Manager.\-h\item 
+C\-:/\-Users/\-Almas/workspace/c++/tetris3d/src/engine/core/Resource\-Manager.\-cpp\end{DoxyCompactItemize}
