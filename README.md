@@ -10,10 +10,14 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 ## Dependencies ##
 
 * **[SDL](http://www.libsdl.org/)** **2.0.0**+ (including SDL_image, SDL_ttf, SDL_net, SDL_mixer)
-* **OpenGL 2.1**+ (Preferably 3.0+)
+* **OpenGL 2.1**+
 * **[GLEW](http://glew.sourceforge.net/) 1.6**+
 
-## Compile and run ##
+## Install ##
+
+In dist/ you'll find installers for different platforms
+
+## Compile and run from source code ##
 
 For Linux:
 
@@ -43,7 +47,5 @@ https://github.com/AlmasB/tetris3d-controller
     
 ## Known issues & bugs ##
 
-* On linux VMs (Fedora20x64, Ubuntu13.10x64) with OpenGL 2.1 emulation
-    only the front faces are drawn (nothing to do with glFaceCull though)
 * With NVIDIA driver 311.48 (other versions may be affected too) SDL_GL_SetSwapInterval(1)
     (double buffering) causes high cpu load
