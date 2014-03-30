@@ -168,6 +168,10 @@ class Matrix4f {
 	public:
 		float m[4][4];
 
+		/**
+		* Matrix is deliberately left uninitialised because values
+		* will be rewritten anyway
+		*/
 		Matrix4f() {}
 
 		inline void loadIdentity() {

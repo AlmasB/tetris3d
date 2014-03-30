@@ -11,7 +11,12 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <GL/glew.h>
-#include <GL/glu.h>
+
+#if defined(__APPLE__)
+	#include <OpenGL/glu.h>
+#else
+	#include <GL/glu.h>
+#endif
 
 #include "../core/EngineCommon.h"
 #include "Movable.h"

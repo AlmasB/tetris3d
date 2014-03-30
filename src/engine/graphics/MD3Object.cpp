@@ -118,6 +118,7 @@ void MD3Object::loadImpl(const std::string & fileName) {
 			offsetSurfaces += surfaces[i].offsetEnd;
 			//std::cout << "offset surf " << offsetSurfaces << std::endl;
 
+			delete verticesLocal;
 			delete tris;
 		}
 
@@ -144,7 +145,7 @@ std::shared_ptr<MD3Object> MD3Object::load(const std::string & fileName) {
 		obj->loadImpl(fileName);
 	}
 	catch (EngineException& e) {
-		throw e;
+		throw;
 	}
 
 	return obj;

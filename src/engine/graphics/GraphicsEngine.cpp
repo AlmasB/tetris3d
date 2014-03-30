@@ -282,8 +282,7 @@ std::shared_ptr<Camera> GraphicsEngine::getCamera() {
 
 std::shared_ptr<Camera> Camera::instance = std::shared_ptr<Camera>(new Camera());
 
-Camera::Camera() : Movable(), center(Point3f(0, 0, 0)) {
-	assigned = nullptr;
+Camera::Camera() : Movable(), center(Point3f(0, 0, 0)), assigned(nullptr) {
 	cameraPerspective.fov = 60.0f;
 	cameraPerspective.width = (float) DEFAULT_WINDOW_WIDTH;
 	cameraPerspective.height = (float) DEFAULT_WINDOW_HEIGHT;

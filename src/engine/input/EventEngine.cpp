@@ -9,7 +9,7 @@ EventEngine::EventEngine() : running(true), remoteEventEnabled(false) {
 	buttons[Mouse::BTN_RIGHT] = false;
 
 	if (remoteEventEnabled) {
-		bool netOK = true, ipOK = true, serverOK = true;
+		bool netOK = true, ipOK = true;
 
 		if (SDLNet_Init() < 0) {
 			netOK = false;
