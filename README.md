@@ -13,9 +13,14 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 * **OpenGL 2.1**+
 * **[GLEW](http://glew.sourceforge.net/) 1.6**+
 
+For Fedora use yum, Ubuntu apt-get
+For Mac OS use homebrew
+
 ## Install ##
 
 In dist/ you'll find installers for different platforms
+Windows 7/8/8.1
+Mac OS X
 
 ## Compile and run from source code ##
 
@@ -33,6 +38,12 @@ For Windows:
 
 Use cmake 2.6+, CMakeLists.txt included
 Use MS Visual Studio 2013+, as versions below don't support some c++ features used in Tetris3d
+
+For Mac OS:
+
+Makefile coming soon, for now compile manually:
+all .cpp with -std=c++11
+all .o link with -l SDL2 ... -framework OpenGL -l GLEW
 
 ## Debug ##
 
