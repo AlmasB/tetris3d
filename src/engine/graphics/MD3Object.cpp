@@ -118,8 +118,8 @@ void MD3Object::loadImpl(const std::string & fileName) {
 			offsetSurfaces += surfaces[i].offsetEnd;
 			//std::cout << "offset surf " << offsetSurfaces << std::endl;
 
-			delete verticesLocal;
-			delete tris;
+			delete[] verticesLocal;
+			delete[] tris;
 		}
 
 #ifdef __DEBUG
@@ -127,7 +127,7 @@ void MD3Object::loadImpl(const std::string & fileName) {
 #endif
 
 		file.close();
-		delete surfaces;
+		delete[] surfaces;
 	}
 	else {
 		throw EngineException("MD3 Failed to open", fileName.c_str());

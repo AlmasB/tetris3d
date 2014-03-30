@@ -3,22 +3,13 @@
     <cppcheck version="1.63.1"/>
     <errors>
         <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Matrix4f::m&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Matrix4f::m&amp;#039; is not initialized in the constructor.">
-            <location file="engine\math\GameMath.h" line="171"/>
+            <location file="engine\math\GameMath.h" line="175"/>
         </error>
         <error id="noCopyConstructor" severity="style" msg="&amp;#039;class EventEngine&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&amp;#039;class EventEngine&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
             <location file="engine\input\EventEngine.h" line="23"/>
         </error>
         <error id="noCopyConstructor" severity="style" msg="&amp;#039;class Level&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&amp;#039;class Level&amp;#039; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
             <location file="game\Level.h" line="397"/>
-        </error>
-        <error id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: surfaces" verbose="Mismatching allocation and deallocation: surfaces">
-            <location file="engine\graphics\MD3Object.cpp" line="130"/>
-        </error>
-        <error id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: tris" verbose="Mismatching allocation and deallocation: tris">
-            <location file="engine\graphics\MD3Object.cpp" line="122"/>
-        </error>
-        <error id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: verticesLocal" verbose="Mismatching allocation and deallocation: verticesLocal">
-            <location file="engine\graphics\MD3Object.cpp" line="121"/>
         </error>
     </errors>
 </results>
