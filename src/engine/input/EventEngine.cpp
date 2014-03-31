@@ -45,7 +45,7 @@ EventEngine::~EventEngine() {
 #ifdef __DEBUG
 	debug("EventEngine::~EventEngine() started");
 #endif
-
+	if (remoteEventEnabled) {
 	running = false;
 
 	if (connThread)
@@ -58,7 +58,7 @@ EventEngine::~EventEngine() {
 
 	safeDelete(connThread);
 	SDLNet_Quit();
-
+	}
 #ifdef __DEBUG
 	debug("EventEngine::~EventEngine() finished");
 #endif

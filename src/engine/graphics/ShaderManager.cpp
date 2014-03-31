@@ -19,7 +19,7 @@ GLuint ShaderManager::createShader(const char * shaderCode, GLenum shaderType) {
 	}
 
 	const GLchar* strings[] = { shaderCode };	// shader code strings
-	GLint lengths[] = { strlen(shaderCode) };	// shader code string length
+	GLint lengths[] = { (GLint)strlen(shaderCode) };	// shader code string length
 
 	glShaderSource(shader, 1, strings, lengths);
 	glCompileShader(shader);

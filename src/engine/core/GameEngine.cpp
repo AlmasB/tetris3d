@@ -11,7 +11,7 @@ GameEngine::GameEngine() {
 		debug("WIN32");
 	#elif defined(__linux__)
 		debug("LINUX");
-	#elif defined(__APPLE__ && __MACH__)
+	#elif defined(__APPLE__)
 		debug("MACOSX");
 	#endif
 #endif
