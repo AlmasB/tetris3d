@@ -16,6 +16,9 @@ Email: a.baimagambetov1@uni.brighton.ac.uk
 For Fedora use yum, Ubuntu apt-get
 For Mac OS use homebrew
 
+SDL2 sub libraries can be built from source if the package is not available
+for your platform http://www.libsdl.org/projects/
+
 ## Install ##
 
 In dist/ you'll find installers for different platforms
@@ -38,6 +41,12 @@ For Windows:
 
 Use cmake 2.6+, CMakeLists.txt included
 Use MS Visual Studio 2013+, as versions below don't support some c++ features used in Tetris3d
+
+## How to play ##
+
+Use mouse or arrow keys to look around. LMB or SPACE to grab an object. After you grab use WSAD to
+move the object. The direction is based on your camera, so this takes time to get used to but nice
+part of gameplay, otherwise the game would be too easy
 
 ## Debug ##
 
