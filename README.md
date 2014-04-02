@@ -58,6 +58,14 @@ uncomment #define __DEBUG to see hopefully useful debug info on terminal
 
 There's an android app that works as a wireless controller. Source code:
 https://github.com/AlmasB/tetris3d-controller
+
+## Credits: ##
+
+All resources shown below were free of charge and free to use on the date they were obtained
+A "clong" sound effect - http://www.pacdv.com/sounds/index.html
+"Tetris" font - http://www.1001freefonts.com/
+"Brick" texture - http://www.cgtextures.com/
+
     
 ## Known issues & bugs ##
 
