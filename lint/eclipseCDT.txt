@@ -1,0 +1,26 @@
+Description	Resource	Path	Location	Type
+Class 'PhysicsObject' has virtual method 'applyAntiGravity' but non-virtual destructor	PhysicsEngine.h	/tetris3dEclipse/src/engine/physics	line 22	Code Analysis Problem
+Class 'GameObject' has virtual method 'draw' but non-virtual destructor	GameObject.h	/tetris3dEclipse/src/game	line 6	Code Analysis Problem
+Member 'vbo' was not initialized in this constructor 	Primitives3d.cpp	/tetris3dEclipse/src/engine/graphics	line 9	Code Analysis Problem
+Class 'Camera' has virtual method 'getCenter' but non-virtual destructor	GraphicsEngine.h	/tetris3dEclipse/src/engine/graphics	line 59	Code Analysis Problem
+Member 'ibo' was not initialized in this constructor 	Primitives3d.cpp	/tetris3dEclipse/src/engine/graphics	line 9	Code Analysis Problem
+Member 'len' was not initialized in this constructor 	EventEngine.cpp	/tetris3dEclipse/src/engine/input	line 3	Code Analysis Problem
+Member 'port' was not initialized in this constructor 	EventEngine.cpp	/tetris3dEclipse/src/engine/input	line 3	Code Analysis Problem
+Member 'client' was not initialized in this constructor 	EventEngine.cpp	/tetris3dEclipse/src/engine/input	line 3	Code Analysis Problem
+Class 'Movable' has virtual method 'getCenter' but non-virtual destructor	Movable.h	/tetris3dEclipse/src/engine/graphics	line 13	Code Analysis Problem
+Member 'ipaddr' was not initialized in this constructor 	EventEngine.cpp	/tetris3dEclipse/src/engine/input	line 3	Code Analysis Problem
+Member 'remoteip' was not initialized in this constructor 	EventEngine.cpp	/tetris3dEclipse/src/engine/input	line 3	Code Analysis Problem
+Possible assignment in condition 'locked = b'	GameObject.cpp	/tetris3dEclipse/src/game	line 16	Semantic Error
+Member 'vertices' was not initialized in this constructor 	MD3Object.cpp	/tetris3dEclipse/src/engine/graphics	line 3	Code Analysis Problem
+Class 'MD3Object' has virtual method 'getCenter' but non-virtual destructor	MD3Object.h	/tetris3dEclipse/src/engine/graphics	line 89	Code Analysis Problem
+Class 'Cuboid' has virtual method 'draw' but non-virtual destructor	Primitives3d.h	/tetris3dEclipse/src/engine/graphics	line 94	Code Analysis Problem
+Class 'Cube' has virtual method 'draw' but non-virtual destructor	Primitives3d.h	/tetris3dEclipse/src/engine/graphics	line 103	Code Analysis Problem
+Class 'Primitive3d' has virtual method 'getCenter' but non-virtual destructor	Primitives3d.h	/tetris3dEclipse/src/engine/graphics	line 49	Code Analysis Problem
+Member 'y' was not initialized in this constructor 	GameMath.h	/tetris3dEclipse/src/engine/math	line 304	Code Analysis Problem
+Member 'x' was not initialized in this constructor 	GameMath.h	/tetris3dEclipse/src/engine/math	line 304	Code Analysis Problem
+Member 'indices' was not initialized in this constructor 	MD3Object.cpp	/tetris3dEclipse/src/engine/graphics	line 3	Code Analysis Problem
+Member 'numVertices' was not initialized in this constructor 	MD3Object.cpp	/tetris3dEclipse/src/engine/graphics	line 3	Code Analysis Problem
+Member 'x' was not initialized in this constructor 	GameMath.h	/tetris3dEclipse/src/engine/math	line 311	Code Analysis Problem
+Class 'Player' has virtual method 'draw' but non-virtual destructor	Player.h	/tetris3dEclipse/src/game	line 6	Code Analysis Problem
+Member 'numIndices' was not initialized in this constructor 	MD3Object.cpp	/tetris3dEclipse/src/engine/graphics	line 3	Code Analysis Problem
+Member 'y' was not initialized in this constructor 	GameMath.h	/tetris3dEclipse/src/engine/math	line 311	Code Analysis Problem
