@@ -71,3 +71,6 @@ A "clong" sound effect - http://www.pacdv.com/sounds/index.html
 
 * With NVIDIA driver 311.48 (other versions may be affected too) SDL_GL_SetSwapInterval(1)
     (double buffering) causes high cpu load
+    
+* If you are using VirtualBox's machines mouse behaves very strangely and it becomes unplayable.
+    Use arrow keys instead if this is the case. This issue hasn't been seen on OSes running natively
