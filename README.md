@@ -42,7 +42,7 @@ For Windows:
 Use cmake 2.6+, CMakeLists.txt included
 Use MS Visual Studio 2013+, as versions below don't support some c++ features used in Tetris3d
 External libs needed to build on Windows can be found under libs/
-Simply point cmake to that folder
+Simply point cmake to that folder, dlls are also located there
 
 ## How to play ##
 
