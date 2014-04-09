@@ -72,7 +72,28 @@ A "clong" sound effect - http://www.pacdv.com/sounds/index.html
 ## Known issues & bugs ##
 
 * With NVIDIA driver 311.48 (other versions may be affected too) SDL_GL_SetSwapInterval(1)
-    (double buffering) causes high cpu load
+    (double buffering) causes high cpu load. Possibly NVIDIA driver issue or SDL lib bug, 
+    other drivers not affected
     
-* If you are using VirtualBox's machines mouse behaves very strangely and it becomes unplayable.
-    Use arrow keys instead if this is the case. This issue hasn't been seen on OSes running natively
+* If you are using VirtualBox's machines, mouse behaves very strangely and it becomes unplayable.
+    Possibly mouse handling in VMs differs from native handling.
+    Use arrow keys instead if this is the case. This issue hasn't been seen on OSes running natively.
+    
+## Version ##
+
+Current stable version is 0.2
+Latest build version is 0.2.1
+    
+## Updates ##
+
+Next stable version (0.3) will include:
+
+* Powerups
+
+* You will no longer die if you couldn't catch blocks in time. The blocks will disappear and another batch will be spawned.
+    This will cost you points however.
+    
+* The player will be able to adjust mouse sensitivity in the game
+
+* The player will be able to switch to fullscreen mode and back.
+    (The feature already exists in build 0.2.1)
