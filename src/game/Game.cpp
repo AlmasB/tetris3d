@@ -25,6 +25,7 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 
 		dummy = MD3Object::load("res/upper.md3");	// TODO: remove after tests;
 		dummy->setCenter(Point3f(-80, 0, 0));
+		dummy->rotate(-60.0f, -30.0f, 60.0f);
 	}
 	catch (EngineException & e) {
 		std::cout << "Game::Game()" << e.what() << std::endl;	// note that when EngineException is constructed it prints trace anyway
