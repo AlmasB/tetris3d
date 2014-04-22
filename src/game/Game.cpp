@@ -115,34 +115,25 @@ int Game::runMainLoop() {
 }
 
 void Game::update() {
+	// block - platform collision
 	for (auto block : extraBlocks) {
 		if (selected != block) {
 			block->applyGravity(*physics);
-		}
-	}
-
-	// block - platform collision
-	for (auto block : extraBlocks) {
-		for (auto platform : platforms) {
-			if (platform->isColliding(*block)) {
-				block->applyAntiGravity(*physics);
-				break;
+			for (auto platform : platforms) {
+				if (platform->isColliding(*block)) {
+					block->applyAntiGravity(*physics);
+					break;
+				}
 			}
 		}
 	}
 
 	// block - block collision
-	std::list<std::shared_ptr<GameObject>> tmp;
-	for (auto obj : extraBlocks)
-		tmp.push_back(obj);
-
-	while (!tmp.empty()) {
-		std::shared_ptr<GameObject> tmpObj = tmp.front();
-		tmp.pop_front();
-
-		for (auto obj : tmp) {
-			if (obj->isColliding(*tmpObj)) {
-				tmpObj->applyAntiGravity(*physics);
+	for (std::list<std::shared_ptr<GameObject>>::iterator it = extraBlocks.begin(); it != extraBlocks.end(); ) {
+		std::shared_ptr<GameObject> tmp = *it;
+		for (std::list<std::shared_ptr<GameObject>>::iterator iter = ++it ; iter != extraBlocks.end(); ++iter) {
+			if (tmp->isColliding(*(*iter))) {
+				tmp->applyAntiGravity(*physics);
 				break;
 			}
 		}
@@ -201,7 +192,7 @@ void Game::render() {
 	prize->draw();
 
 	crosshair->draw();	// fancy tiny spinning cube
-	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// texture
+	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// crosshair texture
 
 	gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
 	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, GAME_W - 200, 50);	// FPS
@@ -344,7 +335,7 @@ void Game::spawnAllBlocks() {
 	int blocksNeeded = currentLevel->width * currentLevel->height - mainBlocks.size();
 
 	for (int i = 0; i < blocksNeeded; ++i) {
-		Point3f p((float)getRandom(-currentLevel->width, currentLevel->width), 4 + i*2.0f, player->getCenter().z + getRandom(-5, 5));
+		Point3f p((float)getRandom(-currentLevel->width, currentLevel->width), 4 + (blocksNeeded-i)*2.0f, player->getCenter().z + getRandom(-5, 5));
 		extraBlocks.push_back(std::make_shared<GameObject>(p, 2.0f, getRandomColor(50, 200)));
 	}
 }
