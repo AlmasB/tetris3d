@@ -7,6 +7,8 @@
 
 #include "ShaderManager.h"
 
+// TODO: in later versions create external glsl files
+
 static const char* vertexShaderCode = "                                             \n\
 #version 120                                                                        \n\
 																					\n\

@@ -8,6 +8,10 @@ EventEngine::EventEngine() : running(true), remoteEventEnabled(false) {
 	buttons[Mouse::BTN_LEFT] = false;
 	buttons[Mouse::BTN_RIGHT] = false;
 
+#ifdef __DEBUG
+	debug("Remote Control is", remoteEventEnabled ? "ON" : "OFF");
+#endif
+
 	if (remoteEventEnabled) {
 		bool netOK = true, ipOK = true;
 
