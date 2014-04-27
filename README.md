@@ -22,7 +22,7 @@ for your platform http://www.libsdl.org/projects/
 ## Install ##
 
 In dist/ you'll find installers for different platforms
-Windows 7/8/8.1
+Windows 7/8/8.1 (x64)
 Mac OS X
 
 ## Compile and run from source code ##
