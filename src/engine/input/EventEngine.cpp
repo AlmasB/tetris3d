@@ -139,6 +139,14 @@ void EventEngine::updateKeys(const SDL_Keycode &key, bool keyDown) {
 	keys[index] = keyDown;
 }
 
+void EventEngine::setPressed(Key key) {
+    keys[key] = true;
+}
+
+void EventEngine::setPressed(Mouse btn) {
+    buttons[btn] = true;
+}
+
 bool EventEngine::isPressed(Key key) {
 	return keys[key];
 }

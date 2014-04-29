@@ -52,7 +52,13 @@ class EventEngine {
 		
 		bool isPressed(Key);
 		bool isPressed(Mouse);
-		
+    
+        /**
+         * Software emulation of keypresses
+         */
+        void setPressed(Key);
+        void setPressed(Mouse);
+	
 		void setMouseRelative(bool);
 
 		/**
