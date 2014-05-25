@@ -42,6 +42,9 @@ int AbstractGame::runMainLoop() {
 		gfx->setFrameStart();
 		eventSystem->pollEvents();
 
+		if (eventSystem->isPressed(Key::ESC))	// debug escape
+			running = false;
+
 		handleKeyEvents();
 		handleMouseEvents();
 

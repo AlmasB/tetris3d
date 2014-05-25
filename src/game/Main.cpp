@@ -1,8 +1,10 @@
 #include "Game.h"
+#include "../test/TestGame.h"
 
 int mainImpl() {
 	try {
-		Game game;
+		//Game game;
+		TestGame game;
 		return game.runMainLoop();
 	}
 	catch (int code) {
