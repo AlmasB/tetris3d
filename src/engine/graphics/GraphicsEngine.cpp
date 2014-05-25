@@ -67,6 +67,13 @@ void GraphicsEngine::setWindowTitle(const char * title) {
 #endif
 }
 
+void GraphicsEngine::setWindowTitle(const std::string & title) {
+	SDL_SetWindowTitle(window, title.c_str());
+#ifdef __DEBUG
+	debug("Set window title to:", title.c_str());
+#endif
+}
+
 void GraphicsEngine::setWindowIcon(const char *iconFileName) {
 	SDL_Surface * icon = IMG_Load(iconFileName);
 	if (nullptr == icon) {

@@ -41,7 +41,7 @@ Game::Game() : running(true), currentStep(0), currentCutScene(CutScene::NONE), c
 
 	// adjust settings
 	std::string title = "Tetris3D v" + std::to_string(_TETRIS_VERSION_MAJOR) + "." + std::to_string(_TETRIS_VERSION_MINOR) + " by " + _TETRIS_AUTHOR;
-	gfx->setWindowTitle(title.c_str());
+	gfx->setWindowTitle(title);
 	gfx->setWindowSize(GAME_W, GAME_H);
 	gfx->useFont(ResourceManager::getFont(_RES_FONT));
 	eventSystem->setMouseRelative(true);	// trap mouse for FPS

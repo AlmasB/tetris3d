@@ -116,9 +116,14 @@ class GraphicsEngine {
 		void useFont(TTF_Font * font);
 		GLuint createGLTextureFromText(std::string text, SDL_Color textColor);
 
+		/**
+		* Clears everything on the screen
+		* Call this before drawing anything to screen
+		*/
 		void clearScreen();
 
 		/**
+		* Displays everything rendered on the screen
 		* Call this method after you have finished drawing
 		*/
 		void showScreen();
@@ -144,6 +149,7 @@ class GraphicsEngine {
 		void setWindowIcon(const char *);
 		void setWindowSize(const int &, const int &);
 		void setWindowTitle(const char *title);
+		void setWindowTitle(const std::string &);
 		void setFullscreen(bool);
 
 		Dimension2i getWindowSize();
