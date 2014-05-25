@@ -7,7 +7,7 @@
 class TestGame : public AbstractGame {
 	private:
 		void handleKeyEvents();
-		void handleMouseEvents();
+	
 		void update();
 		void render();
 	public:

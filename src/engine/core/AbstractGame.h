@@ -4,6 +4,8 @@
 #include "GameEngine.h"
 
 class AbstractGame {
+	private:
+		void handleMouseEvents();
 	protected:
 		AbstractGame();
 		virtual ~AbstractGame();
@@ -19,7 +21,9 @@ class AbstractGame {
 		bool running;
 
 		virtual void handleKeyEvents() = 0;
-		virtual void handleMouseEvents() = 0;
+
+		virtual void onLeftMouseButton();
+		virtual void onRightMouseButton();
 
 		virtual void update() = 0;
 		virtual void render() = 0;

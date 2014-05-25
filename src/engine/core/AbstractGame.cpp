@@ -64,3 +64,11 @@ int AbstractGame::runMainLoop() {
 
 	return 0;
 }
+
+void AbstractGame::handleMouseEvents() {
+	if (eventSystem->isPressed(Mouse::BTN_LEFT)) onLeftMouseButton();
+	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) onRightMouseButton();
+}
+
+void AbstractGame::onLeftMouseButton() {}
+void AbstractGame::onRightMouseButton() {}

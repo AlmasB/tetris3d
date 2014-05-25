@@ -18,12 +18,6 @@ void TestGame::handleKeyEvents() {
 	}
 }
 
-void TestGame::handleMouseEvents() {
-	if (eventSystem->isPressed(Mouse::BTN_LEFT)) {
-		std::cout << "Left mouse button is pressed" << std::endl;
-	}
-}
-
 void TestGame::update() {
 	//std::cout << "UPDATE" << std::endl;
 }
