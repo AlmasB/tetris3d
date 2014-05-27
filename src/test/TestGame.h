@@ -4,8 +4,16 @@
 #include "../engine/core/AbstractGame.h"
 #include "../engine/graphics/Primitives3d.h"
 
+#include "MazeGenerator.h"
+
 class TestGame : public AbstractGame {
 	private:
+
+		MazeGenerator * gen;
+		std::shared_ptr<Cube> dummy;
+
+		std::vector<std::shared_ptr<Cuboid>> walls;
+
 		void handleKeyEvents();
 	
 		void update();
