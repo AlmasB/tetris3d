@@ -3,6 +3,7 @@
 
 #include "../engine/core/AbstractGame.h"
 #include "../engine/graphics/Primitives3d.h"
+#include "../engine/core/ResourceManager.h"
 
 #include "MazeGenerator.h"
 
@@ -15,6 +16,7 @@ class TestGame : public AbstractGame {
 		std::vector<std::shared_ptr<Cuboid>> walls;
 
 		void handleKeyEvents();
+        void onLeftMouseButton();
 	
 		void update();
 		void render();
