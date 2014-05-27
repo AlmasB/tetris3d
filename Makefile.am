@@ -6,6 +6,8 @@ TetrisV_SOURCES += src/engine/graphics/GraphicsEngine.cpp src/engine/graphics/Pr
 TetrisV_SOURCES += src/engine/input/EventEngine.cpp
 TetrisV_SOURCES += src/engine/physics/PhysicsEngine.cpp
 
+TetrisV_SOURCES += src/test/TestGame.cpp src/test/MazeGenerator.cpp
+
 
 AM_CPPFLAGS = -std=c++0x
 AM_CPPFLAGS += $(gl_CFLAGS) $(glew_CFLAGS) $(sdl2_CFLAGS)
