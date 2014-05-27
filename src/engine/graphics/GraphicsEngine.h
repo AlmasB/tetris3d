@@ -153,6 +153,12 @@ class GraphicsEngine {
 		void setFullscreen(bool);
 
 		Dimension2i getWindowSize();
+		/**
+		* @return current display mode's resolution
+		*         since most displays use native (max) resolution
+		*         this returns maximum available (the one you can set) window size
+		*/
+		Dimension2i getMaximumWindowSize();
 
 		void setFrameStart();
 		void adjustFPSDelay(const Uint32 &);

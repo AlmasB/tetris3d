@@ -110,6 +110,18 @@ Dimension2i GraphicsEngine::getWindowSize() {
 	return Dimension2i(w, h);
 }
 
+Dimension2i GraphicsEngine::getMaximumWindowSize() {
+	SDL_DisplayMode current;
+	if (SDL_GetCurrentDisplayMode(0, &current) == 0) {
+		return Dimension2i(current.w, current.h);
+	}
+	else {
+		std::cout << "Failed to get window data" << std::endl;
+		std::cout << "GraphicsEngine::getMaximumWindowSize() -> return (0, 0)" << std::endl;
+		return Dimension2i(0, 0);
+	}
+}
+
 void GraphicsEngine::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
