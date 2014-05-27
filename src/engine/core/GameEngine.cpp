@@ -23,6 +23,15 @@ GameEngine::GameEngine() {
 	debug("SDL_Init() successful");
 #endif
 
+	SDL_version compiled, linked;
+	SDL_VERSION(&compiled);
+	SDL_GetVersion(&linked);
+
+	printf("Compiled against SDL %d.%d.%d\n",
+		compiled.major, compiled.minor, compiled.patch);
+	printf("Linked against SDL %d.%d.%d\n",
+		linked.major, linked.minor, linked.patch);
+
 	Uint32 ticks = SDL_GetTicks();
 	srand(ticks);	// init random seed
 
