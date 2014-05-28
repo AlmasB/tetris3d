@@ -50,7 +50,6 @@ GraphicsEngine::~GraphicsEngine() {
 
 void GraphicsEngine::initGL() {
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (SDL_GL_SetSwapInterval(0) < 0) {	// on NVIDIA drivers setting to 1 causes high cpu load
