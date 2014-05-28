@@ -39,30 +39,27 @@ GameEngine::GameEngine() {
 	debug("Inited srand() with", ticks);
 #endif
 
-	try {
-		gfxInstance = std::shared_ptr<GraphicsEngine>(new GraphicsEngine());
+	// init subsystems
+
+	gfxInstance = std::shared_ptr<GraphicsEngine>(new GraphicsEngine());
 
 #ifdef __DEBUG
-		debug("GraphicsEngine() successful");
+	debug("GraphicsEngine() successful");
 #endif
 
-		audioInstance = std::shared_ptr<AudioEngine>(new AudioEngine());
+	audioInstance = std::shared_ptr<AudioEngine>(new AudioEngine());
 
 #ifdef __DEBUG
-		debug("AudioEngine() successful");
+	debug("AudioEngine() successful");
 #endif
 
-		eventInstance = std::shared_ptr<EventEngine>(new EventEngine());
+	eventInstance = std::shared_ptr<EventEngine>(new EventEngine());
 
 #ifdef __DEBUG
-		debug("EventEngine() successful");
+	debug("EventEngine() successful");
 #endif
 
-		physicsInstance = std::shared_ptr<PhysicsEngine>(new PhysicsEngine());
-	}
-	catch (EngineException & e) {
-		throw;
-	}
+	physicsInstance = std::shared_ptr<PhysicsEngine>(new PhysicsEngine());
 }
 
 GameEngine::~GameEngine() {
