@@ -191,16 +191,16 @@ void Game::render() {
 
 	prize->draw();
 
+	if (dummy)	// MD3 Model
+		dummy->draw();
+	else
+		std::cout << "NO DUMMY" << std::endl;
+
 	crosshair->draw();	// fancy tiny spinning cube
 	gfx->drawGLTexture(ResourceManager::getTextureID(_RES_TEX_CROSSHAIR), GAME_W / 2 - 15, GAME_H / 2 - 15, 30, 30);	// crosshair texture
 
 	gfx->drawText(std::to_string(player->getScore()), SDL_COLOR_GREEN, 50, 50);	// score
 	gfx->drawText(std::to_string(gfx->getAverageFPS()) + " FPS", SDL_COLOR_BLUE, GAME_W - 200, 50);	// FPS
-
-	if (dummy)	// MD3 Model
-		dummy->draw();
-	else
-		std::cout << "NO DUMMY" << std::endl;
 
 	gfx->showScreen();
 }
