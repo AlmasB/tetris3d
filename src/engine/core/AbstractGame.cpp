@@ -53,6 +53,7 @@ int AbstractGame::runMainLoop() {
 
 		gfx->clearScreen();
 		render();
+		renderUI();
 		gfx->showScreen();
 
 		gfx->adjustFPSDelay(16);	// atm hardcoded to ~60 FPS
@@ -72,3 +73,4 @@ void AbstractGame::handleMouseEvents() {
 
 void AbstractGame::onLeftMouseButton() {}
 void AbstractGame::onRightMouseButton() {}
+void AbstractGame::renderUI() {}
