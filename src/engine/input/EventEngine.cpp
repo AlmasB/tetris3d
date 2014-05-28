@@ -113,6 +113,10 @@ void EventEngine::pollEvents() {
 			updateKeys(event.key.keysym.sym, event.type == SDL_KEYDOWN);
 		}
 
+		if (event.type == SDL_QUIT) {
+			keys[QUIT] = true;
+		}
+
 		buttons[Mouse::BTN_LEFT]  = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
 		buttons[Mouse::BTN_RIGHT] = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
 	}
