@@ -38,10 +38,18 @@ varying vec2 outUV;						                                            \n\
 uniform vec4 color;                                                                 \n\
 uniform sampler2D sampler;														    \n\
 uniform int useTexture;                                                             \n\
+struct DirectionalLight {                                                           \n\
+    vec3 color;                                                                     \n\
+	float ambientIntensity;                                                         \n\
+};                                                                                  \n\
+uniform DirectionalLight light;                                                     \n\
 																					\n\
 void main() {                                                                       \n\
-	gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
+	//gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
+	gl_FragColor = (useTexture > 0 ? texture2D(sampler, outUV) : color) * vec4(light.color, 1.0) * light.ambientIntensity;  	        \n\
 }";
+
+// ambient intensity increases effect of that color the greater the value the greater effect
 
 // BIG TODO: maybe we could subtract half distances of object, so that when we use create obj
 // at 0.0.0 it starts drawing from 0.0.0 and not half of it, x-x0 / 2 gives us center etc
@@ -62,6 +70,9 @@ class Primitive3d : public PhysicsObject, public Movable {
 		GLuint textureID;
 		GLuint textureIDLocation;
 		GLuint useTextureLocation;	// we pass 1 to use texture and 0 to use color
+
+		GLuint lightColorLocation;	// light struct gpu memory location
+		GLuint lightIntensityLocation;
 
 		GLuint mvpLocation;	// model view projection
 		GLuint useUI;	// TODO: rename
@@ -89,6 +100,9 @@ class Primitive3d : public PhysicsObject, public Movable {
 
 		virtual void applyGravity(const PhysicsEngine & engine);
 		virtual void applyAntiGravity(const PhysicsEngine & engine);
+
+		void setAmbientIntensity(float v);
+		float intensity;
 
 		virtual void draw() = 0;
 };

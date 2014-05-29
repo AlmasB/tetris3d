@@ -18,7 +18,12 @@ Primitive3d::Primitive3d(const Point3f &_center, float _x, float _y, float _z, S
 	textureIDLocation = glGetUniformLocation(shaderProgram, "sampler");
 	useTextureLocation = glGetUniformLocation(shaderProgram, "useTexture");
 
+	lightColorLocation = glGetUniformLocation(shaderProgram, "light.color");
+	lightIntensityLocation = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
+
 	useUI = glGetUniformLocation(shaderProgram, "useUI");
+
+	intensity = 1.0f;
 
 	glUseProgram(0);
 }
@@ -164,11 +169,18 @@ Cuboid::Cuboid(const Point3f & center, float lX, float lY, float lZ, SDL_Color c
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void Primitive3d::setAmbientIntensity(float v) {
+	intensity = v;
+}
+
 void Cuboid::draw() {
 	glUseProgram(shaderProgram);
 
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
 	glUniform4f(colorLocation, color.r, color.g, color.b, 1.0f);
+
+	glUniform3f(lightColorLocation, 1.0f, 1.0f, 1.0f);
+	glUniform1f(lightIntensityLocation, intensity);
 
 	if (0 != textureID) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);
