@@ -31,6 +31,14 @@ class AudioEngine {
 		* @param volume - the volume at which to play in range [0..128]
 		*/
 		void playSound(Mix_Chunk * sound, const int & _volume);
+
+		/**
+		* Plays mp3 file given amount of times
+		*
+		* @param mp3 - the file to play
+		* @param times - number of times, -1 will play indefinitely
+		*/
+		void playMP3(Mix_Music * mp3, const int & times);
 };
 
 #endif

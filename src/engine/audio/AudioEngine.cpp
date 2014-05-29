@@ -29,3 +29,7 @@ void AudioEngine::playSound(Mix_Chunk * sound, const int & _volume) {
 		Mix_PlayChannel(-1, sound, 0);
 	}
 }
+
+void AudioEngine::playMP3(Mix_Music * mp3, const int & times) {
+	Mix_PlayMusic(mp3, times);
+}
