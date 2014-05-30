@@ -7,6 +7,8 @@
 
 #include "ShaderManager.h"
 
+#include <vector>
+
 // TODO: in later versions create external glsl files
 
 static const char* vertexShaderCode = "                                             \n\
@@ -46,8 +48,10 @@ uniform DirectionalLight light;                                                 
 																					\n\
 void main() {                                                                       \n\
 	//gl_FragColor = useTexture > 0 ? texture2D(sampler, outUV) : color;  	        \n\
-	gl_FragColor = (useTexture > 0 ? texture2D(sampler, outUV) : color) * vec4(light.color, 1.0) * light.ambientIntensity;  	        \n\
+	gl_FragColor = (useTexture > 0 ? texture2D(sampler, outUV) : color)             \n\
+		* vec4(light.color, 1.0) * light.ambientIntensity;  	                    \n\
 }";
+
 
 // ambient intensity increases effect of that color the greater the value the greater effect
 
@@ -108,7 +112,6 @@ class Primitive3d : public PhysicsObject, public Movable {
 };
 
 class Cuboid : public Primitive3d {
-
 	public:
 		Cuboid(const Point3f & center, float x, float y, float z, SDL_Color color);
 		Cuboid(const Point3f & center, float x, float y, float z, GLuint textureID);
@@ -120,6 +123,16 @@ class Cube : public Cuboid {
 	public:
 		Cube(const Point3f & center, float size, SDL_Color color);
 		Cube(const Point3f & center, float size, GLuint textureID);
+};
+
+class Sphere : public Primitive3d {
+	private:
+		int slices, stacks;
+	public:
+		Sphere(const Point3f & center, const float & size, SDL_Color color);
+		// ST coordinates are not mapped correctly at the moment
+		Sphere(const Point3f & center, const float & size, GLuint textureID);
+		virtual void draw();
 };
 
 #endif

@@ -120,6 +120,8 @@ class GraphicsEngine {
 		*/
 		static GLuint createGLTextureFromSurface(SDL_Surface * surf);
 
+		static GLuint createSkyboxGLTextureFromSurface(SDL_Surface * surf);
+
 		void useFont(TTF_Font * font);
 		GLuint createGLTextureFromText(std::string text, SDL_Color textColor);
 
