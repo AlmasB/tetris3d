@@ -69,7 +69,7 @@ void MazeGenerator::generateMaze(int cx, int cy) {
 }
 
 void MazeGenerator::display() {
-	for (int i = 0; i < y; i++) {
+	/*for (int i = 0; i < y; i++) {
 		// draw the north edge
 		for (int j = 0; j < x; j++) {
 			std::cout << (((maze[j][i] & 1) == 0) ? "+---" : "+   ");
@@ -87,7 +87,7 @@ void MazeGenerator::display() {
 	for (int j = 0; j < x; j++) {
 		std::cout << "+---";
 	}
-	std::cout << "+" << std::endl;
+	std::cout << "+" << std::endl;*/
 
 
 
