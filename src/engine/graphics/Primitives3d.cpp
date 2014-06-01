@@ -7,7 +7,8 @@ Primitive3d::Primitive3d(const Point3f & center, float x, float y, float z, GLui
 : Primitive3d(center, x, y, z, SDL_COLOR_GRAY, textureID) {}
 
 Primitive3d::Primitive3d(const Point3f &_center, float _x, float _y, float _z, SDL_Color color, GLuint _textureID)
-: PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(toSDLColorf(color)), originalColor(toSDLColorf(color)) {
+: PhysicsObject(_center, _x, _y, _z), textureID(_textureID), transformer(_center), color(toSDLColorf(color)), originalColor(toSDLColorf(color)),
+	ambientLightColor(toSDLColorf(SDL_COLOR_WHITE)), ambientLightIntensity(1.0f) {
 
 	shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCode, fragmentShaderCode);
 	//shaderProgram = ShaderManager::getInstance()->createProgram(vertexShaderCodeSKY, fragmentShaderCodeSKY);
@@ -22,8 +23,6 @@ Primitive3d::Primitive3d(const Point3f &_center, float _x, float _y, float _z, S
 	lightIntensityLocation = glGetUniformLocation(shaderProgram, "light.ambientIntensity");
 
 	useUI = glGetUniformLocation(shaderProgram, "useUI");
-
-	intensity = 1.0f;
 
 	glUseProgram(0);
 }
@@ -79,8 +78,17 @@ void Primitive3d::setCenter(const Point3f & _center) {
 	setCenter(_center.x, _center.y, _center.z);
 }
 
+void Primitive3d::updateCameraTransforms() {
+	transformer.center = Vector3f(center.x, center.y, center.z);
+}
+
 void Primitive3d::move(const Vector3f & v) {
 	center += v;
+	transformer.center = Vector3f(center.x, center.y, center.z);
+}
+
+void Primitive3d::moveWithPhysics(const Vector3f & v) {
+	applyForce(v);	// this might change center of the object
 	transformer.center = Vector3f(center.x, center.y, center.z);
 }
 
@@ -169,8 +177,9 @@ Cuboid::Cuboid(const Point3f & center, float lX, float lY, float lZ, SDL_Color c
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Primitive3d::setAmbientIntensity(float v) {
-	intensity = v;
+void Primitive3d::setAmbientLightColor(SDL_Colorf c, float i) {
+	ambientLightColor = c;
+	ambientLightIntensity = i;
 }
 
 void Cuboid::draw() {
@@ -179,8 +188,8 @@ void Cuboid::draw() {
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
 	glUniform4f(colorLocation, color.r, color.g, color.b, 1.0f);
 
-	glUniform3f(lightColorLocation, 1.0f, 1.0f, 1.0f);
-	glUniform1f(lightIntensityLocation, intensity);
+	glUniform3f(lightColorLocation, ambientLightColor.r, ambientLightColor.g, ambientLightColor.b);
+	glUniform1f(lightIntensityLocation, ambientLightIntensity);
 
 	if (0 != textureID) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);
@@ -309,8 +318,8 @@ void Sphere::draw() {
 	glUniformMatrix4fv(mvpLocation, 1, GL_TRUE, (const GLfloat*)transformer.transform());
 	glUniform4f(colorLocation, color.r, color.g, color.b, 1.0f);
 
-	glUniform3f(lightColorLocation, 1.0f, 1.0f, 1.0f);
-	glUniform1f(lightIntensityLocation, intensity);
+	glUniform3f(lightColorLocation, ambientLightColor.r, ambientLightColor.g, ambientLightColor.b);
+	glUniform1f(lightIntensityLocation, ambientLightIntensity);
 
 	if (0 != textureID) {	// check if texture exists
 		glActiveTexture(GL_TEXTURE0);

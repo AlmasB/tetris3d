@@ -2,8 +2,7 @@
 #define __PRIMITIVES_H__
 
 #include "../physics/PhysicsEngine.h"
-#include "Movable.h"
-#include "GraphicsEngine.h"
+#include "AmbientLight.h"
 
 #include "ShaderManager.h"
 
@@ -75,6 +74,9 @@ class Primitive3d : public PhysicsObject, public Movable {
 		GLuint textureIDLocation;
 		GLuint useTextureLocation;	// we pass 1 to use texture and 0 to use color
 
+		SDL_Colorf ambientLightColor;
+		float ambientLightIntensity;
+
 		GLuint lightColorLocation;	// light struct gpu memory location
 		GLuint lightIntensityLocation;
 
@@ -102,11 +104,14 @@ class Primitive3d : public PhysicsObject, public Movable {
 		Point3f getCenter();
 		Vector3f getScale();
 
+		void updateCameraTransforms();
+
 		virtual void applyGravity(const PhysicsEngine & engine);
 		virtual void applyAntiGravity(const PhysicsEngine & engine);
 
-		void setAmbientIntensity(float v);
-		float intensity;
+		void moveWithPhysics(const Vector3f &);
+
+		void setAmbientLightColor(SDL_Colorf, float intensity);
 
 		virtual void draw() = 0;
 };
