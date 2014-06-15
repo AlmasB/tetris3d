@@ -85,14 +85,19 @@ TestGame::TestGame() : AbstractGame() {
 		}
 	}
 
-	/*for (int j = 0; j < 10; ++j) {
+	for (int j = 0; j < 10; ++j) {
 		for (int i = 0; i < 10; ++i) {
-			objects.push_back(std::make_shared<Cuboid>(Point3f(i * 2, -0.1f + j, 2.0f), 2.0f, 1.0f, 1.0f, SDL_COLOR_GRAY));
+			std::shared_ptr<Cuboid> obj = std::make_shared<Cuboid>(Point3f(i * 4, 0.5f + j*2, 2.0f), 2.0f, 1.0f, 1.0f, SDL_COLOR_GRAY);
+			objects.push_back(obj);
+			physics->registerObject(obj);
 		}
-	}*/
+	}
 
-	test = std::make_shared<Cuboid>(Point3f(5.0f, 1.0f, 5.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE);
-	test2 = std::make_shared<Cuboid>(Point3f(50.0f, 1.5f, 5.0f), 3.0f, 3.0f, 3.0f, SDL_COLOR_RED);
+	test = std::make_shared<Cuboid>(Point3f(15.0f, 30.0f, 15.0f), 2.0f, 2.0f, 2.0f, SDL_COLOR_BLUE);
+	test2 = std::make_shared<Cuboid>(Point3f(5.0f, 50.5f, 5.0f), 3.0f, 3.0f, 3.0f, SDL_COLOR_RED);
+
+	physics->registerObject(test);
+	physics->registerObject(test2);
 
 
 	//walls.push_back(std::make_shared<Cuboid>(Point3f(0, 12.0f, 0), 100.0f, 3.0f, 200.0f, SDL_COLOR_GRAY));
@@ -152,7 +157,24 @@ void TestGame::handleKeyEvents() {
 		dummy->moveRight(0.15f);
 	}
 
+	if (eventSystem->isPressed(Key::LEFT)) {
+		test->moveWithPhysics(Vector3f(-2.5f, 0, 0));
+	}
+
+	if (eventSystem->isPressed(Key::RIGHT)) {
+		test->moveWithPhysics(Vector3f(2.5f, 0, 0));
+	}
+
+	if (eventSystem->isPressed(Key::UP)) {
+		test->moveWithPhysics(Vector3f(0, 0, 2.5f));
+	}
+
+	if (eventSystem->isPressed(Key::DOWN)) {
+		test->moveWithPhysics(Vector3f(0, 0, -2.5f));
+	}
+
 	if (eventSystem->isPressed(Key::SPACE)) {
+		test->moveWithPhysics(Vector3f(-1.5f, 0, 0));
 	}
 
 	Point2 pos = eventSystem->getMouseDPos();
@@ -166,6 +188,8 @@ void TestGame::handleKeyEvents() {
 void TestGame::onLeftMouseButton() {
     std::cout << "Left mouse Button pushed" << std::endl;
     sfx->playSound(ResourceManager::getSound("res/audio/clong.wav"));
+
+	test->moveWithPhysics(Vector3f(1.5f, 0, 0));
 }
 
 void TestGame::update() {
@@ -185,7 +209,7 @@ void TestGame::update() {
 	if (test2->getCenter().y - test2->getHalfLengthY() > 1)
 		test2->move(Vector3f(0, -9.8f * time, 0));*/
 
-	if (!collide) {
+	/*if (!collide) {
 		test->move(Vector3f(v1, 0, 0));
 		test2->move(Vector3f(-v2, 0, 0));
 		if (test->isColliding(*test2)) {
@@ -205,7 +229,7 @@ void TestGame::update() {
 			v2 -= 0.001;
 		else
 			v2 = 0;
-	}
+	}*/
 
 
 	/*if (time < 5) {
@@ -215,7 +239,13 @@ void TestGame::update() {
 		}
 	}*/
 
-	time += 0.016;
+	//time += 0.016;
+
+	test->updateCameraTransforms();
+	test2->updateCameraTransforms();
+
+	for (auto obj : objects)
+		obj->updateCameraTransforms();
 }
 
 void TestGame::render() {

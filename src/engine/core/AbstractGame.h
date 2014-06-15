@@ -6,6 +6,8 @@
 class AbstractGame {
 	private:
 		void handleMouseEvents();
+		void updatePhysics();
+
 	protected:
 		AbstractGame();
 		virtual ~AbstractGame();
@@ -19,6 +21,7 @@ class AbstractGame {
 
 		/* Main loop control */
 		bool running;
+		double gameTime;
 
 		virtual void handleKeyEvents() = 0;
 

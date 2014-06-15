@@ -1,6 +1,6 @@
 #include "AbstractGame.h"
 
-AbstractGame::AbstractGame() : running(true) {
+AbstractGame::AbstractGame() : running(true), gameTime(0.0) {
 	std::shared_ptr<GameEngine> engine = GameEngine::getInstance();
 
 	// engine ready, get subsystems
@@ -49,7 +49,10 @@ int AbstractGame::runMainLoop() {
 		handleMouseEvents();
 
 		update();
+		updatePhysics();
 		camera->updateView();
+
+		gameTime += 0.016;	// 60 times a sec
 
 		gfx->clearScreen();
 		render();
@@ -69,6 +72,10 @@ int AbstractGame::runMainLoop() {
 void AbstractGame::handleMouseEvents() {
 	if (eventSystem->isPressed(Mouse::BTN_LEFT)) onLeftMouseButton();
 	if (eventSystem->isPressed(Mouse::BTN_RIGHT)) onRightMouseButton();
+}
+
+void AbstractGame::updatePhysics() {
+	physics->update();
 }
 
 void AbstractGame::onLeftMouseButton() {}

@@ -371,4 +371,8 @@ inline int getRandom(int min, int max) {
 	return (int)(rand() % (max - min)) + min;
 }
 
+inline bool isBetween(float value, float min, float max) {
+	return value >= min && value <= max;
+}
+
 #endif
